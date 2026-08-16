@@ -1,0 +1,207 @@
+{
+  "alias": "Golden",
+  "collectedAt": "2026-07-02T23:10:58Z",
+  "complete": true,
+  "datasets": [
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 6,
+      "dataset": "conditional_access_policies",
+      "durationSeconds": 0.969,
+      "endpoint": "/identity/conditionalAccess/policies",
+      "errors": [],
+      "files": [
+        "raw/conditional_access_policies.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 0,
+      "dataset": "named_locations",
+      "durationSeconds": 0.375,
+      "endpoint": "/identity/conditionalAccess/namedLocations",
+      "errors": [],
+      "files": [
+        "raw/named_locations.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 3,
+      "dataset": "auth_strengths",
+      "durationSeconds": 0.39,
+      "endpoint": "/policies/authenticationStrengthPolicies",
+      "errors": [],
+      "files": [
+        "raw/auth_strengths.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 1,
+      "dataset": "auth_methods_policy",
+      "durationSeconds": 0.75,
+      "endpoint": "/policies/authenticationMethodsPolicy",
+      "errors": [],
+      "files": [
+        "raw/auth_methods_policy.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 1,
+      "dataset": "security_defaults",
+      "durationSeconds": 0.469,
+      "endpoint": "/policies/identitySecurityDefaultsEnforcementPolicy",
+      "errors": [],
+      "files": [
+        "raw/security_defaults.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 1,
+      "dataset": "authorization_policy",
+      "durationSeconds": 0.094,
+      "endpoint": "/policies/authorizationPolicy",
+      "errors": [],
+      "files": [
+        "raw/authorization_policy.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 2,
+      "dataset": "users",
+      "durationSeconds": 0.812,
+      "endpoint": "/users",
+      "errors": [],
+      "files": [
+        "raw/users.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 2,
+      "dataset": "registration_details",
+      "durationSeconds": 0.125,
+      "endpoint": "/reports/authenticationMethods/userRegistrationDetails",
+      "errors": [],
+      "files": [
+        "raw/registration_details.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 146,
+      "dataset": "roles",
+      "durationSeconds": 1.141,
+      "endpoint": "/roleManagement/directory/roleDefinitions|roleAssignments|roleEligibilitySchedules",
+      "errors": [
+        "roleEligibilitySchedules unreadable, marked unknown: AadPremiumLicenseRequired"
+      ],
+      "files": [
+        "raw/roles.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 3,
+      "dataset": "groups",
+      "durationSeconds": 0.234,
+      "endpoint": "/groups + /groups/{id}/transitiveMembers/$count",
+      "errors": [],
+      "files": [
+        "raw/groups.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 176,
+      "dataset": "service_principals",
+      "durationSeconds": 0.313,
+      "endpoint": "/servicePrincipals",
+      "errors": [],
+      "files": [
+        "raw/service_principals.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 2,
+      "dataset": "org_licenses",
+      "durationSeconds": 0.219,
+      "endpoint": "/organization + /subscribedSkus",
+      "errors": [],
+      "files": [
+        "raw/org_licenses.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 1,
+      "dataset": "domains",
+      "durationSeconds": 0.062,
+      "endpoint": "/domains",
+      "errors": [],
+      "files": [
+        "raw/domains.json"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0 (interactive) + beta (non-interactive)",
+      "complete": true,
+      "count": 647,
+      "dataset": "signins",
+      "durationSeconds": 299.516,
+      "endpoint": "/auditLogs/signIns (interactive v1.0; non-interactive beta, signInEventTypes filter), window 30 days since 2026-06-02T23:05:58Z in one-day slices",
+      "errors": [],
+      "files": [
+        "raw/signins_interactive.jsonl.gz",
+        "raw/signins_noninteractive.jsonl.gz"
+      ],
+      "skipped": false
+    },
+    {
+      "apiVersion": "v1.0",
+      "complete": true,
+      "count": 0,
+      "dataset": "risky_users",
+      "durationSeconds": 0.0,
+      "endpoint": "/identityProtection/riskyUsers",
+      "errors": [],
+      "files": [
+        "raw/risky_users.json"
+      ],
+      "skipped": true
+    }
+  ],
+  "tenantId": "096cf77b-cd41-4a03-92f5-e2551080e52c",
+  "tool": "0.1.0"
+}

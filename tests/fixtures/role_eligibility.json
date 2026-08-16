@@ -1,0 +1,22 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#roleManagement/directory/roleEligibilitySchedules",
+  "value": [
+    {
+      "id": "80000000-0000-0000-0000-000000000001",
+      "principalId": "20000000-0000-0000-0000-000000000002",
+      "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10",
+      "directoryScopeId": "/",
+      "appScopeId": null,
+      "createdDateTime": "2025-06-01T00:00:00Z",
+      "modifiedDateTime": "2025-06-01T00:00:00Z",
+      "status": "Provisioned",
+      "memberType": "Direct",
+      "scheduleInfo": {
+        "startDateTime": "2025-06-01T00:00:00Z",
+        "expiration": {
+          "type": "noExpiration"
+        }
+      }
+    }
+  ]
+}

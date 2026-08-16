@@ -1,0 +1,27 @@
+# Tenant data, secrets, and artifacts never leave this machine
+data/
+certs/
+baselines/
+config.yaml
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+.claude/settings.local.json
+
+# Local tooling output
+graphify-out/
+
+# Working notes: kept on this machine, never published
+notes/
+
+# Coverage measurement artifacts (dev only, never committed)
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml

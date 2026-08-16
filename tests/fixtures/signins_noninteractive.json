@@ -1,0 +1,31 @@
+{
+  "@odata.context": "https://graph.microsoft.com/beta/$metadata#auditLogs/signIns",
+  "value": [
+    {
+      "id": "60000000-0000-0000-0000-000000000002",
+      "createdDateTime": "2026-06-09T01:00:00Z",
+      "userDisplayName": "User 1",
+      "userPrincipalName": "user1@tenant.example",
+      "userId": "20000000-0000-0000-0000-000000000001",
+      "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+      "appDisplayName": "Graph explorer",
+      "ipAddress": "203.0.113.5",
+      "clientAppUsed": "Mobile Apps and Desktop clients",
+      "correlationId": "b0000000-0000-0000-0000-000000000003",
+      "conditionalAccessStatus": "notApplied",
+      "isInteractive": false,
+      "signInEventTypes": [
+        "nonInteractiveUser"
+      ],
+      "resourceDisplayName": "Microsoft Graph",
+      "resourceId": "00000003-0000-0000-c000-000000000000",
+      "status": {
+        "errorCode": 0,
+        "failureReason": null,
+        "additionalDetails": null
+      },
+      "appliedConditionalAccessPolicies": [],
+      "sessionLifetimePolicies": []
+    }
+  ]
+}

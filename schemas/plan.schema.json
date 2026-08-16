@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ZephyrPretendstoKnowTech/IAMAI/schemas/plan.schema.json",
+  "title": "IAMAI remediation plan record",
+  "description": "The shape of data/<alias>/plans/<timestamp>-plan.json. See ARTIFACTS.md for the contract a consumer must respect.",
+  "type": "object",
+  "required": ["schemaVersion", "alias", "generatedAt", "steps", "phases"],
+  "properties": {
+    "schemaVersion": {"type": "integer", "const": 2},
+    "alias": {"type": "string"},
+    "tenantId": {"type": "string", "description": "Real tenant id; raw file only."},
+    "generatedAt": {"type": "string"},
+    "basedOnAssessment": {"type": "string"},
+    "startDate": {"type": "string"},
+    "licenseTier": {"type": "string"},
+    "phases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["number", "name"],
+        "properties": {
+          "number": {"type": "integer"},
+          "name": {"type": "string"},
+          "purpose": {"type": "string"},
+          "days": {"type": ["string", "array"]},
+          "dates": {"type": "string"},
+          "gateId": {"type": "string"}
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {"type": "string"},
+          "statement": {"type": "string"},
+          "query": {"type": "string"},
+          "extensionRule": {"type": "string"}
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/step"}
+    },
+    "watchList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item": {"type": "string"},
+          "kind": {"type": "string"},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "notIncluded": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "controlId": {"type": "string"},
+          "title": {"type": "string"},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "comms": {
+      "type": "object",
+      "properties": {
+        "announcement": {"type": "string"},
+        "reminder": {"type": "string"},
+        "helpdesk": {"type": "string"}
+      }
+    },
+    "bestEffortNote": {"type": "string"},
+    "unknowns": {"type": "array", "items": {"type": "string"}},
+    "scopeNote": {"type": "string"}
+  },
+  "$defs": {
+    "step": {
+      "type": "object",
+      "required": ["id", "title", "phase"],
+      "properties": {
+        "id": {"type": "string"},
+        "controlId": {"type": "string"},
+        "title": {"type": "string"},
+        "phase": {"type": "integer"},
+        "riskClass": {"type": "string", "enum": ["high", "medium", "low"]},
+        "actions": {"type": "array", "items": {"type": "string"}},
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "statement": {"type": "string"},
+              "query": {"type": "string"},
+              "result": {"type": "string", "enum": ["pass", "fail", "unverified"]}
+            }
+          }
+        },
+        "verification": {
+          "type": "object",
+          "properties": {
+            "query": {"type": "string"},
+            "expected": {"type": "string"}
+          }
+        },
+        "rollback": {"type": "array", "items": {"type": "string"}},
+        "watchFor": {"type": "array", "items": {"type": "string"}},
+        "affected": {
+          "type": "object",
+          "properties": {
+            "count": {"type": "integer", "minimum": 0},
+            "samples": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "lists": {"type": "array"}
+      }
+    }
+  }
+}

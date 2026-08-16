@@ -1,0 +1,38 @@
+Helpdesk one pager: second sign in step rollout
+
+What changed
+- Everyone must register a second sign in step (Microsoft Authenticator) by
+  {{ registration_deadline }}.
+- From {{ enforcement_day }}, sign in requires the second step. Until then,
+  policies run in report-only mode and block nobody.
+
+Common calls and what to do
+
+1. "I keep getting a registration prompt."
+   That is expected. Walk the caller through registering the Microsoft
+   Authenticator app; it takes about two minutes and the prompts stop.
+
+2. "I cannot sign in at all."
+   Check whether the caller has registered a second step. If they have not,
+   {% if uses_tap %}create a Temporary Access Pass for them (Users, then
+   Authentication methods, then Add authentication method), read it to them
+   by voice, and stay on the line while they register.{% else %}escalate to
+   the rollout owner before changing anything.{% endif %}
+
+3. "My old email app stopped working."
+   Older apps that cannot do the second step are being retired. Move the
+   caller to Outlook or the web mailbox. If the app belongs to a system, not
+   a person, escalate to the rollout owner; do not create exceptions
+   yourself.
+
+4. "I lost my phone."
+   {% if uses_tap %}Verify the caller's identity by an agreed second channel,
+   then issue a Temporary Access Pass so they can register a new device.
+   {% else %}Verify the caller's identity by an agreed second channel, then
+   escalate to the rollout owner to reset their sign in methods.{% endif %}
+
+Escalation
+- Anything involving an account that runs software (a service account), an
+  executive, or a shared mailbox goes to the rollout owner before any change.
+- Never remove an account from a security policy to fix a call. That is a
+  rollout owner decision and it is logged.

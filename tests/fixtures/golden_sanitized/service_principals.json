@@ -1,0 +1,1058 @@
+[
+  {
+    "accountEnabled": true,
+    "appId": "00000001-0000-0000-c000-000000000000",
+    "displayName": "Azure ESTS Service",
+    "id": "93394c37-a35a-458a-9a7b-e19e9005754e"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "062778a7-7172-42a2-a312-0ebdd692c460",
+    "displayName": "Azure Purview",
+    "id": "41e95fbf-a70a-43f4-9b28-ab7ff8fe5c65"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "9d1c17c9-fca9-46d5-a5cb-75d1571bdac5",
+    "displayName": "Office365DirectorySynchronizationService",
+    "id": "85a4304d-21c1-44ce-90a1-66906bb718c9"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "5c15fbee-df2e-4af7-8750-c30db90c2dde",
+    "displayName": "Microsoft Approval Management",
+    "id": "76b03113-474d-44a2-a9e6-a17978bc3970"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "78b95982-c852-49f3-b86b-99c897e71d69",
+    "displayName": "M365 Admin Services",
+    "id": "bb71eb1c-8710-4653-a169-a3c10b0b4b3c"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "a45cbb6f-42c7-44c5-9866-721d98b4bb99",
+    "displayName": "Office365 Shell SS-Server Default",
+    "id": "49ed8271-bb52-4e91-a4ce-0d6f47661443"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "bd1a072b-49f6-4f9b-afd7-e8c06bd27261",
+    "displayName": "OneProfile Service",
+    "id": "4b500440-006e-41a6-9a9b-1164d30f940c"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "e5c9adad-256b-45c4-99a5-9032bfec27e2",
+    "displayName": "Universal Print",
+    "id": "22f8509a-3bd2-43b7-be0b-5f5c16b801e7"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "928e3885-909b-4e89-a290-892b93af60bb",
+    "displayName": "SharePoint Online Web Client Extensibility",
+    "id": "3ab5fa22-aec8-4646-81f8-a8b9e20d8826"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "f96e190e-927b-408e-8193-ad26e3742d77",
+    "displayName": "CompliancePolicy",
+    "id": "1d71919a-d05a-43bd-836a-07b715609798"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "ed3d0193-ea71-42d0-a2fa-b31c2a85d31a",
+    "displayName": "IC3 Long Running Operations Service",
+    "id": "e4f501d0-eb2f-4a31-aed2-d62c4a1c692c"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "1624f120-6647-4010-bcf7-05047bdf1515",
+    "displayName": "Microsoft.Defender.Incident",
+    "id": "295cc733-402e-4b9d-b6de-f2a680c2b3b6"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "2675674c-eb31-4ab2-be0c-fdefdb2e92f1",
+    "displayName": "Microsoft Windows AutoPilot Service API",
+    "id": "3cd7ed35-1d49-4501-98e4-84bc2b2e9eb0"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "fd778354-0c42-4868-98f4-e5e52d8d3c6b",
+    "displayName": "MCAPI Authorization Prod",
+    "id": "78254631-5914-4fc1-9f44-f80033490c1f"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "4ab369a9-ba82-4c47-889e-d199b4463f00",
+    "displayName": "DeploymentScheduler",
+    "id": "6dd887c3-b0dc-4e2f-82ec-ddff0eda4bda"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "0381f81e-1530-4594-87ab-4bdeade66af4",
+    "displayName": "WeveEngine",
+    "id": "02686494-d761-477d-92e5-0ab7cf93f5c5"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "99bbf5c0-85d6-4086-905e-69074616027f",
+    "displayName": "IAMTenantCrawler",
+    "id": "c51efea2-e461-40c0-857a-6d4d9bdb9d99"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "4d04822e-e180-4c5b-825e-c93102f5e9c7",
+    "displayName": "o365.servicecommunications.microsoft.com",
+    "id": "357718a0-cca5-4ffd-a047-921557d37a62"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "03eb8d55-c9a7-42ea-84ac-d72013ebac1c",
+    "displayName": "Data Classification Service",
+    "id": "b6de9c72-72c6-4a0f-9825-51e2ec061ebc"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "b279d4e3-a410-48fd-8673-28ecb59c6565",
+    "displayName": "Azure Virtual Desktop",
+    "id": "57e276b8-8d6d-42c8-acba-af47f7d3257d"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "21c98c72-173c-4fb3-afc5-f9b693ca2a54",
+    "displayName": "Microsoft Intune Service Discovery",
+    "id": "6676c5e1-1cd1-45be-81b1-f612cafe232f"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "61068831-3427-4ad5-b37d-6677c602fdb6",
+    "displayName": "Messaging Bot API Application",
+    "id": "11223ae9-a5af-4c92-8613-b0c002b7da62"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "552056d0-d83f-4c86-b99d-996f854cdf13",
+    "displayName": "Microsoft Teams Graph Service",
+    "id": "15347290-8ce0-424d-a3e1-5389a544edff"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "1c2ab6b5-3ff6-4555-acee-07ea6e55d1c3",
+    "displayName": "Microsoft Teams AuditService",
+    "id": "a6cc38b2-a077-4a38-a041-e616d7df7184"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "110a2fda-6d9c-4914-9b7c-07cb8b48d1e7",
+    "displayName": "SPAuthEvent",
+    "id": "4fa8ce19-1b94-4695-bd70-99602fa07cef"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "28929ef4-a416-4923-afcc-71d6a35ba268",
+    "displayName": "Office Shredding Service",
+    "id": "c6f0c52b-43d0-4291-b6b1-f07b46df3e0f"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "860dd173-8a55-4d81-b2b2-3f4908fddf2c",
+    "displayName": "Azure Signup Api",
+    "id": "a15abb38-8b9e-47ce-a46a-4a81f401c434"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "853bdc6f-b94d-46d7-9844-74da6c2f4f27",
+    "displayName": "MS Teams Griffin Assistant",
+    "id": "b20cfbfe-77e3-49ef-93e5-0ff578b9ddcb"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "0000000a-0000-0000-c000-000000000000",
+    "displayName": "Microsoft Intune",
+    "id": "6dc04827-0012-478c-a343-16af67685db6"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000012-0000-0000-c000-000000000000",
+    "displayName": "Microsoft Rights Management Services",
+    "id": "14cf4b22-c8a0-4516-9400-98dcac182abc"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "85a053da-15be-41a6-880f-ee0d03cc3f15",
+    "displayName": "Skype and Teams Tenant Admin API",
+    "id": "90062c2b-697b-4ada-904e-f16013aac46a"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "3f355382-19a4-4ffe-aa56-426474cca85d",
+    "displayName": "Marketplace Catalog",
+    "id": "e314d9b0-f48b-422e-87d8-0c10b381339e"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "d6063a6c-1e21-48e0-a0aa-f96d6dc9988c",
+    "displayName": "Conferencing Virtual Assistant",
+    "id": "5f0a8292-178d-460d-99ac-6bc20b9287cd"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "a101add9-8fdc-43b3-a9a5-b0a9c5f6362e",
+    "displayName": "Power Platform API",
+    "id": "1a39bc0b-6419-429b-bd02-62f3661540bb"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "320ea83d-1870-4786-8c27-0ebc0fa76ee0",
+    "displayName": "Marketplace Rating and Reviews PROD",
+    "id": "ac4552d3-51c5-42c4-84df-0ea566ac283b"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000006-0000-0ff1-ce00-000000000000",
+    "displayName": "Microsoft Office 365 Portal",
+    "id": "b5185e4b-ca60-4ffc-94ad-e46074496aa0"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "082bdce3-ac18-41a1-b1b4-3fbc8a00c9a0",
+    "displayName": "WindowsUpdate-Service",
+    "id": "628cd3a8-c550-4d4e-ad60-77d822dd123c"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "934434e0-a1f3-4477-ae16-facf508cac48",
+    "displayName": "OfficeClientService",
+    "id": "626fc940-394b-40d2-b3d0-705d22c6a913"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "0fd848fd-f6db-43cb-913e-ee3b846e3f1d",
+    "displayName": "Microsoft Modern Contact Master",
+    "id": "e348511a-3f1f-4621-b97a-992fb948beb9"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "7c492181-7e0a-4c14-8bfc-1531a3819491",
+    "displayName": "Azure Credential Configuration Endpoint Service",
+    "id": "9df36abe-0636-43a4-840a-45eec16613ea"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "465bdbae-b500-467c-9484-0a8cc22dfe8a",
+    "displayName": "Group Configuration Processor",
+    "id": "688fbe28-4dbf-4202-9fea-2eb9b7b074a6"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "3f1cc121-162a-4f90-8ce1-75dfe8f1fbd1",
+    "displayName": "Microsoft Office Licensing Service",
+    "id": "2bd18c05-1e0c-433b-bde4-439877f1abf6"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "0e3a7875-22f0-49a1-811b-fc424d21d2de",
+    "displayName": "Cortana at Work Service",
+    "id": "0e81b606-6196-4ece-a84a-e45c9ed3e265"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "f3286cc9-5ee8-4061-b6f7-86a5b7c4414d",
+    "displayName": "Customer Service Trial PVA",
+    "id": "417f502a-a07a-454a-b51e-380fc54756a0"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "7e13cf0d-da46-477a-a13e-0f61dce3cea7",
+    "displayName": "Microsoft Intune API",
+    "id": "9a090fed-7ec2-4c99-9103-40c320bb75b5"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "81cf4bfa-f788-4366-9d7e-d4626a464653",
+    "displayName": "O365 Demeter",
+    "id": "edb4ace3-5219-4114-95c7-d68505b5c8af"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "e1c4931c-51ae-4b93-a956-d0f45f7d8810",
+    "displayName": "Azure AD Notification",
+    "id": "2a59b6af-2880-46f6-9091-555f1ee3a44f"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "47f8d11e-4a41-4afa-86ff-f3fb3fa9589e",
+    "displayName": "Microsoft Solution Providers",
+    "id": "66a1f9b9-91ed-4858-b9be-1e2880575926"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "1bbb2ecd-3204-4389-94e4-f70676a89802",
+    "displayName": "Microsoft Device Management EMM API",
+    "id": "93c087f3-d4cc-488c-b032-05d81686323b"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "c7c9f564-197a-41da-9f59-7e3e29eeb915",
+    "displayName": "Conference Auto Attendant",
+    "id": "53fbd870-a0e7-446c-87b6-e6c45ead5ec8"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "8fb1eed6-dd5b-4584-a66b-4a56926f5a5f",
+    "displayName": "Azure Multi-Factor Auth Connector",
+    "id": "4b99bd21-7b78-4df4-a207-93dabf1bffab"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "87a21176-e1cd-4cba-9c85-d5f9d382a040",
+    "displayName": "Connectors",
+    "id": "dc71d5e1-bc4a-486a-8d31-e6423fdd9e66"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "447a9cc1-4579-4173-94a0-6d4dc80a1658",
+    "displayName": "Microsoft Teams ATP Service",
+    "id": "75620fce-de92-41d8-b38d-0e4630d064c8"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "36f3efe1-d973-4232-b107-72c4831a67ed",
+    "displayName": "ProjectWorkManagement",
+    "id": "49d60649-7076-45ad-a9fd-28b4c8d67051"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "04284eb4-409c-49f3-85d5-38c753b2f32b",
+    "displayName": "Skype Teams Calling API Service",
+    "id": "3d6105c3-1206-45ab-b7df-e575aaa94bd4"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "9ab20aef-934b-45ae-9289-063243c0ddee",
+    "displayName": "SalesInsightsWebApp",
+    "id": "7dddacad-9606-4c93-8b8f-317a0989b237"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000005-0000-0ff1-ce00-000000000000",
+    "displayName": "Viva Engage",
+    "id": "abe87c1b-42d6-42b1-9e82-da543bde4cf3"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "f845fb89-ab09-4233-8720-1c9b9dec3e52",
+    "displayName": "Microsoft Substrate Management",
+    "id": "68654ccb-c56c-4023-b9b9-a8dc356ae344"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "028af8cd-476b-436a-aa88-083b0cf5139c",
+    "displayName": "PushChannel",
+    "id": "6621f357-8943-478f-a056-09207cacfe96"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000002-0000-0000-c000-000000000000",
+    "displayName": "Windows Azure Active Directory",
+    "id": "94ae25fb-54cb-4a3e-9882-938231e58ed7"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "9f0bbd13-1d8d-44e8-a618-30568c2e15a7",
+    "displayName": "O365 Secure Score",
+    "id": "15efc2ff-bd01-4661-b1d3-116e8612ca73"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "388e3d22-12a5-40ee-853c-5b882f071a89",
+    "displayName": "Azure Resource Graph",
+    "id": "7903dc69-f1c6-401e-b6da-519a00fbcd8e"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "fd49c9b0-ab12-495a-ab7a-1dc105e1b26d",
+    "displayName": "Azure MFA StrongAuthenticationService",
+    "id": "7408ad27-6fa9-4297-aa93-b4e9dd5e89b8"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "3106f7cb-eb8a-4e0d-94fc-afb339642f8c",
+    "displayName": "Windows Update for Business Deployment Service",
+    "id": "1286fd06-236c-47bc-8ab8-c6bb51b370bf"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "44da98d6-841e-469e-a446-e5709dead65e",
+    "displayName": "Microsoft Service Trust",
+    "id": "be036dbd-b978-408f-b08f-710464fab33f"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "ef4f3663-bef2-4fc8-8960-cd6b56002c6c",
+    "displayName": "Workload Identity Control Plane",
+    "id": "c5bc8825-0930-45a3-ad51-01d147d648ec"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "49221f46-bfbe-4fe8-bb96-248a6f60ef53",
+    "displayName": "WindowsDefenderATP",
+    "id": "4790db26-d059-4d53-b128-9831676b4892"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "858b0a57-1181-4839-b240-b7fb77113807",
+    "displayName": "Customer Service Trial PVA - readonly",
+    "id": "45b796eb-1b3f-4e3e-8aba-55cecbf523a4"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "6167c588-0d97-450b-831e-b2d30bb52943",
+    "displayName": "SharePoint Framework Azure AD Helper",
+    "id": "522386c4-f97c-4c28-a617-9daf8d6f8d17"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000007-0000-0ff1-ce00-000000000000",
+    "displayName": "Microsoft Exchange Online Protection",
+    "id": "a1576fb3-228d-4395-a474-712689324dcc"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "f0e760cb-8f81-4582-9a1e-b050ce7edf49",
+    "displayName": "Skype Core Calling Service",
+    "id": "15a23ddc-7669-42d7-bfe3-69bebe1c022b"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "0180ea42-0b4c-4065-96dd-e7cb89afcc4a",
+    "displayName": "OCaaS Experience Management Service",
+    "id": "c8827172-c16a-47b8-8387-d2d80e7c5c71"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "fe9d169b-f5b3-4f17-a183-61596fa611d9",
+    "displayName": "Azure Multi-Factor Auth Client",
+    "id": "8f244fdc-2d06-4a75-88e5-6a7cbfbf4c85"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "324a1d97-3969-4677-9ffc-dfecbedf3a9e",
+    "displayName": "Teams NRT DLP Ingestion Service",
+    "id": "2d798bcf-5cc3-42b2-b4d7-01a70e978c40"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "78e3fd23-ae1c-4db9-9661-e173d92b036a",
+    "displayName": "Portfolios",
+    "id": "bbf6f195-6c89-4b79-a4ac-9e36bff7b5c9"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "e8ef07bf-e50d-4ae8-9617-1d76bf261742",
+    "displayName": "Microsoft Graph Connectors Core",
+    "id": "95d49ab3-cd99-48de-bdde-9db616473fa7"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000003-0000-0000-c000-000000000000",
+    "displayName": "Microsoft Graph",
+    "id": "1113bcb2-8b43-4bc7-98df-f515b8519ba8"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "3e3999a7-a5d7-4341-95ac-03c7170cdeb9",
+    "displayName": "Microsoft Graph Change Tracking",
+    "id": "94343e49-eda9-47ed-95d7-b93da46cea0e"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "8f4b6b76-e6d4-406e-a215-d54728ab11b8",
+    "displayName": "IAMAI Collector",
+    "id": "112d6847-b2f8-4dde-90eb-dac46257f3a8"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "eb3b601c-4439-4652-ad79-21f985f50133",
+    "displayName": "PowerApps Service",
+    "id": "1ede9085-29b7-44f5-98eb-96a3157fbc0f"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000009-0000-0000-c000-000000000000",
+    "displayName": "Power BI Service",
+    "id": "a88f3955-f9d7-4479-a2b9-04ca9d06d1c9"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "ce0610d8-bf70-403e-9e9b-79ee2bcd9663",
+    "displayName": "Dynamics Lifecycle services",
+    "id": "04a889d7-cb32-4d3b-95ea-598f8af7778d"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "520deead-472a-43e1-bdc3-5eaebb76337c",
+    "displayName": "Microsoft password reset service",
+    "id": "a3641285-faee-4499-b505-560747604afa"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000007-0000-0000-c000-000000000000",
+    "displayName": "Dataverse",
+    "id": "a6cef975-3755-4039-bba1-03339157c2d0"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "a1556672-df54-4da1-88ec-7fd388b83d14",
+    "displayName": "Microsoft Teams AadSync",
+    "id": "902c70cb-64b9-4ed1-a4a9-45c64f1d5887"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "8ba54266-38b3-4ecb-8576-338276e848ec",
+    "displayName": "Microsoft.SMIT",
+    "id": "1dff917e-a5b3-4034-986b-d368c73265d5"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000003-0000-0ff1-ce00-000000000000",
+    "displayName": "Office 365 SharePoint Online",
+    "id": "94751419-afcb-4622-83e3-49591df3698b"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "c520bab0-0165-4dda-bd5d-2e88bb5bc5b8",
+    "displayName": "SharePoint Notification Service",
+    "id": "1573baff-76ca-4482-b531-846021e0dc2f"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "7039d4b0-ba67-4c8a-ab61-50ae4bbc1b04",
+    "displayName": "Microsoft Defender for Cloud Apps - Customer Experience",
+    "id": "93c7d8ce-33a4-4fa1-a34e-19269ec6fb50"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "45bafca0-df3a-4816-9592-47a195a071ca",
+    "displayName": "M365AdminAgent",
+    "id": "6aade9e2-e372-4f5f-86c0-1774fa0a4718"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "51e81cd6-7bf2-4a4d-a909-0bea8bd944ea",
+    "displayName": "Signup",
+    "id": "aabb1e06-66a2-4a82-82a1-3abbb9c7a9a1"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "311ed010-1640-4015-92ae-fb78cb1efefa",
+    "displayName": "MicrosoftEndpointDLP",
+    "id": "750afc95-ee7e-487a-8a2b-9d0559753c3b"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "8cab0b64-5bd3-4b71-91d9-7a3bc53a9d10",
+    "displayName": "Office 365 Information Protection",
+    "id": "dd85acf6-891c-40f1-ab73-d7d5c2b9a8b0"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "b32301e1-4571-42e4-b453-6c966a35a9e0",
+    "displayName": "Azure Management Groups",
+    "id": "3449fe27-8206-49df-8c1c-0e2defe1babd"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000005-0000-0000-c000-000000000000",
+    "displayName": "Microsoft Azure Workflow",
+    "id": "1e2bb6b2-19a0-422e-bd1b-fb52a46c4f20"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "76a56922-6587-44ec-bdf1-5fa4ab698f88",
+    "displayName": "Microsoft Teams - Teams And Channels Service",
+    "id": "7e1190c0-c69f-4190-87c9-e6de2112fe63"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "7dcc070c-2f5a-4b3a-9d5d-559f10b5db32",
+    "displayName": "CloudLicensingSystem",
+    "id": "f5422a65-f922-4583-9d90-389c3b1a4140"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000002-0000-0ff1-ce00-000000000000",
+    "displayName": "Office 365 Exchange Online",
+    "id": "617792da-f4e9-4a61-ab84-952d809462b7"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "c604edb8-c87b-4325-bafb-d55037d07441",
+    "displayName": "Virtual Visits App",
+    "id": "d3dfa09d-1343-41fd-814e-c7dcaf678847"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "804ee6a6-58df-4f6b-ba68-8f2c7b8d73a8",
+    "displayName": "IPSubstrate",
+    "id": "8861145d-5d0c-4b9f-aab1-2fd312958558"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "7a103c59-4dc1-4e23-a421-0cbef34d9211",
+    "displayName": "Cortana Runtime Service",
+    "id": "af4de793-2beb-4cad-96b4-e4a5f4d4fcce"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "c1837e7d-2120-451b-af88-9f915eb8c5ba",
+    "displayName": "Microsoft Teams User Profile Search Service",
+    "id": "ac5f6e24-3e96-4661-98cb-11d8c942d6a4"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "e1f9347c-9f5d-43ab-8f13-65b9184ce427",
+    "displayName": "OCaaS Worker Services",
+    "id": "16271a96-f890-4f8f-b6c1-babf5736c014"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "ad9c930a-9553-41da-b516-f69cc816d926",
+    "displayName": "Sway",
+    "id": "1daff102-6395-43b0-8ce6-4e6ea555c4d6"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "2c975cde-fd1b-4bf9-a0e6-69f473831553",
+    "displayName": "Request Approvals Read Platform",
+    "id": "a9f5ad6b-897b-4baa-9ccd-cc215f0d3abd"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "04ee6208-f533-4398-8d09-297bbb2e3aa2",
+    "displayName": "Microsoft Intune SCCM Connector",
+    "id": "153781a6-c390-4eb3-a79a-afee00b10761"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "254defbf-5395-41cd-8566-88f2e0ab39b2",
+    "displayName": "Microsoft SaaS Hub Resource Provider",
+    "id": "f4939a29-c542-4668-8089-048260537a5f"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "8e05d74f-9da4-4f4d-8ca9-d93ef423096f",
+    "displayName": "IC3 Tenant Provisioning",
+    "id": "737c79d8-e701-4eae-811e-7db6f7c14206"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "4fc0369e-ee65-4e2e-a706-0dfe04e48d83",
+    "displayName": "Azure Resource Manager",
+    "id": "cc11dd63-1587-4ba4-9972-b4834e029d1b"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "fff61ae7-14f2-4536-a214-0b87a74873c4",
+    "displayName": "Microsoft Information Protection API",
+    "id": "5c8e4e3b-5495-49ab-af30-875a438a68eb"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "d39fd73b-e0cd-48e1-aed8-74df35473d97",
+    "displayName": "IAMAI Setup",
+    "id": "90ba7a14-233e-4258-9fdd-48929d8a43ac"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "98444048-d3b8-4270-a952-d9085390c977",
+    "displayName": "AADReporting",
+    "id": "6af1777a-d0be-41dc-aeea-8e97cbd7cbaf"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "9a9a8aee-0453-409d-ad7f-9e76a60e9d40",
+    "displayName": "Teams Biometric Service",
+    "id": "b36f63a7-7201-48f8-af37-2bbf79e153be"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "df4c1b92-7e52-4f61-8865-de1e8fd96fa0",
+    "displayName": "Dunloe Dataplane Service",
+    "id": "a672c707-5e5a-4df5-a80f-20e279fb00a4"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "dcc77f95-8cff-4acd-963b-a6d661e215eb",
+    "displayName": "Exchange Rbac",
+    "id": "8b98cec5-8e89-41ad-b286-0bec297a294a"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "63c5877b-be47-41c2-9ff1-b84f30d1b63b",
+    "displayName": "Microsoft Flow Service",
+    "id": "be8e68f0-0f2f-4df8-9f36-ac5341a71ac7"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "dc315048-0c68-400d-9db4-d00c761c1ad7",
+    "displayName": "Customer Experience Platform PROD",
+    "id": "54c7da9d-5813-4567-967c-3ddb51eec8fc"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "9303fa43-9c9d-46a9-80ac-703974fe16ec",
+    "displayName": "Modern Workplace Customer APIs",
+    "id": "47e60006-b2c2-4e13-a9a3-e9e8a9458631"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "038c96d2-8c4b-4a23-a614-9b4adbd95244",
+    "displayName": "Azure Virtual Desktop ARM Provider",
+    "id": "dbd1fb7d-7795-41f3-aaf2-84a3c6a6ff7e"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "6b9876bb-5615-4bf9-b592-0531d7f938bd",
+    "displayName": "Microsoft Teams Services",
+    "id": "2c584a83-ab59-461d-9bc2-fea3a56d8ea8"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "5e1ec274-7484-4276-8536-1a6c0635c310",
+    "displayName": "Microsoft SharePoint Online - SharePoint Home",
+    "id": "d3e89e65-ccb2-41c8-9454-53b7c60e142e"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "fae1ddfd-e667-45ed-9bd5-994c554d8f37",
+    "displayName": "Microsoft Commerce Accounts Service",
+    "id": "799e5f87-803e-44c7-90ea-56495c0ec772"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "1c3f9714-cea8-4bb0-a077-d7023cb96b22",
+    "displayName": "Windows 365",
+    "id": "0c271f01-78e9-4be8-af9d-26c9f33b3fdf"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "ea046a53-a2ee-4789-afde-9024e5406ea2",
+    "displayName": "Microsoft AppSource",
+    "id": "2cbcf9c5-c336-4e00-96c5-929ee2b276a0"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "a89680bb-b3da-4970-be5b-ca212cd83a30",
+    "displayName": "Policy Administration Service",
+    "id": "191d9078-544a-4558-ae76-e06adddae54a"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "82c06a69-a56b-4702-804c-b831c6405848",
+    "displayName": "Microsoft Teams AuthSvc",
+    "id": "9b8d4623-f722-4a90-86ac-30f002466e42"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "90a3cbfe-e370-458f-8b48-f3292693c900",
+    "displayName": "M365 License Manager",
+    "id": "7e4a3e9d-e7bd-4329-bf20-64a2e2297937"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "703df55c-c0fa-4f50-83cb-f91ebc4f4cf2",
+    "displayName": "Intune CMDeviceService",
+    "id": "f0c09612-942d-4605-acd2-6a42bff8b7bb"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "f69cf6a3-d71c-45c3-ae37-9ce0a7e0b28a",
+    "displayName": "OCaaS Client Interaction Service",
+    "id": "6a0b377c-e9cc-4184-9ffc-d076e799cdb1"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "9fbeadd5-6e3c-4ef3-be6c-e366d7cecd48",
+    "displayName": "ExchangeRevocationSync",
+    "id": "86923d6a-4c06-452c-9fa9-4571c8b4f29c"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "feb34b4d-9464-46df-8e9e-6a7e53656bc6",
+    "displayName": "Microsoft Teams UIS",
+    "id": "e742de6a-2607-442d-9e3e-947c123f3352"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "e7960d78-7b91-406d-9dc8-a6a84c0a6a48",
+    "displayName": "Microsoft Mobile Application Management",
+    "id": "1e7db022-9d4c-4393-a824-77fbb6454449"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "fbd4475c-0d49-4416-8b02-381b101864f8",
+    "displayName": "AzureSupportCenter",
+    "id": "9f376645-3fbe-4081-a1de-69e1d80f49be"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "c057aa5c-f918-4652-ba3b-8e54df9a7d34",
+    "displayName": "Substrate-FileWatcher",
+    "id": "6e579b62-7ddb-4778-a051-65a988d39a3d"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "d047f7d9-d744-427f-9dfe-df9cd188a168",
+    "displayName": "IAM Supportability",
+    "id": "e3cc8810-3059-4b8d-b872-b141abefe66f"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "bffdcad9-9250-484f-bf95-89f54d40b9a4",
+    "displayName": "PowerApps-Advisor",
+    "id": "7368cd3e-e309-49b5-91ee-a3e0027e7134"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "fde0bf0a-d2ff-4585-a364-4bfb1062a0e8",
+    "displayName": "OMSAuthorizationServicePROD",
+    "id": "7728fc4a-0060-4df3-8412-a92d7dc2bead"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "b167991d-5746-47d1-a38f-3a0f9f8e3960",
+    "displayName": "Microsoft PrivateStore",
+    "id": "0f5d42ff-f70c-4942-afc7-a151db68a20a"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "9e4882bf-9f72-4e95-8501-ed29e77d7b94",
+    "displayName": "Microsoft Cloud App Security",
+    "id": "9c6ca66b-8ab3-4e19-b9fc-a3e4ec4f8375"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "3abcfe03-a2b8-4c41-b838-c4c58fef66a9",
+    "displayName": "MS-PIM",
+    "id": "a044fc86-4b2f-4d70-88f1-bccb2b412c34"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "e8bef9b5-05c9-4d8a-a5fb-01a48e65a96a",
+    "displayName": "Office 365 Enterprise Insights",
+    "id": "f895bd77-ca41-43e9-afb1-5968082ee972"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "7959f0ed-105e-4485-ae9f-66478d6be96a",
+    "displayName": "Dynamics Data Integration",
+    "id": "6c8ebf30-9399-4eaf-af28-e661361c72c9"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "b38965b7-17e7-4d33-bf7c-c143fe6a0cf3",
+    "displayName": "SubscriptionRP",
+    "id": "3c359e66-21d1-4e42-9c51-5c91c45cd1bd"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "a5adf20f-3209-41f8-b2b6-b272a263a29e",
+    "displayName": "Microsoft Teams Chat Aggregator",
+    "id": "7f47885c-00c3-49fa-a241-fee98562a5d8"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "f9dff42a-11bc-4cb5-8c6e-96afff204c09",
+    "displayName": "Azure AD Identity Governance - Entitlement Management",
+    "id": "5cd54172-e107-4165-997d-e531fd61aca3"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "8a66a807-32a8-49da-bb38-8ba972aac308",
+    "displayName": "People Profile Event Proxy",
+    "id": "5690d92d-ae9c-43f5-a3d1-d57d964b82b0"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "5edb3a4e-1695-41b9-a2ab-fb5f243172be",
+    "displayName": "Microsoft Information Protection Sync Service",
+    "id": "d6c652f3-cb25-486b-84c8-90fbbc599a52"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "d9c49840-b733-4bff-83a1-77afec8b4ee8",
+    "displayName": "M365PurvieweDiscoveryService",
+    "id": "af8e8590-bab4-47cc-b958-242908784d62"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "63ec7017-b2f5-47fd-9fb3-69b37e8f75c2",
+    "displayName": "AAD Request Verification Service - PROD",
+    "id": "c0d70ac8-5fb0-4a40-8356-4f46345d6744"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "004267ca-0954-420d-b7ec-7b07a957cf4b",
+    "displayName": "Microsoft Threat Protection",
+    "id": "26b04676-a59e-4df3-8bf9-f472ba698bb4"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "00000004-0000-0ff1-ce00-000000000000",
+    "displayName": "Skype for Business Online",
+    "id": "aa7ba1d2-3219-4d66-938e-bdc6b9b0f778"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "8d7b3dfb-5e38-4a62-9ba3-b8725ad1c561",
+    "displayName": "Office 365 Management APIs",
+    "id": "4cf3465e-d09b-4c55-acce-370f9a129f0e"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "5dde1369-b262-4c2f-bc59-639ae9f79640",
+    "displayName": "Microsoft Forms",
+    "id": "ee103e9a-a08a-40ab-b76a-937ecc6a3bb0"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "acff74bb-f7d3-42a2-9406-10e4f6ceee63",
+    "displayName": "MMD Intune Partner Sync",
+    "id": "9bab736f-b63e-4e2f-81c0-28c32958799b"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "1da4fa77-dc45-4e4c-b310-dadda2a32a69",
+    "displayName": "CABProvisioning",
+    "id": "7721eae4-a57b-4a2e-a120-50627be34652"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "602e6dca-7565-459e-9b3d-5c463379a22c",
+    "displayName": "M365 App Management Service",
+    "id": "2cfdb1a9-e336-4541-8e8a-30363c51cd66"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "4dbd2c18-19e9-45b2-8104-84406e0b379d",
+    "displayName": "Meeting Migration Service",
+    "id": "91f59da8-d8f5-49d0-adf3-300fbb08c4a9"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "937b986f-7157-46d8-a9a7-f9114984838b",
+    "displayName": "Microsoft Rights Management Services Default",
+    "id": "ad0faa40-9446-4abd-bfb0-01df5360a076"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "0142f22b-b515-4343-a2ea-5cb22fc6726f",
+    "displayName": "Microsoft Flow CDS Integration Service",
+    "id": "230bacc8-4614-4330-9242-70260324b230"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "c2e04cf2-54b2-4148-a4c2-dda72daac47c",
+    "displayName": "Bing",
+    "id": "7f9b3c92-0d0e-4f95-b288-f8442eb304e8"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "38bf3442-7c61-4b79-8af7-11736e0926cd",
+    "displayName": "Teams NRT DLP Service",
+    "id": "88708eb6-1bfc-4d20-a49a-f00268bc8078"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "0a3ab9db-8605-4a90-94cd-433a6f4268be",
+    "displayName": "Microsoft To-Do",
+    "id": "0b785a90-4478-402a-85fa-ece6b38cc237"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "d30f1ab9-ce29-45b1-a856-49c0d109bf91",
+    "displayName": "Microsoft Device Management Checkin",
+    "id": "295b2d61-02a0-4161-866f-429237b592d6"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "b4551c72-63b7-4878-a945-f16f090d590a",
+    "displayName": "Media Analysis and Transformation Service",
+    "id": "8735925c-a445-4be5-8ce5-1417c6d8e5db"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "e3c762b4-77cf-444c-adbe-e8a260d04194",
+    "displayName": "Device Registration Service",
+    "id": "0fb0170f-3a41-4bc2-aaf9-832e1a3095e4"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "0000000c-0000-0000-c000-000000000000",
+    "displayName": "Microsoft App Access Panel",
+    "id": "3475d4c5-bfec-417c-88d8-c6a39b1a3ecc"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "5a42019e-b995-40e3-8cf5-f84f2e006017",
+    "displayName": "CPIM Service",
+    "id": "7a20ee07-adfa-4e15-a3d8-5f0407d5e62a"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "0879ce30-8299-4c3e-9123-e9451f281d4a",
+    "displayName": "SharePoint Home Notifier",
+    "id": "83c39c7c-887a-4b1e-a4e8-130955385d45"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "a9cfe21a-a1dd-4264-9c7b-bf5ff3eccc95",
+    "displayName": "Office 365 Configure",
+    "id": "350f5720-b970-4fc3-877d-3d207c36f0b6"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "f9e3f077-5649-4884-9219-458301df8d55",
+    "displayName": "Microsoft Azure AD Identity Protection",
+    "id": "f6eeda16-668c-4387-bd2d-2b8756904fd2"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "374ce548-112d-41a0-a771-80a725dcaa85",
+    "displayName": "Privacy Management",
+    "id": "bf5e410c-ced5-4c08-b068-5311f7f3d906"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "317f6d1b-1386-48c8-9889-e21eb4027972",
+    "displayName": "Microsoft Intune Advanced Threat Protection Integration",
+    "id": "2608b2c6-eddc-465a-a3fa-a664559c370c"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "b28bb442-9216-4b37-b075-e826561da3e8",
+    "displayName": "Skype Presence Service",
+    "id": "3fc6d69a-8736-4bc1-94b8-8699103a0014"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "c49c56bd-f1c3-4742-bde8-bf750f9f9bcd",
+    "displayName": "Narada Notification Service",
+    "id": "2bc8b850-cb5f-455e-91aa-d93ed22b687d"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "f2cf7ea5-af3d-410c-8311-6b5521a262aa",
+    "displayName": "Microsoft 365 Security and Compliance Center",
+    "id": "0585e253-a4e0-4cbf-bf3f-568c96310947"
+  },
+  {
+    "accountEnabled": true,
+    "appId": "ae97804d-be9e-4fee-9c56-6ec0da4f6923",
+    "displayName": "Configuration Manager Microservice",
+    "id": "3ecb1842-b04a-4e08-bc5d-834135646613"
+  }
+]

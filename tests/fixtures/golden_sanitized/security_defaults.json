@@ -1,0 +1,12 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#policies/identitySecurityDefaultsEnforcementPolicy/$entity",
+  "controlTypes": [],
+  "description": "Security defaults is a set of basic identity security mechanisms recommended by Microsoft. When enabled, these recommendations will be automatically enforced in your organization. Administrators and users will be better protected from common identity related attacks.",
+  "displayName": "Security Defaults",
+  "id": "e1fd53c0-70f3-4c99-9264-720731383700",
+  "isEnabled": false,
+  "securityDefaultsUpsell": {
+    "action": "none",
+    "dueDateTime": "2026-07-02T19:59:19.2674118Z"
+  }
+}

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remediation plan: {{ alias }}</title>
+<style>{{ base_css }}</style>
+<style>
+  /* Components specific to the plan, built on the shared tokens. */
+  .phase-intro { color: var(--ink-2); max-width: 40rem; }
+  .card .detail { color: var(--ink-2); font-size: 0.9rem; }
+  .card ol, .card ul { margin: 0.4rem 0 0.4rem 1.3rem; padding: 0; }
+  .card li { margin: 0.45rem 0; }
+  .alert {
+    border: 1px solid var(--bad);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.9rem;
+    margin: 0.75rem 0;
+    font-size: 0.92rem;
+    background: var(--bad-tint);
+  }
+  .alert strong { color: var(--bad); }
+  .checkpoint {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 4px solid var(--warn);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    margin: 0.75rem 0;
+  }
+  .checkpoint .query { color: var(--ink-2); font-size: 0.9rem; }
+  pre.comms {
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 0.95em;
+  }
+  @media print { .checkpoint, pre.comms { background: #ffffff; } }
+</style>
+</head>
+<body>
+<main>
+
+<div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; remediation plan</span></div>
+<h1>Remediation plan</h1>
+<p class="meta">Tenant: {{ alias }}. Generated {{ generated_at }}.
+Rollout starts {{ start_date }}.
+Based on the assessment generated {{ based_on }}.
+License tier assumed: {{ license_tier }}.</p>
+
+<h2>How to read this plan</h2>
+<p>This plan is a series of steps grouped into phases, with a measured
+checkpoint at the end of each phase. A checkpoint is a statement that is
+checked against fresh data, not a date on the wall. When a checkpoint is not
+met, the phases that depend on it wait until it is: the dates move, the order
+never does, and nothing here expires. To check a checkpoint, run the
+collection and assessment again and compare the result to its statement.</p>
+<p>Work one step at a time, top to bottom, and tick the boxes as you go. The
+actions are the heart of each step. The folded sections underneath hold the
+reference detail: how the step is verified, how to roll it back, and what to
+watch for. Select a folded section to open it; open the ones you want on
+paper before printing.</p>
+
+<h2>The rollout at a glance</h2>
+<table>
+  <tr><th>Phase</th><th>Days</th><th>Dates</th><th>Checkpoint to pass</th></tr>
+  {% for phase in phases %}
+  <tr>
+    <td>{{ phase.number }}. {{ phase.name }}</td>
+    <td>{{ phase.days }}</td>
+    <td>{{ phase.dates }}</td>
+    <td>{{ phase.gateId }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2>The checkpoints</h2>
+{% for gate in gates %}
+<div class="checkpoint">
+  <strong>{{ gate.id }}.</strong> {{ gate.statement }}
+  <p class="query">How to check: {{ gate.query }}.</p>
+  <p class="query">If not met: {{ gate.extensionRule }}</p>
+</div>
+{% endfor %}
+
+{% for phase in phases %}
+<h2>Phase {{ phase.number }}: {{ phase.name }}</h2>
+<p class="eyebrow">{{ phase.days }} &middot; {{ phase.dates }}</p>
+<p class="phase-intro">{{ phase.purpose }}
+{% if gates_by_id.get(phase.gateId) %}Checkpoint to pass before the next phase: {{ gates_by_id[phase.gateId].statement }}{% endif %}</p>
+{% for step in steps_by_phase.get(phase.number, []) %}
+<section class="card">
+  <header>
+    <span class="eyebrow">Step {{ positions[step.id] }} of {{ total_steps }}</span>
+    <span class="risk {{ step.riskClass }}"><span class="dot"></span>{{ risk_labels[step.riskClass] }}</span>
+  </header>
+  <div class="title-row"><span class="tick"></span><h3>{{ step.title }}</h3></div>
+  <p class="detail">Accounts this affects: {{ step.affected.count }}{% if step.affected.samples %}
+  (for example {% for sample in step.affected.samples %}{{ sample }}{{ ", " if not loop.last }}{% endfor %}){% endif %}</p>
+
+  {% set failing = step.preconditions | selectattr("result", "equalto", "fail") | list %}
+  {% if failing %}
+  <div class="alert"><strong>Fix before this step:</strong>
+    <ul>
+    {% for pre in failing %}<li>{{ pre.statement }} <span class="detail">Checked by: {{ pre.query }}.</span></li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <h4>Actions</h4>
+  <ol class="actions">
+  {% for action in step.actions %}<li>{{ action }}</li>{% endfor %}
+  </ol>
+
+  {% for biglist in step.lists %}
+  <details>
+    <summary>{{ biglist.title }}: {{ biglist.summary }}</summary>
+    <ul>
+    {% for item in biglist['items'] %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+  </details>
+  {% endfor %}
+
+  <details>
+    <summary>Before you start: {{ step.preconditions | length }} check{{ 's' if step.preconditions | length != 1 }}</summary>
+    <ul>
+    {% for pre in step.preconditions %}
+      <li><span class="pre-{{ pre.result }}">[{{ precondition_labels[pre.result] }}]</span>
+      {{ pre.statement }} <span class="detail">Checked by: {{ pre.query }}.</span></li>
+    {% endfor %}
+    </ul>
+  </details>
+
+  <details>
+    <summary>Reference: how this step is verified, rolled back, and what to watch for</summary>
+    <h4>How this step is verified</h4>
+    <p class="detail">{{ step.verification.query }}. Expected: {{ step.verification.expected }}
+    Current status: {{ step.verification.status }}.</p>
+    <h4>If something goes wrong</h4>
+    <ol>
+    {% for item in step.rollback %}<li>{{ item }}</li>{% endfor %}
+    </ol>
+    <h4>Watch for</h4>
+    <ul>
+    {% for item in step.watchFor %}<li>{{ item }}</li>{% endfor %}
+    </ul>
+  </details>
+
+  <p class="detail">Step {{ step.id }}{% if step.controlId %} for control {{ step.controlId }}{% endif %}</p>
+</section>
+{% else %}
+<p class="detail">No steps in this phase for this tenant.</p>
+{% endfor %}
+{% endfor %}
+
+<h2>Watch list</h2>
+{% if watch_list %}
+{% set accounts = watch_list | selectattr("kind", "equalto", "account") | list %}
+{% set applications = watch_list | selectattr("kind", "equalto", "application") | list %}
+<p>Accounts and applications to keep an eye on for the whole rollout:
+{{ watch_list | length }} item{{ 's' if watch_list | length != 1 }}
+({{ accounts | length }} account{{ 's' if accounts | length != 1 }},
+{{ applications | length }} application{{ 's' if applications | length != 1 }}).</p>
+<table>
+  <tr><th>Item</th><th>Kind</th><th>Why</th></tr>
+  {% for item in watch_list[:8] %}
+  <tr><td>{{ item.item }}</td><td>{{ item.kind }}</td><td>{{ item.reason }}</td></tr>
+  {% endfor %}
+</table>
+{% if watch_list | length > 8 %}
+<details>
+  <summary>Show the remaining {{ watch_list | length - 8 }} of {{ watch_list | length }} watch list items</summary>
+  <table>
+    <tr><th>Item</th><th>Kind</th><th>Why</th></tr>
+    {% for item in watch_list[8:] %}
+    <tr><td>{{ item.item }}</td><td>{{ item.kind }}</td><td>{{ item.reason }}</td></tr>
+    {% endfor %}
+  </table>
+</details>
+{% endif %}
+{% else %}
+<p>Nothing needs special monitoring beyond the step cards.</p>
+{% endif %}
+
+{% if best_effort_note %}
+<h2>What this plan can reach</h2>
+<p>{{ best_effort_note }}</p>
+{% endif %}
+
+{% if not_included %}
+<h2>Not included in this plan</h2>
+<p>These protections are graded below the standard but the plan leaves them
+out, with the reason stated honestly.</p>
+<table>
+  <tr><th>Protection</th><th>Why it is not included</th></tr>
+  {% for item in not_included[:8] %}
+  <tr><td>{{ item.title }} ({{ item.controlId }})</td><td>{{ item.reason }}</td></tr>
+  {% endfor %}
+</table>
+{% if not_included | length > 8 %}
+<details>
+  <summary>Show the remaining {{ not_included | length - 8 }} of {{ not_included | length }} protections</summary>
+  <table>
+    <tr><th>Protection</th><th>Why it is not included</th></tr>
+    {% for item in not_included[8:] %}
+    <tr><td>{{ item.title }} ({{ item.controlId }})</td><td>{{ item.reason }}</td></tr>
+    {% endfor %}
+  </table>
+</details>
+{% endif %}
+{% endif %}
+
+<h2>What this plan cannot see</h2>
+<p>An honest list of blind spots. Nothing here was guessed around.</p>
+<ul>
+{% for item in unknowns[:8] %}<li>{{ item }}</li>{% endfor %}
+</ul>
+{% if unknowns | length > 8 %}
+<details>
+  <summary>Show the remaining {{ unknowns | length - 8 }} of {{ unknowns | length }} items</summary>
+  <ul>
+  {% for item in unknowns[8:] %}<li>{{ item }}</li>{% endfor %}
+  </ul>
+</details>
+{% endif %}
+
+<h2>Communication templates</h2>
+<p>Ready to send messages, populated with this plan's checkpoints and real
+dates. This tool never sends anything itself.</p>
+{% for name, text in comms.items() %}
+<h4>{{ comms_titles.get(name, name) }}</h4>
+<pre class="comms">{{ text }}</pre>
+{% endfor %}
+
+<footer>
+<p>{{ scope_note }}</p>
+<p>To keep a copy, print this page to PDF from the browser. Open any folded
+sections you want on paper first.</p>
+</footer>
+
+</main>
+</body>
+</html>

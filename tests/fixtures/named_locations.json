@@ -1,0 +1,32 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#identity/conditionalAccess/namedLocations",
+  "value": [
+    {
+      "@odata.type": "#microsoft.graph.ipNamedLocation",
+      "id": "50000000-0000-0000-0000-000000000001",
+      "displayName": "Head office",
+      "createdDateTime": "2025-01-09T00:00:00Z",
+      "modifiedDateTime": "2025-01-09T00:00:00Z",
+      "isTrusted": true,
+      "ipRanges": [
+        {
+          "@odata.type": "#microsoft.graph.iPv4CidrRange",
+          "cidrAddress": "203.0.113.0/24"
+        }
+      ]
+    },
+    {
+      "@odata.type": "#microsoft.graph.countryNamedLocation",
+      "id": "50000000-0000-0000-0000-000000000002",
+      "displayName": "Allowed countries",
+      "createdDateTime": "2025-01-09T00:01:00Z",
+      "modifiedDateTime": "2025-01-09T00:01:00Z",
+      "countriesAndRegions": [
+        "AU",
+        "NZ"
+      ],
+      "includeUnknownCountriesAndRegions": false,
+      "countryLookupMethod": "clientIpAddress"
+    }
+  ]
+}

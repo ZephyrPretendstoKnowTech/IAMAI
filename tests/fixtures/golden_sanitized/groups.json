@@ -1,0 +1,35 @@
+{
+  "groups": [
+    {
+      "displayName": "Group 1",
+      "groupTypes": [
+        "Unified"
+      ],
+      "id": "affaee40-abcd-47e7-a8e8-6491e736cb14",
+      "membershipRule": null,
+      "onPremisesSyncEnabled": null,
+      "securityEnabled": false
+    },
+    {
+      "displayName": "Group 2",
+      "groupTypes": [
+        "Unified"
+      ],
+      "id": "e29883fb-409b-4101-ae05-d454a38804fb",
+      "membershipRule": null,
+      "onPremisesSyncEnabled": null,
+      "securityEnabled": false
+    },
+    {
+      "displayName": "Group 3",
+      "groupTypes": [],
+      "id": "5137fe56-b084-441a-a61b-0dcff4e618d8",
+      "membershipRule": null,
+      "onPremisesSyncEnabled": null,
+      "securityEnabled": true
+    }
+  ],
+  "transitiveMemberCounts": {
+    "4b3ae702-b7b0-4dc5-8d24-8f6b9a31e27f": 1
+  }
+}

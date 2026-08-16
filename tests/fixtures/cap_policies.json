@@ -1,0 +1,98 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#identity/conditionalAccess/policies",
+  "value": [
+    {
+      "id": "40000000-0000-0000-0000-000000000001",
+      "displayName": "CA001 Require MFA for all users",
+      "createdDateTime": "2025-01-10T03:00:00Z",
+      "modifiedDateTime": "2025-04-01T05:00:00Z",
+      "state": "enabled",
+      "conditions": {
+        "clientAppTypes": [
+          "all"
+        ],
+        "applications": {
+          "includeApplications": [
+            "All"
+          ],
+          "excludeApplications": [],
+          "includeUserActions": []
+        },
+        "users": {
+          "includeUsers": [
+            "All"
+          ],
+          "excludeUsers": [
+            "20000000-0000-0000-0000-00000000000b"
+          ],
+          "includeGroups": [],
+          "excludeGroups": [
+            "30000000-0000-0000-0000-000000000001"
+          ],
+          "includeRoles": [],
+          "excludeRoles": []
+        },
+        "locations": null,
+        "platforms": null,
+        "signInRiskLevels": [],
+        "userRiskLevels": []
+      },
+      "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+          "mfa"
+        ],
+        "customAuthenticationFactors": [],
+        "termsOfUse": [],
+        "authenticationStrength": null
+      },
+      "sessionControls": null
+    },
+    {
+      "id": "40000000-0000-0000-0000-000000000002",
+      "displayName": "CA002 Block legacy authentication",
+      "createdDateTime": "2025-01-10T03:05:00Z",
+      "modifiedDateTime": "2025-01-10T03:05:00Z",
+      "state": "enabledForReportingButNotEnforced",
+      "conditions": {
+        "clientAppTypes": [
+          "exchangeActiveSync",
+          "other"
+        ],
+        "applications": {
+          "includeApplications": [
+            "All"
+          ],
+          "excludeApplications": [],
+          "includeUserActions": []
+        },
+        "users": {
+          "includeUsers": [
+            "All"
+          ],
+          "excludeUsers": [
+            "20000000-0000-0000-0000-00000000000b"
+          ],
+          "includeGroups": [],
+          "excludeGroups": [],
+          "includeRoles": [],
+          "excludeRoles": []
+        },
+        "locations": null,
+        "platforms": null,
+        "signInRiskLevels": [],
+        "userRiskLevels": []
+      },
+      "grantControls": {
+        "operator": "OR",
+        "builtInControls": [
+          "block"
+        ],
+        "customAuthenticationFactors": [],
+        "termsOfUse": [],
+        "authenticationStrength": null
+      },
+      "sessionControls": null
+    }
+  ]
+}

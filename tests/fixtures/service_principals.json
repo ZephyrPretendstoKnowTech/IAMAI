@@ -1,0 +1,17 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#servicePrincipals(id,appId,displayName,accountEnabled)",
+  "value": [
+    {
+      "id": "90000000-0000-0000-0000-000000000001",
+      "appId": "00000002-0000-0ff1-ce00-000000000000",
+      "displayName": "Office 365 Exchange Online",
+      "accountEnabled": true
+    },
+    {
+      "id": "90000000-0000-0000-0000-000000000002",
+      "appId": "a0000000-0000-0000-0000-00000000000a",
+      "displayName": "Line of business app",
+      "accountEnabled": true
+    }
+  ]
+}

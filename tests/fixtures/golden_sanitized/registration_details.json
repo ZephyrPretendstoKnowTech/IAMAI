@@ -1,0 +1,49 @@
+[
+  {
+    "id": "0cef596d-59f3-4742-a117-b335eb763903",
+    "isAdmin": true,
+    "isMfaCapable": true,
+    "isMfaRegistered": true,
+    "isPasswordlessCapable": true,
+    "isSsprCapable": true,
+    "isSsprEnabled": true,
+    "isSsprRegistered": true,
+    "isSystemPreferredAuthenticationMethodEnabled": true,
+    "lastUpdatedDateTime": "2026-07-02T20:35:33.2444785Z",
+    "methodsRegistered": [
+      "microsoftAuthenticatorPush",
+      "passKeyDeviceBoundAuthenticator",
+      "softwareOneTimePasscode"
+    ],
+    "systemPreferredAuthenticationMethods": [
+      "Fido2"
+    ],
+    "userDisplayName": "User 1",
+    "userPreferredMethodForSecondaryAuthentication": "push",
+    "userPrincipalName": "user2@tenant.example",
+    "userType": "member"
+  },
+  {
+    "id": "6a748406-3237-4fb2-bbc6-ca6079bd68d0",
+    "isAdmin": true,
+    "isMfaCapable": true,
+    "isMfaRegistered": true,
+    "isPasswordlessCapable": false,
+    "isSsprCapable": true,
+    "isSsprEnabled": true,
+    "isSsprRegistered": true,
+    "isSystemPreferredAuthenticationMethodEnabled": true,
+    "lastUpdatedDateTime": "2026-07-02T21:11:54.9976492Z",
+    "methodsRegistered": [
+      "microsoftAuthenticatorPush",
+      "softwareOneTimePasscode"
+    ],
+    "systemPreferredAuthenticationMethods": [
+      "PhoneAppNotification"
+    ],
+    "userDisplayName": "User 2",
+    "userPreferredMethodForSecondaryAuthentication": "push",
+    "userPrincipalName": "user3@tenant.example",
+    "userType": "member"
+  }
+]

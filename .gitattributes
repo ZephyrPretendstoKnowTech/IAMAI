@@ -1,0 +1,18 @@
+# Line endings are normalised to LF in the repository regardless of the
+# platform a file was written on. Python's write_text uses the platform
+# convention, so a snapshot fixture generated on Windows is byte different
+# from the identical content generated elsewhere. Without this, the same
+# fixture content produces a different hash depending on who ran the
+# collector (BUGS.md item 30).
+* text=auto eol=lf
+
+# Never touched: the mapping and the packs are compared byte for byte.
+*.json text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.j2 text eol=lf
+*.toml text eol=lf
+
+# Compressed sign-in feeds are binary and must not be transformed at all.
+*.gz binary
+*.pem binary

@@ -1,0 +1,16 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#identityProtection/riskyUsers",
+  "value": [
+    {
+      "id": "20000000-0000-0000-0000-000000000002",
+      "isDeleted": false,
+      "isProcessing": false,
+      "riskLastUpdatedDateTime": "2026-06-05T00:00:00Z",
+      "riskLevel": "medium",
+      "riskState": "atRisk",
+      "riskDetail": "none",
+      "userDisplayName": "User 2",
+      "userPrincipalName": "user2@tenant.example"
+    }
+  ]
+}

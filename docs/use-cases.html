@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IAMAI use cases: who it is for and the value it delivers</title>
+<meta name="description" content="Who IAMAI is for and how it fits real work: baseline a new client, review what changed, turn findings into a staged remediation plan, and hand over a sanitized report. Read only, local, open source.">
+<style>
+  :root {
+    /* Paper and ink */
+    --page: #f7f7f4;
+    --surface: #ffffff;
+    --surface-2: #fbfbf9;
+    --ink: #14140f;
+    --ink-2: #565550;
+    /* Secondary text. Darkened to clear WCAG AA (4.5:1) on white -- the
+       earlier #8a887f sat at 3.5:1, which is below AA for normal text. */
+    --muted: #726f6a;
+    --hairline: rgba(20, 20, 15, 0.10);
+    --rule: #e5e4dc;
+
+    /* Brand: a deep, steady green. Used for the wordmark, links, and the
+       primary action. */
+    --brand: #1f5137;
+    --brand-ink: #ffffff;
+    --brand-tint: #eef3ee;
+    --accent-bar: #2f6b47;
+
+    /* Semantic status. Each grade and risk level maps to exactly one. */
+    --ok: #157f3b;
+    --ok-tint: #e9f4ec;
+    --info: #0f6e6a;
+    --info-tint: #e6f2f1;
+    --warn: #b7791f;
+    --warn-tint: #fbf1de;
+    --bad: #c23b3b;
+    --bad-tint: #fbeaea;
+    --neutral: #6b6a64;
+    --neutral-tint: #efefea;
+
+    /* Shape */
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 2px rgba(20, 20, 15, 0.04), 0 1px 8px rgba(20, 20, 15, 0.04);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  main { max-width: 56rem; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  h1 { font-size: 1.65rem; line-height: 1.25; margin: 0 0 0.3rem; letter-spacing: -0.01em; }
+  h2 { font-size: 1.2rem; margin: 2.75rem 0 0.85rem; letter-spacing: -0.005em; }
+  h3 { font-size: 1rem; margin: 0; }
+  h4 { font-size: 0.9rem; margin: 1rem 0 0.25rem; }
+  p { margin: 0.45rem 0; }
+  a { color: var(--brand); text-underline-offset: 0.15em; }
+  strong { font-weight: 650; }
+  .eyebrow {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 650;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .meta { color: var(--ink-2); margin-bottom: 1.5rem; }
+  .query { color: var(--muted); font-size: 0.85rem; }
+
+  /* A quiet wordmark, so every page is recognisably the same product. */
+  .brandbar {
+    display: flex; align-items: center; gap: 0.55rem;
+    color: var(--brand); font-weight: 700; letter-spacing: 0.02em;
+    margin-bottom: 1.75rem;
+  }
+  .brandbar .mark {
+    width: 1.5rem; height: 1.5rem; border-radius: 6px;
+    background: var(--brand); color: var(--brand-ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 800;
+  }
+  .brandbar .sub { color: var(--muted); font-weight: 500; letter-spacing: 0; }
+
+  .banner, .why {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 4px solid var(--accent-bar);
+    border-radius: var(--radius-sm);
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+  }
+  .banner strong { display: block; }
+  .why { background: var(--brand-tint); border-left-color: var(--brand); font-size: 0.95rem; }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 0.75rem;
+    margin: 1.25rem 0;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+    padding: 0.85rem 1rem;
+    border-top: 3px solid var(--neutral);
+  }
+  .tile.green { border-top-color: var(--ok); }
+  .tile.amber { border-top-color: var(--warn); }
+  .tile.red { border-top-color: var(--bad); }
+  .tile .status { font-weight: 650; }
+  .tile .icon { display: inline-block; width: 1.1em; }
+  .tile.green .icon { color: var(--ok); }
+  .tile.amber .icon { color: var(--warn); }
+  .tile.red .icon { color: var(--bad); }
+  .tile .count { color: var(--ink-2); font-size: 0.9rem; }
+  .totals { color: var(--ink-2); margin: 0.5rem 0 0; }
+  .legend { color: var(--ink-2); font-size: 0.9rem; margin-top: 0.5rem; }
+  .legend dt { font-weight: 650; float: left; clear: left; width: 8.5rem; color: var(--ink); }
+  .legend dd { margin: 0 0 0.15rem 9rem; }
+
+  .control, .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.15rem 1.4rem;
+    margin: 0.85rem 0;
+    break-inside: avoid;
+  }
+  .card { padding: 1.4rem 1.6rem 1.15rem; margin: 1.35rem 0; }
+  .control header, .card header {
+    display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;
+  }
+  .card .title-row { display: flex; gap: 0.6rem; align-items: baseline; margin-top: 0.15rem; }
+  .control .rationale, .control .detail { color: var(--ink-2); }
+  .control .detail { font-size: 0.9rem; margin-top: 0.5rem; }
+  .control ul, .card ul { margin: 0.3rem 0 0.3rem 1.2rem; padding: 0; }
+  .control .id, .card .id { color: var(--muted); font-size: 0.8rem; }
+
+  /* A small square marker in front of a plan step's actions. */
+  .tick {
+    flex: none; display: inline-block; width: 0.85em; height: 0.85em;
+    border-radius: 3px; position: relative; top: 0.08em; background: var(--brand);
+  }
+  ol.actions { padding-left: 1.3rem; }
+  ol.actions > li { margin: 0.3rem 0; }
+
+  .grade, .risk {
+    white-space: nowrap;
+    font-size: 0.78rem;
+    font-weight: 650;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 0.12rem 0.65rem 0.12rem 0.5rem;
+    background: var(--surface-2);
+  }
+  .grade .dot, .risk .dot {
+    display: inline-block; width: 0.55em; height: 0.55em;
+    border-radius: 50%; margin-right: 0.4em; position: relative; top: -0.02em;
+  }
+  .grade.green .dot { background: var(--ok); }
+  .grade.teal .dot  { background: var(--info); }
+  .grade.amber .dot { background: var(--warn); }
+  .grade.red .dot   { background: var(--bad); }
+  .grade.gray .dot  { background: var(--neutral); }
+  .grade.green { background: var(--ok-tint); }
+  .grade.teal  { background: var(--info-tint); }
+  .grade.amber { background: var(--warn-tint); }
+  .grade.red   { background: var(--bad-tint); }
+  .grade.gray  { background: var(--neutral-tint); }
+  .risk.high .dot   { background: var(--bad); }
+  .risk.medium .dot { background: var(--warn); }
+  .risk.low .dot    { background: var(--ok); }
+  .risk.high   { background: var(--bad-tint); }
+  .risk.medium { background: var(--warn-tint); }
+  .risk.low    { background: var(--ok-tint); }
+
+  table { border-collapse: collapse; width: 100%; background: var(--surface); border-radius: var(--radius-sm); overflow: hidden; }
+  th, td { text-align: left; padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-weight: 650; background: var(--surface-2); font-size: 0.92rem; }
+  td.num { font-variant-numeric: tabular-nums; }
+  .table-wrap { overflow-x: auto; }
+
+  details {
+    margin: 0.75rem 0;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.95rem;
+    background: var(--surface-2);
+  }
+  details summary { cursor: pointer; color: var(--ink-2); font-size: 0.92rem; font-weight: 650; }
+  details[open] summary { margin-bottom: 0.4rem; }
+
+  form { margin-top: 1.5rem; }
+  .progress { color: var(--muted); font-size: 0.9rem; letter-spacing: 0.02em; }
+  .opt {
+    display: block; padding: 0.55rem 0.7rem; margin: 0.3rem 0;
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm); cursor: pointer;
+  }
+  .opt:hover { border-color: var(--brand); }
+  .extra { display: block; margin-top: 0.8rem; font-size: 0.9rem; }
+  input[type="text"], textarea {
+    width: 100%; box-sizing: border-box; padding: 0.5rem; margin-top: 0.3rem;
+    border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+    font: inherit; background: var(--surface);
+  }
+  select.dropdown {
+    width: 100%; box-sizing: border-box; padding: 0.5rem; margin-top: 0.3rem;
+    border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+    font: inherit; background: var(--surface); color: var(--ink);
+  }
+  input[type="text"]:focus, textarea:focus, select.dropdown:focus { outline: 2px solid var(--accent-bar); outline-offset: 1px; }
+  button, .btn {
+    display: inline-block; margin-top: 1.2rem; padding: 0.62rem 1.5rem;
+    font: inherit; font-weight: 650; background: var(--brand); color: var(--brand-ink);
+    border: none; border-radius: var(--radius-sm); cursor: pointer; text-decoration: none;
+  }
+  button:hover, .btn:hover { background: var(--accent-bar); }
+  .btn.ghost { background: transparent; color: var(--brand); border: 1px solid var(--hairline); }
+  .btn.ghost:hover { background: var(--brand-tint); }
+  /* Keyboard focus must be visible on every interactive element, not just
+     text inputs (WCAG 2.4.7). :focus-visible keeps mouse clicks ringless. */
+  button:focus-visible, .btn:focus-visible, a:focus-visible, .opt:focus-within {
+    outline: 2px solid var(--accent-bar); outline-offset: 2px;
+  }
+  .wizard-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+  .wizard-nav .btn { margin-top: 0; padding: 0.45rem 1rem; }
+  .error { background: var(--bad-tint); border-left: 4px solid var(--bad); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); }
+
+  footer {
+    margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
+    color: var(--ink-2); font-size: 0.9rem;
+  }
+
+  /* Narrow screens: let a wide table scroll within itself rather than push
+     the whole page sideways. display:block turns the table into a scroll box;
+     it reverts to a normal table above this width and in print. */
+  @media (max-width: 40rem) {
+    table { display: block; overflow-x: auto; }
+    main { padding: 1.75rem 1rem 3rem; }
+    .hero h1 { font-size: 1.8rem; }
+  }
+
+  @media print {
+    body { background: #ffffff; }
+    main { max-width: none; padding: 0; }
+    .control, .card, .tile, .banner, .why, table, details { background: #ffffff; box-shadow: none; }
+    a { color: var(--ink); text-decoration: none; }
+    .brandbar { margin-bottom: 1rem; }
+  }
+
+  main { max-width: 60rem; }
+  .hero { padding: 1.5rem 0 0.5rem; }
+  .hero h1 { font-size: 2.2rem; max-width: 22ch; }
+  .hero p.lead { font-size: 1.2rem; color: var(--ink-2); max-width: 46ch; margin: 0.75rem 0 1.5rem; }
+  .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 1.25rem 0; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem; margin: 1.25rem 0;
+  }
+  .feature {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem 1.4rem;
+  }
+  .feature .n {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.6rem; height: 1.6rem; border-radius: 6px;
+    background: var(--brand-tint); color: var(--brand); font-weight: 800; font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  .feature h3 { margin-bottom: 0.3rem; }
+  .feature p { color: var(--ink-2); font-size: 0.95rem; margin: 0; }
+  .never { background: var(--brand-tint); border-radius: var(--radius); padding: 1.4rem 1.6rem; margin: 1.5rem 0; }
+  .never ul { margin: 0.5rem 0 0 1.1rem; }
+  .never li { margin: 0.35rem 0; }
+  pre.code {
+    background: var(--ink); color: #eef3ee; border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem; overflow-x: auto; font-size: 0.9rem; line-height: 1.5;
+  }
+
+  .scenario { border: 1px solid var(--hairline); border-radius: var(--radius);
+    background: var(--surface); box-shadow: var(--shadow); padding: 1.25rem 1.4rem; margin: 1rem 0; }
+  .scenario h3 { margin: 0 0 0.35rem; }
+  .scenario .step { color: var(--brand); font-weight: 700; font-size: 0.85rem;
+    text-transform: uppercase; letter-spacing: 0.04em; }
+  .scenario code { font-size: 0.9rem; }
+  .pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; margin: 1.25rem 0; }
+  .pillar { border-left: 4px solid var(--brand); padding: 0.2rem 0 0.2rem 1rem; }
+  .pillar h3 { margin: 0 0 0.25rem; font-size: 1.05rem; }
+  .pillar p { margin: 0; color: var(--ink-2); font-size: 0.95rem; }
+</style>
+</head>
+<body>
+<main>
+  <div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; use cases</span></div>
+
+  <section class="hero">
+    <h1>Know where a tenant stands, and what to do about it.</h1>
+    <p class="lead">IAMAI is for the people responsible for an identity they did not set up:
+    the providers, admins and consultants who need a straight answer about a Microsoft Entra
+    tenant's security and a plan they can actually carry out.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://github.com/ZephyrPretendstoKnowTech/IAMAI">Get it on GitHub</a>
+      <a class="btn ghost" href="example-report.html">See a sample report</a>
+      <a class="btn ghost" href="guide.html">Read the guide</a>
+    </div>
+  </section>
+
+  <h2>Who it is for</h2>
+  <div class="grid"><div class="feature"><h3>The managed IT provider</h3><p>You look after many client tenants and have more of them than you have hours. You need each one assessed against the same standard, quickly, and a report and plan per client without hand-auditing every policy.</p></div><div class="feature"><h3>The internal admin</h3><p>You run one or a few tenants and wear every hat. You are not a Conditional Access specialist, and you want a plain-English answer to "where do we stand, and what should I do next?" that you can act on.</p></div><div class="feature"><h3>The security consultant</h3><p>You do identity posture reviews. You want a fast, repeatable, evidence-based assessment and a defensible remediation plan you can hand over, plus a clean copy you can share without exposing the client.</p></div><div class="feature"><h3>Whoever inherited the tenant</h3><p>You picked up a tenant with no history and no documentation. You need an honest map of what is actually configured before you touch anything.</p></div></div>
+
+  <h2>Where it fits</h2>
+  <div class="scenario"><div class="step">Onboarding</div><h3>Baseline a new client in minutes</h3><p>A new tenant lands on your plate. Run <code>collect</code> then <code>assess</code> and you have a graded report of where its identity security actually stands, against a clear standard, before your first call. No clicking through a dozen blades to piece it together.</p></div><div class="scenario"><div class="step">Review</div><h3>See what changed since last time</h3><p>Every collect is a dated, immutable snapshot. Re-run it next quarter and the assessment reflects the tenant as it is now, so a recurring check-up is one command, not a fresh manual audit.</p></div><div class="scenario"><div class="step">Remediation</div><h3>Turn findings into a rollout a person can run</h3><p>The plan is the report turned into staged work: each phase ends at a checkpoint you confirm, and every step says what it will cost the people who use the tenant, how to verify it worked, and how to undo it. It even carries announcement and helpdesk templates. The tool writes it; a person carries it out.</p></div><div class="scenario"><div class="step">Reporting</div><h3>Hand over something the client can trust</h3><p>Run <code>sanitize</code> and every real name, sign-in name, IP and tenant id becomes a stable stand-in. The result shows exactly what the real report says, with nobody exposed, so it is safe to attach to an email or a ticket.</p></div><div class="scenario"><div class="step">Triage</div><h3>Understand an unfamiliar tenant fast</h3><p>Inherited a tenant nobody documented? A single read-only pass gives you an honest picture of its policies, admins, sign-in methods and gaps, so you know what you are dealing with before you change a thing.</p></div>
+
+  <h2>Why this tool, and not a script or a spreadsheet</h2>
+  <div class="pillars"><div class="pillar"><h3>It cannot break anything</h3><p>Every permission is a read permission. It cannot create, edit or delete a policy, an account or a setting. Running it on a live production tenant is safe by construction.</p></div><div class="pillar"><h3>Nothing leaves the machine</h3><p>No telemetry, no accounts, no uploads. The only traffic is to Microsoft's own endpoints, and everything it collects stays in a folder you control. Sharing is a deliberate, sanitized step you take on purpose.</p></div><div class="pillar"><h3>It never overstates</h3><p>A grade is never better than the evidence. Where the data cannot judge something it says UNKNOWN rather than guessing, and there is no single vanity score to chase, so you always see which specific protection is weak.</p></div><div class="pillar"><h3>It is free and open</h3><p>Open source under the Apache License 2.0. Read the standard it grades against, read the code, run it on your own machine, forever.</p></div></div>
+
+  <div class="never">
+    <strong>The honest part.</strong>
+    <ul>
+      <li>It is an enablement tool, not a replacement for judgement. It will tell you nobody
+      should hold Global Administrator around the clock. It does not know that the account
+      holding it runs your payroll export. Every recommendation is a starting point to weigh
+      against the tenant in front of you.</li>
+      <li>It is not a compliance certification and it is not an audit. It reads what Microsoft
+      Graph exposes and grades it against a clear, published standard, no more and no less.</li>
+    </ul>
+  </div>
+
+  <h2>See for yourself</h2>
+  <p>Read a <a href="example-report.html">sample report</a> rendered from sanitized data, follow
+  the <a href="guide.html">full guide</a>, or <a href="https://github.com/ZephyrPretendstoKnowTech/IAMAI">get it on GitHub</a> and run it
+  against a tenant of your own. From install to a report in hand is about fifteen minutes.</p>
+
+  <footer>
+    IAMAI is open source under the Apache License 2.0. Read only, local, no telemetry.
+    &middot; <a href="https://github.com/ZephyrPretendstoKnowTech/IAMAI">Source on GitHub</a>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#groups",
+  "value": [
+    {
+      "id": "30000000-0000-0000-0000-000000000001",
+      "displayName": "Group 1",
+      "groupTypes": [],
+      "securityEnabled": true,
+      "onPremisesSyncEnabled": null,
+      "membershipRule": null
+    },
+    {
+      "id": "30000000-0000-0000-0000-000000000002",
+      "displayName": "Group 2",
+      "groupTypes": [
+        "Unified"
+      ],
+      "securityEnabled": false,
+      "onPremisesSyncEnabled": null,
+      "membershipRule": null
+    }
+  ]
+}

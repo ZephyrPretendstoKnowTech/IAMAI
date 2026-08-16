@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The questionnaire</title>
+<style>{{ base_css }}</style>
+</head>
+<body>
+<main>
+  <div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; questionnaire</span></div>
+  <p class="progress">Tenant: {{ alias }} &middot; Question {{ position }} of {{ total }}</p>
+  <h1>{{ question.text }}</h1>
+  <p class="why">Why we ask: {{ question.trigger }}</p>
+
+  {% if question.evidence.rows %}
+  <h2>What the data shows</h2>
+  <p class="query">{{ question.evidence.query }}</p>
+  <table>
+    <tr><th>Item</th><th>Detail</th></tr>
+    {% for row in question.evidence.rows %}
+    <tr><td>{{ row["item"] }}</td><td>{{ row["detail"] }}</td></tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    {% if question.answerType in ("selectAccounts", "selectLocations", "confirmSet") %}
+      {% for option in question.options %}
+      <label class="opt"><input type="checkbox" name="selection" value="{{ option.value }}"{% if option.value in prefill.selected %} checked{% endif %}> {{ option.label }}</label>
+      {% endfor %}
+      {% if question.answerType == "selectLocations" %}
+      <label class="extra">Or enter your office public IP address or range, for example 203.0.113.0/24 (separate several with commas):
+        <input type="text" name="extra" value="{{ prefill.extra }}">
+      </label>
+      {% elif question.answerType == "selectAccounts" %}
+      <label class="extra">Add an account by its exact sign in name (separate several with commas):
+        <input type="text" name="extra" value="{{ prefill.extra }}">
+      </label>
+      {% endif %}
+    {% elif question.answerType == "singleChoice" %}
+      {% for option in question.options %}
+      <label class="opt"><input type="radio" name="choice" value="{{ option.value }}"{% if option.value == prefill.choice %} checked{% endif %}> {{ option.label }}</label>
+      {% endfor %}
+      {% if has_other %}
+      <label class="extra">If something else, describe it in a few words:
+        <input type="text" name="note" value="{{ prefill.note }}">
+      </label>
+      {% endif %}
+    {% elif question.answerType == "selectOne" %}
+      <select name="choice" class="dropdown">
+        {% for option in question.options %}
+        <option value="{{ option.value }}"{% if option.value == prefill.choice or (not prefill.choice and loop.first) %} selected{% endif %}>{{ option.label }}</option>
+        {% endfor %}
+      </select>
+    {% else %}
+      <textarea name="text" rows="3">{{ prefill.text }}</textarea>
+    {% endif %}
+    <button type="submit">Save and continue</button>
+  </form>
+
+  <nav class="wizard-nav" aria-label="Question navigation">
+    <span>{% if prev_id %}<a class="btn ghost" href="{{ url_for('question', question_id=prev_id) }}">&larr; Back</a>{% endif %}</span>
+    <span>{% if next_id %}<a class="btn ghost" href="{{ url_for('question', question_id=next_id) }}">Next &rarr;</a>{% endif %}</span>
+  </nav>
+</main>
+</body>
+</html>

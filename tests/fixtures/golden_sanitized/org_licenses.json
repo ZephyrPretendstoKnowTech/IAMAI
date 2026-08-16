@@ -1,0 +1,995 @@
+{
+  "organization": [
+    {
+      "assignedPlans": [
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "M365Multi-TenantManagement",
+          "servicePlanId": "6f23d6a9-adbf-481c-8538-b4c095654487"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "WindowsDefenderATP",
+          "servicePlanId": "bfc1bbd9-981b-4f71-9b82-17c35fd0e2a4"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "MicrosoftKaizala",
+          "servicePlanId": "54fc630f-5a40-48ee-8965-af0503c1386e"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "PowerAppsService",
+          "servicePlanId": "92f7a6f3-b89b-4bbd-8c30-809e6da5ad1c"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "M365Multi-TenantManagementFE",
+          "servicePlanId": "d55411c9-cfff-40a9-87c7-240f14df7da5"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "RMSOnline",
+          "servicePlanId": "6c57d4b6-3b23-47a5-9bc9-69f17b4947b3"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "CRM",
+          "servicePlanId": "28b0fa46-c39a-4188-89e2-58e979a6b014"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "SCO",
+          "servicePlanId": "8e9ff0ff-aa7a-4b20-83c1-2f636b600ac2"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "SCO",
+          "servicePlanId": "c1ec4a95-1f05-45b3-a911-aa3fa01094f5"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "a6520331-d7d4-4276-95f5-15c0933bc757"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "ProcessSimple",
+          "servicePlanId": "0f9b09cb-62d1-4ff4-9129-43f4996f83f4"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "SharePoint",
+          "servicePlanId": "a1ace008-72f3-4ea0-8dac-33b3a23a2472"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "DynamicsNAV",
+          "servicePlanId": "39b5c996-467e-4e60-bd62-46066f572726"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "CRM",
+          "servicePlanId": "afa73018-811e-46e9-988f-f75d2b1b8430"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "MixedRealityCollaborationServices",
+          "servicePlanId": "3efbd4ed-8958-4824-8389-1321f8730af8"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "9aaf7827-d63c-4b61-89c3-182f06f82e5c"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "RMSOnline",
+          "servicePlanId": "bea4c11e-220a-4e6d-8eb8-8ea15d019f90"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "ProjectWorkManagement",
+          "servicePlanId": "b737dad2-2f6c-4c65-90e3-ca563267e8b9"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "SharePoint",
+          "servicePlanId": "c7699d2e-19aa-44de-8edf-1736da088ca1"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "Chapter5FluidApp",
+          "servicePlanId": "c4b8c31a-fb44-4c65-9837-a21f55fcabda"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "YammerEnterprise",
+          "servicePlanId": "a82fbf69-b4d7-49f4-83a6-915b2cf354f4"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "To-Do",
+          "servicePlanId": "5e62787c-c316-451f-b873-1d05acd4d12c"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "ProjectProgramsAndPortfolios",
+          "servicePlanId": "b21a6b06-1988-436e-a07b-51ec6d9f52ad"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "199a5c09-e0ca-4e37-8f7c-b05d533e1ea2"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "ccibotsprod",
+          "servicePlanId": "ded3d325-1bdc-453e-8432-5bac26d7a014"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "AADPremiumService",
+          "servicePlanId": "41781fb2-bc02-4b7c-bd55-b576c07bb09d"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "WevEngine",
+          "servicePlanId": "b088306e-925b-44ab-baa0-63291c629a91"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "SharePoint",
+          "servicePlanId": "db4d623d-b514-490b-b7ef-8885eee514de"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "Bing",
+          "servicePlanId": "94065c59-bc8e-4e8b-89e5-5138d471eaff"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "MicrosoftStream",
+          "servicePlanId": "743dd19e-1ce3-4c62-a3ad-49ba8f63a2f6"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "Microsoft.ProjectBabylon",
+          "servicePlanId": "c948ea65-2053-4a5a-8a62-9eaaaf11b522"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "MicrosoftOffice",
+          "servicePlanId": "094e7854-93fc-4d55-b2c0-3ab5369ebdc1"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "MultiFactorService",
+          "servicePlanId": "8a256a2b-b617-496d-b51b-e76466e88db0"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "SharePoint",
+          "servicePlanId": "e95bec33-7c88-4a70-8e19-b10bd9d0c014"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "OnlineService",
+          "servicePlanId": "1fe6227d-3e01-46d0-9510-0acad4ff6e94"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "AADPremiumService",
+          "servicePlanId": "de377cbc-0019-4ec2-b77c-3f223947e102"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "Deskless",
+          "servicePlanId": "8c7d2df8-86f0-4902-b2ed-a0458298f3b3"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "MicrosoftOffice",
+          "servicePlanId": "276d6e8a-f056-4f70-b7e8-4fc27f79f809"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "LearningAppServiceInTeams",
+          "servicePlanId": "b76fb638-6ba6-402a-b9f9-83d28acb3d86"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "MicrosoftCommunicationsOnline",
+          "servicePlanId": "0feaeb32-d00e-4d66-bd5a-43b5b83db82c"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "Windows",
+          "servicePlanId": "8e229017-d77b-43d5-9305-903395523b99"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Deleted",
+          "service": "SCO",
+          "servicePlanId": "882e1d05-acd1-4ccb-8708-6ee03664b117"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "TeamspaceAPI",
+          "servicePlanId": "57ff2da0-773e-42df-b2af-ffb7a2317929"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "9bec7e34-c9fa-40b7-a9d1-bd6d1165c7ed"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "176a09a6-7ec5-4039-ac02-b2791c6ba793"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "OfficeForms",
+          "servicePlanId": "159f4cd6-e380-449f-a816-af1a9ef76344"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "d59d7297-56ae-462e-b1ed-ad5b5c08bda7"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "Adallom",
+          "servicePlanId": "932ad362-64a8-4783-9106-97849a1a30b9"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "WevEngine",
+          "servicePlanId": "0403bb98-9d17-4f94-b53e-eca56a7698a6"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "5bfe124c-bbdc-4494-8835-f1297d457d79"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "Bing",
+          "servicePlanId": "0d0c0d31-fae7-41f2-b909-eaf4d7f26dba"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "113feb6c-3fe4-4440-bddc-54d774bf0318"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "Sway",
+          "servicePlanId": "a23b959c-7ce8-4e57-9140-b90eb88a9e97"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "MixedRealityCollaborationServices",
+          "servicePlanId": "dcf9d2f4-772e-4434-b757-77a453cfbc02"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "WhiteboardServices",
+          "servicePlanId": "b8afc642-032e-4de5-8c0a-507a7bba7e5d"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "VivaSkills",
+          "servicePlanId": "13b6da2c-0d84-450e-9f69-a33e221387ca"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "33c4f319-9bdd-48d6-9c4d-410b750a4a5a"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "exchange",
+          "servicePlanId": "f20fedf3-f3c3-43c3-8267-2bfdd51c0939"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "MixedRealityCollaborationServices",
+          "servicePlanId": "f0ff6ac6-297d-49cd-be34-6dfef97f0c28"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:44Z",
+          "capabilityStatus": "Enabled",
+          "service": "YammerEnterprise",
+          "servicePlanId": "7547a3fe-08ee-4ccb-b430-5077c5041653"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "WindowsUpdateforBusinessCloudExtensions",
+          "servicePlanId": "7bf960f6-2cd9-443a-8046-5dbff9558365"
+        },
+        {
+          "assignedDateTime": "2026-06-26T23:18:43Z",
+          "capabilityStatus": "Enabled",
+          "service": "MicrosoftPrint",
+          "servicePlanId": "795f6fe0-cc4d-4773-b050-5dde4dc704c9"
+        }
+      ],
+      "businessPhones": [
+        "redacted"
+      ],
+      "city": "redacted",
+      "country": null,
+      "countryLetterCode": "US",
+      "createdDateTime": "2026-06-26T23:15:00Z",
+      "defaultUsageLocation": null,
+      "deletedDateTime": null,
+      "directorySizeQuota": {
+        "total": 50000,
+        "used": 262
+      },
+      "displayName": "redacted",
+      "id": "096cf77b-cd41-4a03-92f5-e2551080e52c",
+      "isMultipleDataLocationsForServicesEnabled": null,
+      "marketingNotificationEmails": [],
+      "onPremisesLastSyncDateTime": null,
+      "onPremisesSyncEnabled": null,
+      "onPremisesSyncStatus": [],
+      "partnerTenantType": null,
+      "postalCode": "redacted",
+      "preferredLanguage": "en",
+      "privacyProfile": null,
+      "provisionedPlans": [
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "Adallom"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "RMSOnline"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "RMSOnline"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "SharePoint"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "SharePoint"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "SharePoint"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "SharePoint"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "SCO"
+        },
+        {
+          "capabilityStatus": "Deleted",
+          "provisioningStatus": "Success",
+          "service": "SCO"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "SCO"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "exchange"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "ProjectWorkManagement"
+        },
+        {
+          "capabilityStatus": "Enabled",
+          "provisioningStatus": "Success",
+          "service": "MicrosoftCommunicationsOnline"
+        }
+      ],
+      "securityComplianceNotificationMails": [],
+      "securityComplianceNotificationPhones": [],
+      "state": "redacted",
+      "street": "redacted",
+      "technicalNotificationMails": [
+        "user1@tenant.example"
+      ],
+      "tenantType": "AAD",
+      "verifiedDomains": [
+        {
+          "capabilities": "Email, OfficeCommunicationsOnline",
+          "isDefault": true,
+          "isInitial": true,
+          "name": "tenant.example",
+          "type": "Managed"
+        }
+      ]
+    }
+  ],
+  "subscribedSkus": [
+    {
+      "accountId": "096cf77b-cd41-4a03-92f5-e2551080e52c",
+      "accountName": "redacted",
+      "appliesTo": "User",
+      "capabilityStatus": "Enabled",
+      "consumedUnits": 1,
+      "id": "096cf77b-cd41-4a03-92f5-e2551080e52c_cbdc14ab-d96c-4c30-b9f4-6ada7cdc1d46",
+      "prepaidUnits": {
+        "enabled": 25,
+        "lockedOut": 0,
+        "suspended": 0,
+        "warning": 0
+      },
+      "servicePlans": [
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "d59d7297-56ae-462e-b1ed-ad5b5c08bda7",
+          "servicePlanName": "EXCHANGE_STORAGE_50GB",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "Company",
+          "provisioningStatus": "Success",
+          "servicePlanId": "b088306e-925b-44ab-baa0-63291c629a91",
+          "servicePlanName": "INSIGHTS_BY_MYANALYTICS",
+          "servicePlanType": "WevEngine"
+        },
+        {
+          "appliesTo": "Company",
+          "provisioningStatus": "Success",
+          "servicePlanId": "0403bb98-9d17-4f94-b53e-eca56a7698a6",
+          "servicePlanName": "MICROSOFT_MYANALYTICS_FULL",
+          "servicePlanType": "WevEngine"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "13b6da2c-0d84-450e-9f69-a33e221387ca",
+          "servicePlanName": "PEOPLE_SKILLS_FOUNDATION",
+          "servicePlanType": "VivaSkills"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "1fe6227d-3e01-46d0-9510-0acad4ff6e94",
+          "servicePlanName": "PLACES_CORE",
+          "servicePlanType": "OnlineService"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "a6520331-d7d4-4276-95f5-15c0933bc757",
+          "servicePlanName": "GRAPH_CONNECTORS_SEARCH_INDEX",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "f0ff6ac6-297d-49cd-be34-6dfef97f0c28",
+          "servicePlanName": "MESH_IMMERSIVE_FOR_TEAMS",
+          "servicePlanType": "MixedRealityCollaborationServices"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "c948ea65-2053-4a5a-8a62-9eaaaf11b522",
+          "servicePlanName": "PURVIEW_DISCOVERY",
+          "servicePlanType": "Microsoft.ProjectBabylon"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "3efbd4ed-8958-4824-8389-1321f8730af8",
+          "servicePlanName": "MESH_AVATARS_ADDITIONAL_FOR_TEAMS",
+          "servicePlanType": "MixedRealityCollaborationServices"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "dcf9d2f4-772e-4434-b757-77a453cfbc02",
+          "servicePlanName": "MESH_AVATARS_FOR_TEAMS",
+          "servicePlanType": "MixedRealityCollaborationServices"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "c4b8c31a-fb44-4c65-9837-a21f55fcabda",
+          "servicePlanName": "MICROSOFT_LOOP",
+          "servicePlanType": "Chapter5FluidApp"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "0d0c0d31-fae7-41f2-b909-eaf4d7f26dba",
+          "servicePlanName": "Bing_Chat_Enterprise",
+          "servicePlanType": "Bing"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "a1ace008-72f3-4ea0-8dac-33b3a23a2472",
+          "servicePlanName": "CLIPCHAMP",
+          "servicePlanType": "SharePoint"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "a82fbf69-b4d7-49f4-83a6-915b2cf354f4",
+          "servicePlanName": "VIVAENGAGE_CORE",
+          "servicePlanType": "YammerEnterprise"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "bfc1bbd9-981b-4f71-9b82-17c35fd0e2a4",
+          "servicePlanName": "MDE_SMB",
+          "servicePlanType": "WindowsDefenderATP"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "b76fb638-6ba6-402a-b9f9-83d28acb3d86",
+          "servicePlanName": "VIVA_LEARNING_SEEDED",
+          "servicePlanType": "LearningAppServiceInTeams"
+        },
+        {
+          "appliesTo": "Company",
+          "provisioningStatus": "Success",
+          "servicePlanId": "db4d623d-b514-490b-b7ef-8885eee514de",
+          "servicePlanName": "Nucleus",
+          "servicePlanType": "SharePoint"
+        },
+        {
+          "appliesTo": "Company",
+          "provisioningStatus": "Success",
+          "servicePlanId": "d55411c9-cfff-40a9-87c7-240f14df7da5",
+          "servicePlanName": "M365_LIGHTHOUSE_PARTNER_PLAN1",
+          "servicePlanType": "M365Multi-TenantManagementFE"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "7bf960f6-2cd9-443a-8046-5dbff9558365",
+          "servicePlanName": "WINDOWSUPDATEFORBUSINESS_DEPLOYMENTSERVICE",
+          "servicePlanType": "WindowsUpdateforBusinessCloudExtensions"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "795f6fe0-cc4d-4773-b050-5dde4dc704c9",
+          "servicePlanName": "UNIVERSAL_PRINT_01",
+          "servicePlanType": "MicrosoftPrint"
+        },
+        {
+          "appliesTo": "Company",
+          "provisioningStatus": "Success",
+          "servicePlanId": "6f23d6a9-adbf-481c-8538-b4c095654487",
+          "servicePlanName": "M365_LIGHTHOUSE_CUSTOMER_PLAN1",
+          "servicePlanType": "M365Multi-TenantManagement"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "ded3d325-1bdc-453e-8432-5bac26d7a014",
+          "servicePlanName": "POWER_VIRTUAL_AGENTS_O365_P3",
+          "servicePlanType": "ccibotsprod"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "afa73018-811e-46e9-988f-f75d2b1b8430",
+          "servicePlanName": "CDS_O365_P3",
+          "servicePlanType": "CRM"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "b21a6b06-1988-436e-a07b-51ec6d9f52ad",
+          "servicePlanName": "PROJECT_O365_P3",
+          "servicePlanType": "ProjectProgramsAndPortfolios"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "28b0fa46-c39a-4188-89e2-58e979a6b014",
+          "servicePlanName": "DYN365_CDS_O365_P3",
+          "servicePlanType": "CRM"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "8a256a2b-b617-496d-b51b-e76466e88db0",
+          "servicePlanName": "MFA_PREMIUM",
+          "servicePlanType": "MultiFactorService"
+        },
+        {
+          "appliesTo": "Company",
+          "provisioningStatus": "Success",
+          "servicePlanId": "113feb6c-3fe4-4440-bddc-54d774bf0318",
+          "servicePlanName": "EXCHANGE_S_FOUNDATION",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "932ad362-64a8-4783-9106-97849a1a30b9",
+          "servicePlanName": "ADALLOM_S_DISCOVERY",
+          "servicePlanType": "Adallom"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "41781fb2-bc02-4b7c-bd55-b576c07bb09d",
+          "servicePlanName": "AAD_PREMIUM",
+          "servicePlanType": "AADPremiumService"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "54fc630f-5a40-48ee-8965-af0503c1386e",
+          "servicePlanName": "KAIZALA_O365_P2",
+          "servicePlanType": "MicrosoftKaizala"
+        },
+        {
+          "appliesTo": "Company",
+          "provisioningStatus": "Success",
+          "servicePlanId": "94065c59-bc8e-4e8b-89e5-5138d471eaff",
+          "servicePlanName": "MICROSOFT_SEARCH",
+          "servicePlanType": "Bing"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "276d6e8a-f056-4f70-b7e8-4fc27f79f809",
+          "servicePlanName": "OFFICE_SHARED_COMPUTER_ACTIVATION",
+          "servicePlanType": "MicrosoftOffice"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "b8afc642-032e-4de5-8c0a-507a7bba7e5d",
+          "servicePlanName": "WHITEBOARD_PLAN1",
+          "servicePlanType": "WhiteboardServices"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "33c4f319-9bdd-48d6-9c4d-410b750a4a5a",
+          "servicePlanName": "MYANALYTICS_P2",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "39b5c996-467e-4e60-bd62-46066f572726",
+          "servicePlanName": "DYN365BC_MS_INVOICING",
+          "servicePlanType": "DynamicsNAV"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "9bec7e34-c9fa-40b7-a9d1-bd6d1165c7ed",
+          "servicePlanName": "BPOS_S_DlpAddOn",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "bea4c11e-220a-4e6d-8eb8-8ea15d019f90",
+          "servicePlanName": "RMS_S_ENTERPRISE",
+          "servicePlanType": "RMSOnline"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "6c57d4b6-3b23-47a5-9bc9-69f17b4947b3",
+          "servicePlanName": "RMS_S_PREMIUM",
+          "servicePlanType": "RMSOnline"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "176a09a6-7ec5-4039-ac02-b2791c6ba793",
+          "servicePlanName": "EXCHANGE_S_ARCHIVE_ADDON",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "Company",
+          "provisioningStatus": "Success",
+          "servicePlanId": "f20fedf3-f3c3-43c3-8267-2bfdd51c0939",
+          "servicePlanName": "ATP_ENTERPRISE",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "8c7d2df8-86f0-4902-b2ed-a0458298f3b3",
+          "servicePlanName": "Deskless",
+          "servicePlanType": "Deskless"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "5e62787c-c316-451f-b873-1d05acd4d12c",
+          "servicePlanName": "BPOS_S_TODO_1",
+          "servicePlanType": "To-Do"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "199a5c09-e0ca-4e37-8f7c-b05d533e1ea2",
+          "servicePlanName": "MICROSOFTBOOKINGS",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "c1ec4a95-1f05-45b3-a911-aa3fa01094f5",
+          "servicePlanName": "INTUNE_A",
+          "servicePlanType": "SCO"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "159f4cd6-e380-449f-a816-af1a9ef76344",
+          "servicePlanName": "FORMS_PLAN_E1",
+          "servicePlanType": "OfficeForms"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "743dd19e-1ce3-4c62-a3ad-49ba8f63a2f6",
+          "servicePlanName": "STREAM_O365_E1",
+          "servicePlanType": "Microsoftstream"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "7547a3fe-08ee-4ccb-b430-5077c5041653",
+          "servicePlanName": "YAMMER_ENTERPRISE",
+          "servicePlanType": "YammerEnterprise"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "57ff2da0-773e-42df-b2af-ffb7a2317929",
+          "servicePlanName": "TEAMS1",
+          "servicePlanType": "TeamspaceAPI"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "a23b959c-7ce8-4e57-9140-b90eb88a9e97",
+          "servicePlanName": "SWAY",
+          "servicePlanType": "Sway"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "e95bec33-7c88-4a70-8e19-b10bd9d0c014",
+          "servicePlanName": "SHAREPOINTWAC",
+          "servicePlanType": "SharePoint"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "c7699d2e-19aa-44de-8edf-1736da088ca1",
+          "servicePlanName": "SHAREPOINTSTANDARD",
+          "servicePlanType": "SharePoint"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "b737dad2-2f6c-4c65-90e3-ca563267e8b9",
+          "servicePlanName": "PROJECTWORKMANAGEMENT",
+          "servicePlanType": "ProjectWorkManagement"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "92f7a6f3-b89b-4bbd-8c30-809e6da5ad1c",
+          "servicePlanName": "POWERAPPS_O365_P1",
+          "servicePlanType": "PowerAppsService"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "094e7854-93fc-4d55-b2c0-3ab5369ebdc1",
+          "servicePlanName": "OFFICE_BUSINESS",
+          "servicePlanType": "MicrosoftOffice"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "5bfe124c-bbdc-4494-8835-f1297d457d79",
+          "servicePlanName": "O365_SB_Relationship_Management",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "0feaeb32-d00e-4d66-bd5a-43b5b83db82c",
+          "servicePlanName": "MCOSTANDARD",
+          "servicePlanType": "MicrosoftCommunicationsOnline"
+        },
+        {
+          "appliesTo": "Company",
+          "provisioningStatus": "PendingActivation",
+          "servicePlanId": "882e1d05-acd1-4ccb-8708-6ee03664b117",
+          "servicePlanName": "INTUNE_O365",
+          "servicePlanType": "SCO"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "0f9b09cb-62d1-4ff4-9129-43f4996f83f4",
+          "servicePlanName": "FLOW_O365_P1",
+          "servicePlanType": "ProcessSimple"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "9aaf7827-d63c-4b61-89c3-182f06f82e5c",
+          "servicePlanName": "EXCHANGE_S_STANDARD",
+          "servicePlanType": "Exchange"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "de377cbc-0019-4ec2-b77c-3f223947e102",
+          "servicePlanName": "AAD_SMB",
+          "servicePlanType": "AADPremiumService"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "8e9ff0ff-aa7a-4b20-83c1-2f636b600ac2",
+          "servicePlanName": "INTUNE_SMBIZ",
+          "servicePlanType": "SCO"
+        },
+        {
+          "appliesTo": "User",
+          "provisioningStatus": "Success",
+          "servicePlanId": "8e229017-d77b-43d5-9305-903395523b99",
+          "servicePlanName": "WINBIZ",
+          "servicePlanType": "Windows"
+        }
+      ],
+      "skuId": "cbdc14ab-d96c-4c30-b9f4-6ada7cdc1d46",
+      "skuPartNumber": "SPB",
+      "subscriptionIds": [
+        "09494651-e9d4-42d4-ad31-f29c8d56c722"
+      ]
+    }
+  ]
+}

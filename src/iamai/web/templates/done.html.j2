@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The questionnaire is finished</title>
+<style>{{ base_css }}</style>
+<style>
+  .counts { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 1rem 0; }
+  .counts .count {
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.95rem; box-shadow: var(--shadow);
+  }
+  .paths { color: var(--ink-2); font-size: 0.85rem; word-break: break-all; }
+</style>
+</head>
+<body>
+<main>
+  <div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; questionnaire</span></div>
+  <h1>The questionnaire is finished</h1>
+  <p>Every question is answered. The assessment for tenant {{ alias }} was regraded with your answers.</p>
+
+  <h2>Grades after the regrade</h2>
+  <div class="counts">
+    {% for grade, count in grade_counts %}
+    <span class="count">{{ grade }}: {{ count }}</span>
+    {% endfor %}
+  </div>
+
+  <h2>What changed</h2>
+  {% if changes %}
+  <ul>
+    {% for change in changes %}
+    <li>Control {{ change["controlId"] }} moved from {{ change["from"] }} to {{ change["to"] }}.</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No grades changed. The answers are saved and will be used by the plan.</p>
+  {% endif %}
+
+  <p class="paths">Assessment: {{ out_path }}<br>Report: {{ report_path }}</p>
+
+  <p class="why">You can close this tab now.
+  Return to the terminal and press Ctrl+C to stop the wizard.</p>
+</main>
+</body>
+</html>

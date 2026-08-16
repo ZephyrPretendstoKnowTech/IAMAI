@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Tests
+    # The tool is developed on Windows and intended to run anywhere. Both are
+    # checked because the snapshot format is byte compared, and newline
+    # translation on Windows once made identical content hash differently.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        # requirements-dev.txt is hash pinned (DEPS-001), so this is two
+        # steps rather than one: the pinned dependencies first, verified
+        # against their recorded hashes, then the project itself with
+        # --no-deps since its dependencies are already satisfied. pip
+        # rejects mixing --require-hashes with an unpinned editable install
+        # in the same invocation.
+        run: |
+          python -m pip install --require-hashes -r requirements-dev.txt
+          python -m pip install --no-deps -e .
+
+      - name: Tests
+        # Every test runs against recorded Graph responses with respx set to
+        # assert_all_mocked, so a live network call fails rather than silently
+        # reaching Microsoft from CI.
+        run: python -m pytest -q
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5
+        with:
+          # The whole history is public once this repository is, so the whole
+          # history is what gets scanned. A shallow clone would check only the
+          # most recent commit and report clean regardless.
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        # Verifies the downloaded tarball against the checksum gitleaks
+        # publishes alongside it in the same release, so a corrupted or
+        # tampered-in-transit download is caught before the binary ever
+        # runs (DEPLOY-001). This is not a signature: both files come from
+        # the same GitHub release, so it does not defend against a full
+        # compromise of that release itself, only against the tarball being
+        # altered or corrupted separately from it. set -o pipefail makes the
+        # grep-into-sha256sum pipe fail closed on its own terms if the
+        # checksums format ever changes (grep no-match): GitHub's default
+        # bash -e does not enable pipefail, so without this the pipe's exit
+        # status is sha256sum's alone (DEPS-2-005).
+        env:
+          GITLEAKS_VERSION: 8.30.1
+        run: |
+          set -o pipefail
+          ASSET="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -sSfL -O "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${ASSET}"
+          curl -sSfL -o checksums.txt \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_checksums.txt"
+          # sha256sum -c looks up the exact filename named in the checksum
+          # line, so the download must keep its original name (-O) rather
+          # than being renamed -- a renamed file fails this check on every
+          # run, tampered or not, which a local dry run against a synthetic
+          # checksums file caught before this ever reached CI.
+          grep "${ASSET}\$" checksums.txt | sha256sum -c -
+          tar -xzf "$ASSET" gitleaks
+          ./gitleaks version
+
+      - name: Scan history
+        run: ./gitleaks git . --config .gitleaks.toml --redact --no-banner
+
+  packaging:
+    name: Packaging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09  # v5
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --require-hashes -r requirements.txt
+          python -m pip install --no-deps -e .
+
+      - name: The command line entry point exists
+        run: iamai --help
+
+      - name: The shipped standard is present and valid
+        # Whoever self hosts this grades against the pack rather than a
+        # baseline built from a reference tenant they do not have, so a
+        # missing or malformed pack breaks the only path they can take.
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          from iamai.canon import validate_pack
+          path = pathlib.Path("packs/basics-v1.json")
+          pack = json.loads(path.read_text(encoding="utf-8"))
+          errors = validate_pack(pack)
+          if errors:
+              print("\n".join(errors))
+              sys.exit(1)
+          print(f"{path}: {len(pack['controls'])} controls, valid")
+          PY

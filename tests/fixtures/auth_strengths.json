@@ -1,0 +1,30 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#policies/authenticationStrengthPolicies",
+  "value": [
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "createdDateTime": "2021-12-01T00:00:00Z",
+      "modifiedDateTime": "2021-12-01T00:00:00Z",
+      "displayName": "Multifactor authentication",
+      "description": "Combinations of methods that satisfy strong authentication, such as a password + SMS",
+      "policyType": "builtIn",
+      "requirementsSatisfied": "mfa",
+      "allowedCombinations": [
+        "windowsHelloForBusiness",
+        "fido2",
+        "x509CertificateMultiFactor",
+        "deviceBasedPush",
+        "temporaryAccessPassOneTime",
+        "temporaryAccessPassMultiUse",
+        "password, microsoftAuthenticatorPush",
+        "password, softwareOath",
+        "password, hardwareOath",
+        "password, sms",
+        "password, voice",
+        "federatedMultiFactor",
+        "microsoftAuthenticatorPush, federatedSingleFactor",
+        "x509CertificateSingleFactor, federatedSingleFactor"
+      ]
+    }
+  ]
+}

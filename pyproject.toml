@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iamai"
+version = "1.0.0"
+description = "Reads a Microsoft Entra tenant's identity security posture and compares it against a reference baseline."
+requires-python = ">=3.12"
+dependencies = [
+    "msal==1.37.0",
+    "httpx==0.28.1",
+    "typer==0.26.7",
+    "pydantic==2.13.4",
+    "jinja2==3.1.6",
+    "flask==3.1.3",
+    "cryptography==48.0.1",
+    "tenacity==9.1.4",
+    # The IANA time zone database. zoneinfo has no system source on Windows, so
+    # without this every report timezone silently fell back to UTC there.
+    "tzdata==2026.3",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest==9.0.3",
+    "respx==0.23.1",
+]
+
+[project.scripts]
+iamai = "iamai.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"iamai.report" = ["templates/*.j2"]
+"iamai.web" = ["templates/*.j2"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "m0: milestone 0 plumbing tests",
+    "m1: milestone 1 baseline and parity engine tests",
+    "m2: milestone 2 assessment report tests",
+    "m3: milestone 3 questionnaire tests",
+    "m4: milestone 4 plan generator tests",
+    "m5: milestone V2-M0 output humanization tests",
+    "m6: milestone V2-M1 parameterized named location tests",
+    "m7: milestone V2-M2 standard pack tests",
+    "m10: milestone PUB-M0 effect based grading tests",
+    "m11: milestone PUB-M1 licensing aware grading tests",
+    "m12: milestone PUB-M2 basics pack tests",
+    "m13: publication safety tests",
+]

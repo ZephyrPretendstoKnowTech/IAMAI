@@ -1,0 +1,67 @@
+[
+  {
+    "allowedCombinations": [
+      "deviceBasedPush",
+      "federatedMultiFactor",
+      "fido2",
+      "hardwareOath,federatedSingleFactor",
+      "microsoftAuthenticatorPush,federatedSingleFactor",
+      "password,hardwareOath",
+      "password,microsoftAuthenticatorPush",
+      "password,sms",
+      "password,softwareOath",
+      "password,voice",
+      "password,x509CertificateMultiFactor",
+      "password,x509CertificateSingleFactor",
+      "sms,federatedSingleFactor",
+      "softwareOath,federatedSingleFactor",
+      "temporaryAccessPassMultiUse",
+      "temporaryAccessPassOneTime",
+      "voice,federatedSingleFactor",
+      "windowsHelloForBusiness",
+      "x509CertificateMultiFactor"
+    ],
+    "combinationConfigurations": [],
+    "combinationConfigurations@odata.context": "https://graph.microsoft.com/v1.0/$metadata#policies/authenticationStrengthPolicies('254fbacd-58a8-41a0-8e0c-6f4e3ba38bb3')/combinationConfigurations",
+    "createdDateTime": "2021-12-01T00:00:00Z",
+    "description": "Combinations of methods that satisfy strong authentication, such as a password + SMS",
+    "displayName": "Multifactor authentication",
+    "id": "254fbacd-58a8-41a0-8e0c-6f4e3ba38bb3",
+    "modifiedDateTime": "2021-12-01T00:00:00Z",
+    "policyType": "builtIn",
+    "requirementsSatisfied": "mfa"
+  },
+  {
+    "allowedCombinations": [
+      "deviceBasedPush",
+      "fido2",
+      "windowsHelloForBusiness",
+      "x509CertificateMultiFactor"
+    ],
+    "combinationConfigurations": [],
+    "combinationConfigurations@odata.context": "https://graph.microsoft.com/v1.0/$metadata#policies/authenticationStrengthPolicies('8047dc57-1b26-445f-97e4-ddd2742ccddc')/combinationConfigurations",
+    "createdDateTime": "2021-12-01T00:00:00Z",
+    "description": "Passwordless methods that satisfy strong authentication, such as Passwordless sign-in with the Microsoft Authenticator",
+    "displayName": "Passwordless MFA",
+    "id": "8047dc57-1b26-445f-97e4-ddd2742ccddc",
+    "modifiedDateTime": "2021-12-01T00:00:00Z",
+    "policyType": "builtIn",
+    "requirementsSatisfied": "mfa"
+  },
+  {
+    "allowedCombinations": [
+      "fido2",
+      "windowsHelloForBusiness",
+      "x509CertificateMultiFactor"
+    ],
+    "combinationConfigurations": [],
+    "combinationConfigurations@odata.context": "https://graph.microsoft.com/v1.0/$metadata#policies/authenticationStrengthPolicies('93ed2a5a-eca8-454f-b723-ac5cedf72cfb')/combinationConfigurations",
+    "createdDateTime": "2021-12-01T00:00:00Z",
+    "description": "Phishing-resistant, Passwordless methods for the strongest authentication, such as a FIDO2 security key",
+    "displayName": "Phishing-resistant MFA",
+    "id": "93ed2a5a-eca8-454f-b723-ac5cedf72cfb",
+    "modifiedDateTime": "2021-12-01T00:00:00Z",
+    "policyType": "builtIn",
+    "requirementsSatisfied": "mfa"
+  }
+]

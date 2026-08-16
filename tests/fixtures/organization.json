@@ -1,0 +1,28 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#organization",
+  "value": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "displayName": "Tenant",
+      "countryLetterCode": "AU",
+      "tenantType": "AAD",
+      "onPremisesSyncEnabled": null,
+      "verifiedDomains": [
+        {
+          "capabilities": "Email, OfficeCommunicationsOnline",
+          "isDefault": true,
+          "isInitial": false,
+          "name": "tenant.example",
+          "type": "Managed"
+        },
+        {
+          "capabilities": "Email, OfficeCommunicationsOnline",
+          "isDefault": false,
+          "isInitial": true,
+          "name": "tenant2.example",
+          "type": "Managed"
+        }
+      ]
+    }
+  ]
+}

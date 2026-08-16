@@ -1,0 +1,22 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#roleManagement/directory/roleDefinitions",
+  "value": [
+    {
+      "id": "62e90394-69f5-4237-9190-012177145e10",
+      "description": "Can manage all aspects of Microsoft Entra ID and Microsoft services that use Microsoft Entra identities.",
+      "displayName": "Global Administrator",
+      "isBuiltIn": true,
+      "isEnabled": true,
+      "templateId": "62e90394-69f5-4237-9190-012177145e10",
+      "version": "1",
+      "rolePermissions": [
+        {
+          "allowedResourceActions": [
+            "microsoft.directory/applications/allProperties/allTasks"
+          ],
+          "condition": null
+        }
+      ]
+    }
+  ]
+}

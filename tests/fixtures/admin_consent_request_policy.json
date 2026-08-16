@@ -1,0 +1,15 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#policies/adminConsentRequestPolicy/$entity",
+  "isEnabled": true,
+  "notifyReviewers": true,
+  "remindersEnabled": true,
+  "requestDurationInDays": 30,
+  "version": 1,
+  "reviewers": [
+    {
+      "query": "/v1.0/roleManagement/directory/roleAssignments?$filter=roleDefinitionId eq '62e90394-69f5-4237-9190-012177145e10'",
+      "queryType": "MicrosoftGraph",
+      "queryRoot": null
+    }
+  ]
+}

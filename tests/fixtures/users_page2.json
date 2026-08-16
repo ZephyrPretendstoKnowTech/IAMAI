@@ -1,0 +1,14 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+  "value": [
+    {
+      "id": "20000000-0000-0000-0000-00000000000b",
+      "accountEnabled": true,
+      "userType": "Member",
+      "userPrincipalName": "user3@tenant.example",
+      "displayName": "User 3",
+      "onPremisesSyncEnabled": null,
+      "signInActivity": null
+    }
+  ]
+}

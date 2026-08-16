@@ -1,0 +1,31 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#domains",
+  "value": [
+    {
+      "id": "tenant.example",
+      "authenticationType": "Managed",
+      "isAdminManaged": true,
+      "isDefault": true,
+      "isInitial": false,
+      "isRoot": true,
+      "isVerified": true,
+      "supportedServices": [
+        "Email",
+        "OfficeCommunicationsOnline"
+      ]
+    },
+    {
+      "id": "tenant2.example",
+      "authenticationType": "Managed",
+      "isAdminManaged": true,
+      "isDefault": false,
+      "isInitial": true,
+      "isRoot": true,
+      "isVerified": true,
+      "supportedServices": [
+        "Email",
+        "OfficeCommunicationsOnline"
+      ]
+    }
+  ]
+}

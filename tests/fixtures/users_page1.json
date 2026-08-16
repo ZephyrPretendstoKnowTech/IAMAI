@@ -1,0 +1,32 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+  "@odata.nextLink": "https://graph.microsoft.com/v1.0/users?$skiptoken=page2token",
+  "value": [
+    {
+      "id": "20000000-0000-0000-0000-000000000001",
+      "accountEnabled": true,
+      "userType": "Member",
+      "userPrincipalName": "user1@tenant.example",
+      "displayName": "User 1",
+      "onPremisesSyncEnabled": null,
+      "signInActivity": {
+        "lastSignInDateTime": "2026-06-01T01:00:00Z",
+        "lastSignInRequestId": "60000000-0000-0000-0000-000000000001",
+        "lastNonInteractiveSignInDateTime": "2026-06-09T01:00:00Z",
+        "lastNonInteractiveSignInRequestId": "60000000-0000-0000-0000-000000000002"
+      }
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000002",
+      "accountEnabled": true,
+      "userType": "Member",
+      "userPrincipalName": "user2@tenant.example",
+      "displayName": "User 2",
+      "onPremisesSyncEnabled": null,
+      "signInActivity": {
+        "lastSignInDateTime": "2026-05-20T07:00:00Z",
+        "lastSignInRequestId": "60000000-0000-0000-0000-000000000003"
+      }
+    }
+  ]
+}

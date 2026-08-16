@@ -1,0 +1,21 @@
+Subject: Reminder: register your second sign in step by {{ registration_deadline }}
+
+Hello,
+
+Our records show you have not yet registered a second sign in step for your
+work account.
+
+Please register before {{ registration_deadline }}:
+
+1. Sign in to your work account in a browser.
+2. When the registration prompt appears, choose Microsoft Authenticator and
+   follow the steps on the screen.
+{% if uses_tap %}
+If the prompt does not appear or you get stuck, contact the helpdesk and ask
+for a one time pass. It lets you sign in and finish the setup in one go.
+{% endif %}
+From {{ enforcement_day }}, the second step is required to sign in. Register
+now so nothing interrupts your work.
+
+Thank you,
+IT

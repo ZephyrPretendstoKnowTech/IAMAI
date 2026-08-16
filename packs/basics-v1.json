@@ -1,0 +1,2233 @@
+{
+  "builtFrom": {
+    "pack": "standard",
+    "tool": "2.0.0",
+    "version": "v1"
+  },
+  "controls": [
+    {
+      "canonical": {
+        "excludeTargets": [
+          {
+            "isRegistrationRequired": false,
+            "target": "slot:breakGlassAccounts"
+          }
+        ],
+        "includeTargets": [
+          {
+            "isRegistrationRequired": false,
+            "target": "all_users"
+          }
+        ],
+        "snoozeDurationInDays": 1,
+        "state": "enabled",
+        "surface": "registrationCampaign"
+      },
+      "citations": [
+        {
+          "item": "Run a registration campaign to set up a passkey or Microsoft Authenticator",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "campaign-001",
+      "intent": "People are prompted to register a second sign in step until they complete it.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "P1",
+      "mitigation": "Turning passkeys on in the sign in methods policy costs nothing, and the registration campaign itself is part of that policy rather than a policy licence. What needs the licence is enforcing registration through policy. Short of that, ask people to register during onboarding and check the registration report to see who has not.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "Everyone needs a second step registered before it can be required. The prompt moves people to register without blocking their work.",
+      "requiredState": "enabled",
+      "riskClass": "medium",
+      "sourceName": "Registration campaign",
+      "surface": "registrationCampaign"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "category": "require",
+        "clientAppTypes": [
+          "all"
+        ],
+        "grant": {
+          "operator": "OR",
+          "strengthCombos": [
+            "fido2",
+            "windowsHelloForBusiness",
+            "x509CertificateMultiFactor"
+          ]
+        },
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "role:024906de-61e5-49c8-8572-40335f1e0e10",
+            "role:02d5655b-c1cf-4e5f-98da-5fb919085bf6",
+            "role:0526716b-113d-4c15-b2c8-68e3c22b9f80",
+            "role:0964bb5e-9bdb-4d7b-ac29-58e794862a40",
+            "role:0ec3f692-38d6-4d14-9e69-0377ca7797ad",
+            "role:0f971eea-41eb-4569-a71e-57bb8a3eff1e",
+            "role:1076ac91-f3d9-41a7-a339-dcdf5f480acc",
+            "role:10dae51f-b6af-4016-8d66-8c2a99b929b3",
+            "role:112ca1a2-15ad-4102-995e-45b0bc479a6a",
+            "role:11451d60-acb2-45eb-a7d6-43d0f0125c13",
+            "role:11648597-926c-4cf3-9c36-bcebb0ba8dcc",
+            "role:1501b917-7653-4ff9-a4b5-203eaf33784f",
+            "role:158c047a-c907-4556-b7ef-446551a6b5f7",
+            "role:1707125e-0aa2-4d4d-8655-a7c786c76a25",
+            "role:17315797-102d-40b4-93e0-432062caca18",
+            "role:194ae4cb-b126-40b2-bd5b-6091b380977d",
+            "role:1a7d78b6-429f-476b-b8eb-35fb715fffd4",
+            "role:1d336d2c-4ae8-42ef-9711-b3604ce3fc2c",
+            "role:25a516ed-2fa0-40ea-a2d0-12923a21473a",
+            "role:25df335f-86eb-4119-b717-0ff02de207e9",
+            "role:27460883-1df1-4691-b032-3b79643e5e63",
+            "role:281fe777-fb20-4fbb-b7a3-ccebce5b0d96",
+            "role:29232cdf-9323-42fd-ade2-1d097af3e4de",
+            "role:2af84b1e-32c8-42b7-82bc-daa82404023b",
+            "role:2b499bcd-da44-4968-8aec-78e1674fa64d",
+            "role:2b745bdf-0803-4d80-aa65-822c4493daac",
+            "role:2ea5ce4c-b2d8-4668-bd81-3680bd2d227a",
+            "role:31392ffb-586c-42d1-9346-e59415a2cc4e",
+            "role:31e939ad-9672-4796-9c2e-873181342d2d",
+            "role:32696413-001a-46ae-978c-ce0f6b3620d2",
+            "role:38a96431-2bdf-4b4c-8b6e-5d3d8abac1a4",
+            "role:3a2c62db-5318-420d-8d74-23affee5d9d5",
+            "role:3d762c5a-1b6c-493f-843e-55a3b42923d4",
+            "role:3edaf663-341e-4475-9f94-5c398ef6c070",
+            "role:3f04f91a-4ad7-4bd3-bcfa-49882ea1a88a",
+            "role:3f1acade-1e04-4fbc-9b69-f0302cd84aef",
+            "role:422218e4-db15-4ef9-bbe0-8afb41546d79",
+            "role:44367163-eba1-44c3-98af-f5787879f96a",
+            "role:45d8d3c5-c802-45c6-b32a-1d70b5e1e86e",
+            "role:49eb8f75-97e9-4e37-9b2b-6c3ebfcffa31",
+            "role:4a5d8f65-41da-4de4-8968-e035b65339cf",
+            "role:4ba39ca4-527c-499a-b93d-d9b492c50246",
+            "role:4d6ac14f-3453-41d0-bef9-a3e0c569773a",
+            "role:507f53e4-4e52-4077-abd3-d2e1558b6ea2",
+            "role:58a13ea3-c632-46ae-9ee0-9c0d43cd7f3d",
+            "role:59d46f88-662b-457b-bceb-5c3809e5908f",
+            "role:5b784334-f94b-471a-a387-e7219fc49ca2",
+            "role:5c4f9dcd-47dc-4cf7-8c9a-9e4207cbfc91",
+            "role:5d6b6bb7-de71-4623-b4af-96380a352509",
+            "role:5f2222b1-57c3-48ba-8ad5-d4759f1fde6f",
+            "role:62e90394-69f5-4237-9190-012177145e10",
+            "role:644ef478-e28f-4e28-b9dc-3fdde9aa0b1f",
+            "role:69091246-20e8-4a56-aa4d-066075b2a7a8",
+            "role:6b942400-691f-4bf0-9d12-d8a254a2baf5",
+            "role:6e591065-9bad-43ed-90f3-e9424366d2f0",
+            "role:729827e3-9c14-49f7-bb1b-9608f156bbb8",
+            "role:744ec460-397e-42ad-a462-8b3f9747a02c",
+            "role:7495fdc4-34c4-4d15-a289-98788ce399fd",
+            "role:74ef975b-6605-40af-a5d2-b9539d836353",
+            "role:75934031-6c7e-415a-99d7-48dbd49e875e",
+            "role:75941009-915a-4869-abe7-691bff18279e",
+            "role:7698a772-787b-4ac8-901f-60d6b08affd2",
+            "role:78b0ccd1-afc2-4f92-9116-b41aedd09592",
+            "role:790c1fb9-7f7d-4f88-86a1-ef1f95c05c1b",
+            "role:7be44c8a-adaf-4e2a-84d6-ab2649e08a13",
+            "role:810a2642-a034-447f-a5e8-41beaa378541",
+            "role:8329153b-31d0-4727-b945-745eb3bc5f31",
+            "role:8424c6f0-a189-499e-bbd0-26c1753c96d4",
+            "role:843318fb-79a6-4168-9e6f-aa9a07481cc4",
+            "role:87761b17-1ed2-4af3-9acd-92a150038160",
+            "role:8835291a-918c-4fd7-a9ce-faa49f0cf7d9",
+            "role:88d8e3e3-8f55-4a1e-953a-9b9898b8876b",
+            "role:892c5842-a9a6-463a-8041-72aa08ca3cf6",
+            "role:8ac3fc64-6eca-42ea-9e69-59f4c7b60eb2",
+            "role:8c8b803f-96e1-4129-9349-20738d9f9652",
+            "role:92b086b3-e367-4ef2-b869-1de128fb986e",
+            "role:92ed04bf-c94a-4b82-9729-b799a7a4c178",
+            "role:9360feb5-f418-4baa-8175-e2a00bac4301",
+            "role:95e79109-95c0-4d8e-aee3-d01accf2d47b",
+            "role:963797fb-eb3b-4cde-8ce3-5878b3f32a3f",
+            "role:966707d0-3269-4727-9be2-8c3a10f19b9d",
+            "role:99009c4a-3b3f-4957-82a9-9d35e12db77e",
+            "role:9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3",
+            "role:9c094953-4995-41c8-84c8-3ebb9b32c93f",
+            "role:9c6df0f2-1e7c-4dc3-b195-66dfbd24aa8f",
+            "role:9c99539d-8186-4804-835f-fd51ef9e2dcd",
+            "role:9d3e04ba-3ee4-4d1b-a3a7-9aef423a09be",
+            "role:9d70768a-0cbc-4b4c-aea3-2e124b2477f4",
+            "role:9f06204d-73c1-4d4c-880a-6edb90606fd8",
+            "role:a0b1b346-4d3e-4e8b-98f8-753987be4970",
+            "role:a92aed5d-d78a-4d16-b381-09adb37eb3b0",
+            "role:a9ea8996-122f-4c74-9520-8edcd192826c",
+            "role:aa38014f-0993-46e9-9b45-30501a20909d",
+            "role:aaf43236-0c0d-4d5f-883a-6955382ac081",
+            "role:ac16e43d-7b2d-40e0-ac05-243ff356ab5b",
+            "role:ac434307-12b9-4fa1-a708-88bf58caabc1",
+            "role:adb2368d-a9be-41b5-8667-d96778e081b0",
+            "role:af78dc32-cf4d-46f9-ba4e-4428526346b5",
+            "role:b0f54661-2d74-4c50-afa3-1ec803f12efe",
+            "role:b1be1c3e-b65d-4f19-8427-f6fa0d97feb9",
+            "role:b5a8dcf3-09d5-43a9-a639-8e29ef291470",
+            "role:baf37b3a-610e-45da-9e62-d9d1e5e8914b",
+            "role:be2f45a1-457d-42af-a067-6ec1fa63bc45",
+            "role:c34f683f-4d5a-4403-affd-6615e00e3a7f",
+            "role:c430b396-e693-46cc-96f3-db01bf8bb62a",
+            "role:c4e39bd9-1100-46d3-8c65-fb160da0071f",
+            "role:cf1c38e5-3621-4004-a7cb-879624dced7c",
+            "role:d2562ede-74db-457e-a7b6-544e236ebb61",
+            "role:d29b2b05-8046-44ba-8758-1e26182fcf32",
+            "role:d37c8bed-0711-4417-ba38-b4abe66ce4c2",
+            "role:d405c6df-0af8-4e3b-95e4-4d06e542189e",
+            "role:db506228-d27e-4b7d-95e5-295956d6615f",
+            "role:dd13091a-6207-4fc0-82ba-3641e056ab95",
+            "role:e00e864a-17c5-4a4b-9c06-f5b95a8d5bd8",
+            "role:e07494ad-1654-4dd2-922e-6f81a71bf00f",
+            "role:e300d9e7-4a2b-4295-9eff-f1c78b36cc98",
+            "role:e3973bdf-4987-49ae-837a-ba8e231c7286",
+            "role:e48398e2-f4bb-4074-8f31-4586725e205b",
+            "role:e6d1a23a-da11-4be4-9570-befc86d067a7",
+            "role:e8611ab8-c189-46e8-94e1-60213ab1f814",
+            "role:e8cef6f1-e4bd-4ea8-bc07-4b8d950f4477",
+            "role:e93e3737-fa85-474a-aee4-7d3fb86510f3",
+            "role:eb1f4a8d-243a-41f0-9fbd-c7cdf6c5ef7c",
+            "role:ecb2c6bf-0ab6-418e-bd87-7986f8d63bbe",
+            "role:ee67aa9c-e510-4759-b906-227085a7fd4d",
+            "role:f023fd81-a637-4b56-95fd-791ac0226033",
+            "role:f28a1f50-f6e7-4571-818b-6a12f2af6b6c",
+            "role:f2ef992c-3afb-46b9-b7cf-a126ee74c451",
+            "role:f70938a0-fc10-4177-9e90-2178f8765737",
+            "role:fcf91098-03e3-41a9-b5ba-6f0ec8188a12",
+            "role:fdd7a751-b60b-444a-984c-02652fe8fa1c",
+            "role:fe930be7-5e62-47db-91af-98c3a49a38b1",
+            "role:ffd52fa5-98dc-465c-991d-fc073eb59f8f"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "MS.AAD.3.6v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Require phishing-resistant MFA for Microsoft Entra administrator roles",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "cap-001",
+      "intent": "People with administrator roles must prove who they are with a strong, phishing resistant sign in method.",
+      "knownOptionalDeviations": [
+        "270efc09-cd0d-444b-a71f-39af4910ec45"
+      ],
+      "licenseRequirement": "P1",
+      "mitigation": "Security defaults is free and does not need this licence. It requires a second sign in step for everyone, requires it of administrators every time, and blocks the oldest sign in protocols. Administrators will be asked for a second step every time, which is the larger part of this. Requiring that the step be phishing resistant is not possible without the licence, but you can turn passkeys on in the sign in methods policy at no cost and have your administrators register one, so the strong method is at least available and in use even though nothing forces it.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "Administrator accounts can change anything in the company's systems, so they are the first target for attackers. Requiring the strongest sign in proof protects the accounts with the most power.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "high",
+      "sourceName": "Core - Allow - MFA for Admins",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "category": "require",
+        "clientAppTypes": [
+          "all"
+        ],
+        "grant": {
+          "operator": "OR",
+          "strengthCombos": [
+            "fido2",
+            "windowsHelloForBusiness",
+            "x509CertificateMultiFactor"
+          ]
+        },
+        "session": {
+          "signInFrequency": {
+            "frequencyInterval": "timeBased",
+            "isEnabled": true,
+            "type": "days",
+            "value": 14
+          }
+        },
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "role:024906de-61e5-49c8-8572-40335f1e0e10",
+            "role:02d5655b-c1cf-4e5f-98da-5fb919085bf6",
+            "role:0526716b-113d-4c15-b2c8-68e3c22b9f80",
+            "role:0964bb5e-9bdb-4d7b-ac29-58e794862a40",
+            "role:0ec3f692-38d6-4d14-9e69-0377ca7797ad",
+            "role:0f971eea-41eb-4569-a71e-57bb8a3eff1e",
+            "role:1076ac91-f3d9-41a7-a339-dcdf5f480acc",
+            "role:10dae51f-b6af-4016-8d66-8c2a99b929b3",
+            "role:112ca1a2-15ad-4102-995e-45b0bc479a6a",
+            "role:11451d60-acb2-45eb-a7d6-43d0f0125c13",
+            "role:11648597-926c-4cf3-9c36-bcebb0ba8dcc",
+            "role:1501b917-7653-4ff9-a4b5-203eaf33784f",
+            "role:158c047a-c907-4556-b7ef-446551a6b5f7",
+            "role:1707125e-0aa2-4d4d-8655-a7c786c76a25",
+            "role:17315797-102d-40b4-93e0-432062caca18",
+            "role:194ae4cb-b126-40b2-bd5b-6091b380977d",
+            "role:1a7d78b6-429f-476b-b8eb-35fb715fffd4",
+            "role:1d336d2c-4ae8-42ef-9711-b3604ce3fc2c",
+            "role:25a516ed-2fa0-40ea-a2d0-12923a21473a",
+            "role:25df335f-86eb-4119-b717-0ff02de207e9",
+            "role:27460883-1df1-4691-b032-3b79643e5e63",
+            "role:281fe777-fb20-4fbb-b7a3-ccebce5b0d96",
+            "role:29232cdf-9323-42fd-ade2-1d097af3e4de",
+            "role:2af84b1e-32c8-42b7-82bc-daa82404023b",
+            "role:2b499bcd-da44-4968-8aec-78e1674fa64d",
+            "role:2b745bdf-0803-4d80-aa65-822c4493daac",
+            "role:2ea5ce4c-b2d8-4668-bd81-3680bd2d227a",
+            "role:31392ffb-586c-42d1-9346-e59415a2cc4e",
+            "role:31e939ad-9672-4796-9c2e-873181342d2d",
+            "role:32696413-001a-46ae-978c-ce0f6b3620d2",
+            "role:38a96431-2bdf-4b4c-8b6e-5d3d8abac1a4",
+            "role:3a2c62db-5318-420d-8d74-23affee5d9d5",
+            "role:3d762c5a-1b6c-493f-843e-55a3b42923d4",
+            "role:3edaf663-341e-4475-9f94-5c398ef6c070",
+            "role:3f04f91a-4ad7-4bd3-bcfa-49882ea1a88a",
+            "role:3f1acade-1e04-4fbc-9b69-f0302cd84aef",
+            "role:422218e4-db15-4ef9-bbe0-8afb41546d79",
+            "role:44367163-eba1-44c3-98af-f5787879f96a",
+            "role:45d8d3c5-c802-45c6-b32a-1d70b5e1e86e",
+            "role:49eb8f75-97e9-4e37-9b2b-6c3ebfcffa31",
+            "role:4a5d8f65-41da-4de4-8968-e035b65339cf",
+            "role:4ba39ca4-527c-499a-b93d-d9b492c50246",
+            "role:4d6ac14f-3453-41d0-bef9-a3e0c569773a",
+            "role:507f53e4-4e52-4077-abd3-d2e1558b6ea2",
+            "role:58a13ea3-c632-46ae-9ee0-9c0d43cd7f3d",
+            "role:59d46f88-662b-457b-bceb-5c3809e5908f",
+            "role:5b784334-f94b-471a-a387-e7219fc49ca2",
+            "role:5c4f9dcd-47dc-4cf7-8c9a-9e4207cbfc91",
+            "role:5d6b6bb7-de71-4623-b4af-96380a352509",
+            "role:5f2222b1-57c3-48ba-8ad5-d4759f1fde6f",
+            "role:62e90394-69f5-4237-9190-012177145e10",
+            "role:644ef478-e28f-4e28-b9dc-3fdde9aa0b1f",
+            "role:69091246-20e8-4a56-aa4d-066075b2a7a8",
+            "role:6b942400-691f-4bf0-9d12-d8a254a2baf5",
+            "role:6e591065-9bad-43ed-90f3-e9424366d2f0",
+            "role:729827e3-9c14-49f7-bb1b-9608f156bbb8",
+            "role:744ec460-397e-42ad-a462-8b3f9747a02c",
+            "role:7495fdc4-34c4-4d15-a289-98788ce399fd",
+            "role:74ef975b-6605-40af-a5d2-b9539d836353",
+            "role:75934031-6c7e-415a-99d7-48dbd49e875e",
+            "role:75941009-915a-4869-abe7-691bff18279e",
+            "role:7698a772-787b-4ac8-901f-60d6b08affd2",
+            "role:78b0ccd1-afc2-4f92-9116-b41aedd09592",
+            "role:790c1fb9-7f7d-4f88-86a1-ef1f95c05c1b",
+            "role:7be44c8a-adaf-4e2a-84d6-ab2649e08a13",
+            "role:810a2642-a034-447f-a5e8-41beaa378541",
+            "role:8329153b-31d0-4727-b945-745eb3bc5f31",
+            "role:8424c6f0-a189-499e-bbd0-26c1753c96d4",
+            "role:843318fb-79a6-4168-9e6f-aa9a07481cc4",
+            "role:87761b17-1ed2-4af3-9acd-92a150038160",
+            "role:8835291a-918c-4fd7-a9ce-faa49f0cf7d9",
+            "role:88d8e3e3-8f55-4a1e-953a-9b9898b8876b",
+            "role:892c5842-a9a6-463a-8041-72aa08ca3cf6",
+            "role:8ac3fc64-6eca-42ea-9e69-59f4c7b60eb2",
+            "role:8c8b803f-96e1-4129-9349-20738d9f9652",
+            "role:92b086b3-e367-4ef2-b869-1de128fb986e",
+            "role:92ed04bf-c94a-4b82-9729-b799a7a4c178",
+            "role:9360feb5-f418-4baa-8175-e2a00bac4301",
+            "role:95e79109-95c0-4d8e-aee3-d01accf2d47b",
+            "role:963797fb-eb3b-4cde-8ce3-5878b3f32a3f",
+            "role:966707d0-3269-4727-9be2-8c3a10f19b9d",
+            "role:99009c4a-3b3f-4957-82a9-9d35e12db77e",
+            "role:9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3",
+            "role:9c094953-4995-41c8-84c8-3ebb9b32c93f",
+            "role:9c6df0f2-1e7c-4dc3-b195-66dfbd24aa8f",
+            "role:9c99539d-8186-4804-835f-fd51ef9e2dcd",
+            "role:9d3e04ba-3ee4-4d1b-a3a7-9aef423a09be",
+            "role:9d70768a-0cbc-4b4c-aea3-2e124b2477f4",
+            "role:9f06204d-73c1-4d4c-880a-6edb90606fd8",
+            "role:a0b1b346-4d3e-4e8b-98f8-753987be4970",
+            "role:a92aed5d-d78a-4d16-b381-09adb37eb3b0",
+            "role:a9ea8996-122f-4c74-9520-8edcd192826c",
+            "role:aa38014f-0993-46e9-9b45-30501a20909d",
+            "role:aaf43236-0c0d-4d5f-883a-6955382ac081",
+            "role:ac16e43d-7b2d-40e0-ac05-243ff356ab5b",
+            "role:ac434307-12b9-4fa1-a708-88bf58caabc1",
+            "role:adb2368d-a9be-41b5-8667-d96778e081b0",
+            "role:af78dc32-cf4d-46f9-ba4e-4428526346b5",
+            "role:b0f54661-2d74-4c50-afa3-1ec803f12efe",
+            "role:b1be1c3e-b65d-4f19-8427-f6fa0d97feb9",
+            "role:b5a8dcf3-09d5-43a9-a639-8e29ef291470",
+            "role:baf37b3a-610e-45da-9e62-d9d1e5e8914b",
+            "role:be2f45a1-457d-42af-a067-6ec1fa63bc45",
+            "role:c34f683f-4d5a-4403-affd-6615e00e3a7f",
+            "role:c430b396-e693-46cc-96f3-db01bf8bb62a",
+            "role:c4e39bd9-1100-46d3-8c65-fb160da0071f",
+            "role:cf1c38e5-3621-4004-a7cb-879624dced7c",
+            "role:d2562ede-74db-457e-a7b6-544e236ebb61",
+            "role:d29b2b05-8046-44ba-8758-1e26182fcf32",
+            "role:d37c8bed-0711-4417-ba38-b4abe66ce4c2",
+            "role:d405c6df-0af8-4e3b-95e4-4d06e542189e",
+            "role:db506228-d27e-4b7d-95e5-295956d6615f",
+            "role:dd13091a-6207-4fc0-82ba-3641e056ab95",
+            "role:e00e864a-17c5-4a4b-9c06-f5b95a8d5bd8",
+            "role:e07494ad-1654-4dd2-922e-6f81a71bf00f",
+            "role:e300d9e7-4a2b-4295-9eff-f1c78b36cc98",
+            "role:e3973bdf-4987-49ae-837a-ba8e231c7286",
+            "role:e48398e2-f4bb-4074-8f31-4586725e205b",
+            "role:e6d1a23a-da11-4be4-9570-befc86d067a7",
+            "role:e8611ab8-c189-46e8-94e1-60213ab1f814",
+            "role:e8cef6f1-e4bd-4ea8-bc07-4b8d950f4477",
+            "role:e93e3737-fa85-474a-aee4-7d3fb86510f3",
+            "role:eb1f4a8d-243a-41f0-9fbd-c7cdf6c5ef7c",
+            "role:ecb2c6bf-0ab6-418e-bd87-7986f8d63bbe",
+            "role:ee67aa9c-e510-4759-b906-227085a7fd4d",
+            "role:f023fd81-a637-4b56-95fd-791ac0226033",
+            "role:f28a1f50-f6e7-4571-818b-6a12f2af6b6c",
+            "role:f2ef992c-3afb-46b9-b7cf-a126ee74c451",
+            "role:f70938a0-fc10-4177-9e90-2178f8765737",
+            "role:fcf91098-03e3-41a9-b5ba-6f0ec8188a12",
+            "role:fdd7a751-b60b-444a-984c-02652fe8fa1c",
+            "role:fe930be7-5e62-47db-91af-98c3a49a38b1",
+            "role:ffd52fa5-98dc-465c-991d-fc073eb59f8f",
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "All"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "MS.AAD.3.1v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "MS.AAD.3.2v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Require phishing-resistant MFA for all users",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "cap-002",
+      "intent": "Everyone must confirm their identity with a second step when signing in.",
+      "knownOptionalDeviations": [
+        "270efc09-cd0d-444b-a71f-39af4910ec45"
+      ],
+      "licenseRequirement": "P1",
+      "mitigation": "Security defaults is free and does not need this licence. It requires a second sign in step for everyone, requires it of administrators every time, and blocks the oldest sign in protocols. That covers the substance of this control. What it does not give you is the ability to require a phishing resistant method specifically, or to leave anyone out, so plan for the emergency accounts before turning it on.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "A password alone is not enough. If a password is stolen, the second step stops the attacker from getting in.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "high",
+      "sourceName": "Core - Allow - MFA for Internal Users",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "authFlows": [
+          "authenticationTransfer"
+        ],
+        "category": "block",
+        "clientAppTypes": [
+          "all"
+        ],
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "All"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "Block authentication flows with Conditional Access policy",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "cap-003",
+      "intent": "Transferring a sign in from one device to another is blocked.",
+      "knownOptionalDeviations": [
+        "270efc09-cd0d-444b-a71f-39af4910ec45"
+      ],
+      "licenseRequirement": "P1",
+      "mitigation": "There is no free equivalent. This blocks one specific way a sign in is moved from a computer to a phone, and nothing outside policy can see that happen. Requiring a phishing resistant method reduces what an attacker gains from it.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "Attackers abuse sign in transfer to move a stolen session onto their own device. Blocking it closes that path.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "medium",
+      "sourceName": "Core - Block - Authentication Transfer Flow",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "authFlows": [
+          "deviceCodeFlow"
+        ],
+        "category": "block",
+        "clientAppTypes": [
+          "all"
+        ],
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "All"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "MS.AAD.3.9v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Block authentication flows with Conditional Access policy",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "cap-004",
+      "intent": "The device code sign in flow is blocked.",
+      "knownOptionalDeviations": [
+        "270efc09-cd0d-444b-a71f-39af4910ec45"
+      ],
+      "licenseRequirement": "P1",
+      "mitigation": "Security defaults is free and does not need this licence. It requires a second sign in step for everyone, requires it of administrators every time, and blocks the oldest sign in protocols. Tenants created from July 2026 also get the device code sign in flow blocked as part of it. An older tenant does not, and there is no free way to block that flow on its own.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "This sign in style is designed for TVs and shared devices, and attackers abuse it to trick people into approving a sign in they did not start.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "medium",
+      "sourceName": "Core - Block - Device Code Flow",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "category": "block",
+        "clientAppTypes": [
+          "exchangeActiveSync",
+          "other"
+        ],
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "MS.AAD.1.1v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Block legacy authentication with Conditional Access",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "cap-005",
+      "intent": "Old sign in methods that cannot do a second identity check are blocked.",
+      "knownOptionalDeviations": [
+        "270efc09-cd0d-444b-a71f-39af4910ec45"
+      ],
+      "licenseRequirement": "P1",
+      "mitigation": "Security defaults is free and does not need this licence. It requires a second sign in step for everyone, requires it of administrators every time, and blocks the oldest sign in protocols. Blocking the old protocols is part of what it does, so this protection is available to you today at no cost.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "Older apps and protocols skip modern security checks entirely. Attackers use them as a back door, so they are shut off.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "high",
+      "sourceName": "Core - Block - Legacy Authentication",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "00000002-0000-0ff1-ce00-000000000000",
+            "00000003-0000-0ff1-ce00-000000000000",
+            "1c3f9714-cea8-4bb0-a077-d7023cb96b22",
+            "b279d4e3-a410-48fd-8673-28ecb59c6565"
+          ]
+        },
+        "category": "session",
+        "clientAppTypes": [
+          "mobileAppsAndDesktopClients"
+        ],
+        "devices": {
+          "exclude": [],
+          "filter": "device.systemLabels -contains \"CloudPC\" -and device.trustType -eq \"AzureAD\"",
+          "include": [],
+          "mode": "exclude"
+        },
+        "platforms": {
+          "exclude": [],
+          "include": [
+            "windows"
+          ]
+        },
+        "session": {
+          "secureSignInSession": {
+            "isEnabled": true
+          }
+        },
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "All"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "How token protection enhances Conditional Access policies",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "cap-006",
+      "intent": "Sign in sessions on Windows are locked to the device they were created on.",
+      "knownOptionalDeviations": [
+        "270efc09-cd0d-444b-a71f-39af4910ec45"
+      ],
+      "licenseRequirement": "P1",
+      "mitigation": "There is no free equivalent, and this one also needs managed Windows devices, so it is out of reach on two counts for most small tenants. Shorter sessions and phishing resistant methods are the practical substitute.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "If someone steals a session token, it will not work from any other device, so a stolen token is useless.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "medium",
+      "sourceName": "Core - Require - Token Protection (Windows)",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "includeTargets": [
+          {
+            "isRegistrationRequired": false,
+            "target": "all_users"
+          }
+        ],
+        "method": "Email",
+        "state": "disabled",
+        "surface": "authMethods"
+      },
+      "citations": [
+        {
+          "item": "MS.AAD.3.5v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Authentication methods policy",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "method-Email",
+      "intent": "The Email sign in method is turned off.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "This method is easier to trick or intercept, so the standard keeps it off.",
+      "requiredState": "enabled",
+      "riskClass": "low",
+      "sourceName": "Email",
+      "surface": "authMethods"
+    },
+    {
+      "canonical": {
+        "includeTargets": [
+          {
+            "isRegistrationRequired": false,
+            "target": "all_users"
+          }
+        ],
+        "method": "Fido2",
+        "settings": {
+          "isAttestationEnforced": true,
+          "isSelfServiceRegistrationAllowed": true
+        },
+        "state": "enabled",
+        "surface": "authMethods"
+      },
+      "citations": [
+        {
+          "item": "Enable passkeys (FIDO2) for your organization",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "method-Fido2",
+      "intent": "Passkeys can be set up and used to sign in.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "A passkey cannot be phished: it only works on the site it was created for, so a convincing fake page gets nothing. This is the strongest sign in method available and everything else in the standard assumes people can register one.",
+      "requiredState": "enabled",
+      "riskClass": "low",
+      "sourceName": "Fido2",
+      "surface": "authMethods"
+    },
+    {
+      "appliesWhen": [
+        {
+          "equals": true,
+          "path": "keyRestrictions.isEnforced"
+        },
+        {
+          "equals": "allow",
+          "path": "keyRestrictions.enforcementType"
+        }
+      ],
+      "canonical": {
+        "method": "Fido2",
+        "surface": "authMethods"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "Enable and support passkeys in Microsoft Authenticator",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "The allowed passkey device list leaves out the Microsoft Authenticator app, so people cannot set up a passkey on their phone.",
+      "id": "method-Fido2-aaguid",
+      "intent": "If only certain passkey devices are allowed, the Microsoft Authenticator app is one of them.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "method": "Fido2",
+      "needsIntentText": false,
+      "notApplicableText": "This tenant does not limit which passkey devices are allowed, so there is no list to leave the Authenticator app out of.",
+      "profile": "baseline",
+      "rationale": "Limiting which devices can hold a passkey is a good idea. The trap is that the allow list is written with security key identifiers and the Authenticator app is left out, so people trying to set up a passkey on their phone are blocked while security keys keep working. Nothing reports an error; enrollment just fails for everyone without hardware.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "contains": [
+            "de1e552d-db1d-4423-a619-566b625cdc84",
+            "90a3ccdf-635c-4729-a248-9b709135078f"
+          ],
+          "path": "keyRestrictions.aaGuids"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Passkey allow list includes Microsoft Authenticator",
+      "surface": "authMethods"
+    },
+    {
+      "canonical": {
+        "features": {
+          "displayAppInformationRequiredState": "enabled",
+          "displayLocationInformationRequiredState": "enabled"
+        },
+        "includeTargets": [
+          {
+            "isRegistrationRequired": false,
+            "target": "all_users"
+          }
+        ],
+        "method": "MicrosoftAuthenticator",
+        "settings": {
+          "isSoftwareOathEnabled": false
+        },
+        "state": "enabled",
+        "surface": "authMethods"
+      },
+      "citations": [
+        {
+          "item": "MS.AAD.3.3v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Authentication methods policy",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "method-MicrosoftAuthenticator",
+      "intent": "The Microsoft Authenticator app can be used to sign in.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "For people without a security key, Authenticator on a phone is where their passkey lives. It is also the fallback when a key is lost, so turning it off removes the recovery path for everyone who does not carry hardware.",
+      "requiredState": "enabled",
+      "riskClass": "low",
+      "sourceName": "MicrosoftAuthenticator",
+      "surface": "authMethods"
+    },
+    {
+      "appliesWhen": [
+        {
+          "equals": "enabled",
+          "path": "state"
+        }
+      ],
+      "canonical": {
+        "method": "QRCodePin",
+        "surface": "authMethods"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "QR code authentication method in Microsoft Entra ID",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "QR code sign in is turned on for everyone. It only proves possession of a printed code plus a PIN, so leaving it available tenant wide gives every account a weaker way in than the one the rest of these controls require.",
+      "id": "method-QRCodePin",
+      "intent": "If QR code sign in is turned on, it is turned on for particular people rather than everyone.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "method": "QRCodePin",
+      "needsIntentText": false,
+      "notApplicableText": "QR code sign in is turned off, so there is no scope to get wrong.",
+      "profile": "baseline",
+      "rationale": "This method exists for frontline workers who share a device and cannot carry a phone, and for them it is a reasonable trade. It is single factor, so it is not a substitute for the sign in methods the rest of this pack asks for. Turning it off is not the ask; keeping it to the people who need it is, because a weaker way in that is available to everybody is the way in that gets used.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "excludes": [
+            "all_users"
+          ],
+          "path": "includeTargetIds"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "QR code sign in is scoped",
+      "surface": "authMethods"
+    },
+    {
+      "canonical": {
+        "includeTargets": [
+          {
+            "isRegistrationRequired": false,
+            "target": "all_users"
+          }
+        ],
+        "method": "Sms",
+        "state": "disabled",
+        "surface": "authMethods"
+      },
+      "citations": [
+        {
+          "item": "MS.AAD.3.5v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Authentication methods policy",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "method-Sms",
+      "intent": "The Sms sign in method is turned off.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "This method is easier to trick or intercept, so the standard keeps it off.",
+      "requiredState": "enabled",
+      "riskClass": "low",
+      "sourceName": "Sms",
+      "surface": "authMethods"
+    },
+    {
+      "canonical": {
+        "includeTargets": [
+          {
+            "isRegistrationRequired": false,
+            "target": "all_users"
+          }
+        ],
+        "method": "TemporaryAccessPass",
+        "settings": {
+          "defaultLength": 8,
+          "defaultLifetimeInMinutes": 60,
+          "isUsableOnce": false,
+          "maximumLifetimeInMinutes": 480,
+          "minimumLifetimeInMinutes": 60
+        },
+        "state": "enabled",
+        "surface": "authMethods"
+      },
+      "citations": [
+        {
+          "item": "Configure a Temporary Access Pass",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "method-TemporaryAccessPass",
+      "intent": "A time limited pass can be issued so someone can set up a passkey when they have none, or when they have lost the one they had.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "Setting up a passkey requires already being able to sign in, which a new starter cannot do and someone who lost their phone can no longer do. A short lived pass closes that gap without handing out a password. Its lifetime and length are checked because a long lived pass is a password by another name. A tenant that also makes the pass single use is stricter than this and passes.",
+      "requiredState": "enabled",
+      "riskClass": "low",
+      "sourceName": "TemporaryAccessPass",
+      "surface": "authMethods"
+    },
+    {
+      "canonical": {
+        "includeTargets": [
+          {
+            "isRegistrationRequired": false,
+            "target": "all_users"
+          }
+        ],
+        "method": "Voice",
+        "state": "disabled",
+        "surface": "authMethods"
+      },
+      "citations": [
+        {
+          "item": "MS.AAD.3.5v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Authentication methods policy",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "method-Voice",
+      "intent": "The Voice sign in method is turned off.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "This method is easier to trick or intercept, so the standard keeps it off.",
+      "requiredState": "enabled",
+      "riskClass": "low",
+      "sourceName": "Voice",
+      "surface": "authMethods"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "policyMigrationState",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "authMethodsPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "MS.AAD.3.4v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "How to migrate to the Authentication methods policy",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "The move to the current sign in method settings is not finished, so the older settings still apply as well.",
+      "id": "methodspolicy-001",
+      "intent": "The tenant has finished moving to the current place where sign in methods are configured.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "needsIntentText": false,
+      "notApplicableText": "This tenant does not report where it is in the move to the current sign in method settings, so nothing can be concluded about it either way.",
+      "profile": "baseline",
+      "rationale": "Microsoft replaced two older settings pages with a single one. Until the move is finished both sets of settings are live at once, which is how a tenant ends up with a method that looks switched off in one place and still works from the other. Finishing the move means one place decides.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "equals": "migrationComplete",
+          "path": "policyMigrationState"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Sign in method settings fully migrated",
+      "surface": "authMethodsPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "atLeast": 1,
+          "path": "standingAssignments"
+        }
+      ],
+      "canonical": {
+        "surface": "privilegedAccess"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "Plan a Privileged Identity Management deployment",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "An account other than the emergency accounts holds Global Administrator permanently.",
+      "id": "privileged-001",
+      "intent": "Nobody holds Global Administrator permanently except the emergency accounts.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "needsIntentText": false,
+      "notApplicableText": "No permanent privileged role assignments were found to review.",
+      "profile": "baseline",
+      "rationale": "Global Administrator can do anything in the tenant, so an account holding it around the clock is the most valuable target there is, and it is dangerous every hour of every day rather than only while someone is using it. The emergency accounts are the deliberate exception: they exist precisely to always work. Everyone else should hold the role only while doing the work that needs it.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "atMost": 0,
+          "path": "standingGlobalAdminsBesidesBreakGlass"
+        }
+      ],
+      "riskClass": "high",
+      "sourceName": "Standing Global Administrator access",
+      "surface": "privilegedAccess"
+    },
+    {
+      "appliesWhen": [
+        {
+          "equals": true,
+          "path": "isEnabled"
+        }
+      ],
+      "canonical": {
+        "surface": "securityDefaults"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "Security defaults in Microsoft Entra ID",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "Security Defaults is not enabled.",
+      "id": "secdefaults-001",
+      "intent": "This tenant relies on Security Defaults rather than its own access policies.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "needsIntentText": false,
+      "notApplicableText": "This tenant does not use Security Defaults, so it is free to use Conditional Access policies instead, which the rest of this standard assumes.",
+      "profile": "baseline",
+      "rationale": "Security Defaults is Microsoft's built in baseline: it requires a second sign in step for everyone and blocks the oldest sign in methods, at no licence cost. It is a reasonable place for a small tenant to be. It is also all or nothing, so there is no way to make an exception for a service account, protect administrators more strictly than everyone else, or set how often people sign in again. Those need Conditional Access, and Entra will not run both at once.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "equals": true,
+          "path": "isEnabled"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Security Defaults in use",
+      "surface": "securityDefaults"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "category": "session",
+        "clientAppTypes": [
+          "all"
+        ],
+        "session": {
+          "signInFrequency": {
+            "frequencyInterval": "timeBased",
+            "isEnabled": true,
+            "type": "days",
+            "value": 14
+          }
+        },
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "role:024906de-61e5-49c8-8572-40335f1e0e10",
+            "role:02d5655b-c1cf-4e5f-98da-5fb919085bf6",
+            "role:0526716b-113d-4c15-b2c8-68e3c22b9f80",
+            "role:0964bb5e-9bdb-4d7b-ac29-58e794862a40",
+            "role:0ec3f692-38d6-4d14-9e69-0377ca7797ad",
+            "role:0f971eea-41eb-4569-a71e-57bb8a3eff1e",
+            "role:1076ac91-f3d9-41a7-a339-dcdf5f480acc",
+            "role:10dae51f-b6af-4016-8d66-8c2a99b929b3",
+            "role:112ca1a2-15ad-4102-995e-45b0bc479a6a",
+            "role:11451d60-acb2-45eb-a7d6-43d0f0125c13",
+            "role:11648597-926c-4cf3-9c36-bcebb0ba8dcc",
+            "role:1501b917-7653-4ff9-a4b5-203eaf33784f",
+            "role:158c047a-c907-4556-b7ef-446551a6b5f7",
+            "role:1707125e-0aa2-4d4d-8655-a7c786c76a25",
+            "role:17315797-102d-40b4-93e0-432062caca18",
+            "role:194ae4cb-b126-40b2-bd5b-6091b380977d",
+            "role:1a7d78b6-429f-476b-b8eb-35fb715fffd4",
+            "role:1d336d2c-4ae8-42ef-9711-b3604ce3fc2c",
+            "role:25a516ed-2fa0-40ea-a2d0-12923a21473a",
+            "role:25df335f-86eb-4119-b717-0ff02de207e9",
+            "role:27460883-1df1-4691-b032-3b79643e5e63",
+            "role:281fe777-fb20-4fbb-b7a3-ccebce5b0d96",
+            "role:29232cdf-9323-42fd-ade2-1d097af3e4de",
+            "role:2af84b1e-32c8-42b7-82bc-daa82404023b",
+            "role:2b499bcd-da44-4968-8aec-78e1674fa64d",
+            "role:2b745bdf-0803-4d80-aa65-822c4493daac",
+            "role:2ea5ce4c-b2d8-4668-bd81-3680bd2d227a",
+            "role:31392ffb-586c-42d1-9346-e59415a2cc4e",
+            "role:31e939ad-9672-4796-9c2e-873181342d2d",
+            "role:32696413-001a-46ae-978c-ce0f6b3620d2",
+            "role:38a96431-2bdf-4b4c-8b6e-5d3d8abac1a4",
+            "role:3a2c62db-5318-420d-8d74-23affee5d9d5",
+            "role:3d762c5a-1b6c-493f-843e-55a3b42923d4",
+            "role:3edaf663-341e-4475-9f94-5c398ef6c070",
+            "role:3f04f91a-4ad7-4bd3-bcfa-49882ea1a88a",
+            "role:3f1acade-1e04-4fbc-9b69-f0302cd84aef",
+            "role:422218e4-db15-4ef9-bbe0-8afb41546d79",
+            "role:44367163-eba1-44c3-98af-f5787879f96a",
+            "role:45d8d3c5-c802-45c6-b32a-1d70b5e1e86e",
+            "role:49eb8f75-97e9-4e37-9b2b-6c3ebfcffa31",
+            "role:4a5d8f65-41da-4de4-8968-e035b65339cf",
+            "role:4ba39ca4-527c-499a-b93d-d9b492c50246",
+            "role:4d6ac14f-3453-41d0-bef9-a3e0c569773a",
+            "role:507f53e4-4e52-4077-abd3-d2e1558b6ea2",
+            "role:58a13ea3-c632-46ae-9ee0-9c0d43cd7f3d",
+            "role:59d46f88-662b-457b-bceb-5c3809e5908f",
+            "role:5b784334-f94b-471a-a387-e7219fc49ca2",
+            "role:5c4f9dcd-47dc-4cf7-8c9a-9e4207cbfc91",
+            "role:5d6b6bb7-de71-4623-b4af-96380a352509",
+            "role:5f2222b1-57c3-48ba-8ad5-d4759f1fde6f",
+            "role:62e90394-69f5-4237-9190-012177145e10",
+            "role:644ef478-e28f-4e28-b9dc-3fdde9aa0b1f",
+            "role:69091246-20e8-4a56-aa4d-066075b2a7a8",
+            "role:6b942400-691f-4bf0-9d12-d8a254a2baf5",
+            "role:6e591065-9bad-43ed-90f3-e9424366d2f0",
+            "role:729827e3-9c14-49f7-bb1b-9608f156bbb8",
+            "role:744ec460-397e-42ad-a462-8b3f9747a02c",
+            "role:7495fdc4-34c4-4d15-a289-98788ce399fd",
+            "role:74ef975b-6605-40af-a5d2-b9539d836353",
+            "role:75934031-6c7e-415a-99d7-48dbd49e875e",
+            "role:75941009-915a-4869-abe7-691bff18279e",
+            "role:7698a772-787b-4ac8-901f-60d6b08affd2",
+            "role:78b0ccd1-afc2-4f92-9116-b41aedd09592",
+            "role:790c1fb9-7f7d-4f88-86a1-ef1f95c05c1b",
+            "role:7be44c8a-adaf-4e2a-84d6-ab2649e08a13",
+            "role:810a2642-a034-447f-a5e8-41beaa378541",
+            "role:8329153b-31d0-4727-b945-745eb3bc5f31",
+            "role:8424c6f0-a189-499e-bbd0-26c1753c96d4",
+            "role:843318fb-79a6-4168-9e6f-aa9a07481cc4",
+            "role:87761b17-1ed2-4af3-9acd-92a150038160",
+            "role:8835291a-918c-4fd7-a9ce-faa49f0cf7d9",
+            "role:88d8e3e3-8f55-4a1e-953a-9b9898b8876b",
+            "role:892c5842-a9a6-463a-8041-72aa08ca3cf6",
+            "role:8ac3fc64-6eca-42ea-9e69-59f4c7b60eb2",
+            "role:8c8b803f-96e1-4129-9349-20738d9f9652",
+            "role:92b086b3-e367-4ef2-b869-1de128fb986e",
+            "role:92ed04bf-c94a-4b82-9729-b799a7a4c178",
+            "role:9360feb5-f418-4baa-8175-e2a00bac4301",
+            "role:95e79109-95c0-4d8e-aee3-d01accf2d47b",
+            "role:963797fb-eb3b-4cde-8ce3-5878b3f32a3f",
+            "role:966707d0-3269-4727-9be2-8c3a10f19b9d",
+            "role:99009c4a-3b3f-4957-82a9-9d35e12db77e",
+            "role:9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3",
+            "role:9c094953-4995-41c8-84c8-3ebb9b32c93f",
+            "role:9c6df0f2-1e7c-4dc3-b195-66dfbd24aa8f",
+            "role:9c99539d-8186-4804-835f-fd51ef9e2dcd",
+            "role:9d3e04ba-3ee4-4d1b-a3a7-9aef423a09be",
+            "role:9d70768a-0cbc-4b4c-aea3-2e124b2477f4",
+            "role:9f06204d-73c1-4d4c-880a-6edb90606fd8",
+            "role:a0b1b346-4d3e-4e8b-98f8-753987be4970",
+            "role:a92aed5d-d78a-4d16-b381-09adb37eb3b0",
+            "role:a9ea8996-122f-4c74-9520-8edcd192826c",
+            "role:aa38014f-0993-46e9-9b45-30501a20909d",
+            "role:aaf43236-0c0d-4d5f-883a-6955382ac081",
+            "role:ac16e43d-7b2d-40e0-ac05-243ff356ab5b",
+            "role:ac434307-12b9-4fa1-a708-88bf58caabc1",
+            "role:adb2368d-a9be-41b5-8667-d96778e081b0",
+            "role:af78dc32-cf4d-46f9-ba4e-4428526346b5",
+            "role:b0f54661-2d74-4c50-afa3-1ec803f12efe",
+            "role:b1be1c3e-b65d-4f19-8427-f6fa0d97feb9",
+            "role:b5a8dcf3-09d5-43a9-a639-8e29ef291470",
+            "role:baf37b3a-610e-45da-9e62-d9d1e5e8914b",
+            "role:be2f45a1-457d-42af-a067-6ec1fa63bc45",
+            "role:c34f683f-4d5a-4403-affd-6615e00e3a7f",
+            "role:c430b396-e693-46cc-96f3-db01bf8bb62a",
+            "role:c4e39bd9-1100-46d3-8c65-fb160da0071f",
+            "role:cf1c38e5-3621-4004-a7cb-879624dced7c",
+            "role:d2562ede-74db-457e-a7b6-544e236ebb61",
+            "role:d29b2b05-8046-44ba-8758-1e26182fcf32",
+            "role:d37c8bed-0711-4417-ba38-b4abe66ce4c2",
+            "role:d405c6df-0af8-4e3b-95e4-4d06e542189e",
+            "role:db506228-d27e-4b7d-95e5-295956d6615f",
+            "role:dd13091a-6207-4fc0-82ba-3641e056ab95",
+            "role:e00e864a-17c5-4a4b-9c06-f5b95a8d5bd8",
+            "role:e07494ad-1654-4dd2-922e-6f81a71bf00f",
+            "role:e300d9e7-4a2b-4295-9eff-f1c78b36cc98",
+            "role:e3973bdf-4987-49ae-837a-ba8e231c7286",
+            "role:e48398e2-f4bb-4074-8f31-4586725e205b",
+            "role:e6d1a23a-da11-4be4-9570-befc86d067a7",
+            "role:e8611ab8-c189-46e8-94e1-60213ab1f814",
+            "role:e8cef6f1-e4bd-4ea8-bc07-4b8d950f4477",
+            "role:e93e3737-fa85-474a-aee4-7d3fb86510f3",
+            "role:eb1f4a8d-243a-41f0-9fbd-c7cdf6c5ef7c",
+            "role:ecb2c6bf-0ab6-418e-bd87-7986f8d63bbe",
+            "role:ee67aa9c-e510-4759-b906-227085a7fd4d",
+            "role:f023fd81-a637-4b56-95fd-791ac0226033",
+            "role:f28a1f50-f6e7-4571-818b-6a12f2af6b6c",
+            "role:f2ef992c-3afb-46b9-b7cf-a126ee74c451",
+            "role:f70938a0-fc10-4177-9e90-2178f8765737",
+            "role:fcf91098-03e3-41a9-b5ba-6f0ec8188a12",
+            "role:fdd7a751-b60b-444a-984c-02652fe8fa1c",
+            "role:fe930be7-5e62-47db-91af-98c3a49a38b1",
+            "role:ffd52fa5-98dc-465c-991d-fc073eb59f8f",
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "All"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "Conditional Access adaptive session lifetime policies",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "session-001",
+      "intent": "People who are not administrators sign in again at least every 14 days.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "P1",
+      "mitigation": "There is no free way to set how often people sign in again. Security defaults does not expose it. If sessions need to be cut short, an administrator can revoke a person's sign in sessions by hand, which is a response rather than a standing control.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "A session that never expires is a session an attacker can keep using. Fourteen days bounds how long a stolen session stays useful without asking people to sign in so often that they stop reading the prompt.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "medium",
+      "sourceName": "Core - Session - Reauthentication (Standard Users)",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "category": "session",
+        "clientAppTypes": [
+          "all"
+        ],
+        "session": {
+          "signInFrequency": {
+            "frequencyInterval": "timeBased",
+            "isEnabled": true,
+            "type": "hours",
+            "value": 4
+          }
+        },
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "role:024906de-61e5-49c8-8572-40335f1e0e10",
+            "role:02d5655b-c1cf-4e5f-98da-5fb919085bf6",
+            "role:0526716b-113d-4c15-b2c8-68e3c22b9f80",
+            "role:0964bb5e-9bdb-4d7b-ac29-58e794862a40",
+            "role:0ec3f692-38d6-4d14-9e69-0377ca7797ad",
+            "role:0f971eea-41eb-4569-a71e-57bb8a3eff1e",
+            "role:1076ac91-f3d9-41a7-a339-dcdf5f480acc",
+            "role:10dae51f-b6af-4016-8d66-8c2a99b929b3",
+            "role:112ca1a2-15ad-4102-995e-45b0bc479a6a",
+            "role:11451d60-acb2-45eb-a7d6-43d0f0125c13",
+            "role:11648597-926c-4cf3-9c36-bcebb0ba8dcc",
+            "role:1501b917-7653-4ff9-a4b5-203eaf33784f",
+            "role:158c047a-c907-4556-b7ef-446551a6b5f7",
+            "role:1707125e-0aa2-4d4d-8655-a7c786c76a25",
+            "role:17315797-102d-40b4-93e0-432062caca18",
+            "role:194ae4cb-b126-40b2-bd5b-6091b380977d",
+            "role:1a7d78b6-429f-476b-b8eb-35fb715fffd4",
+            "role:1d336d2c-4ae8-42ef-9711-b3604ce3fc2c",
+            "role:25a516ed-2fa0-40ea-a2d0-12923a21473a",
+            "role:25df335f-86eb-4119-b717-0ff02de207e9",
+            "role:27460883-1df1-4691-b032-3b79643e5e63",
+            "role:281fe777-fb20-4fbb-b7a3-ccebce5b0d96",
+            "role:29232cdf-9323-42fd-ade2-1d097af3e4de",
+            "role:2af84b1e-32c8-42b7-82bc-daa82404023b",
+            "role:2b499bcd-da44-4968-8aec-78e1674fa64d",
+            "role:2b745bdf-0803-4d80-aa65-822c4493daac",
+            "role:2ea5ce4c-b2d8-4668-bd81-3680bd2d227a",
+            "role:31392ffb-586c-42d1-9346-e59415a2cc4e",
+            "role:31e939ad-9672-4796-9c2e-873181342d2d",
+            "role:32696413-001a-46ae-978c-ce0f6b3620d2",
+            "role:38a96431-2bdf-4b4c-8b6e-5d3d8abac1a4",
+            "role:3a2c62db-5318-420d-8d74-23affee5d9d5",
+            "role:3d762c5a-1b6c-493f-843e-55a3b42923d4",
+            "role:3edaf663-341e-4475-9f94-5c398ef6c070",
+            "role:3f04f91a-4ad7-4bd3-bcfa-49882ea1a88a",
+            "role:3f1acade-1e04-4fbc-9b69-f0302cd84aef",
+            "role:422218e4-db15-4ef9-bbe0-8afb41546d79",
+            "role:44367163-eba1-44c3-98af-f5787879f96a",
+            "role:45d8d3c5-c802-45c6-b32a-1d70b5e1e86e",
+            "role:49eb8f75-97e9-4e37-9b2b-6c3ebfcffa31",
+            "role:4a5d8f65-41da-4de4-8968-e035b65339cf",
+            "role:4ba39ca4-527c-499a-b93d-d9b492c50246",
+            "role:4d6ac14f-3453-41d0-bef9-a3e0c569773a",
+            "role:507f53e4-4e52-4077-abd3-d2e1558b6ea2",
+            "role:58a13ea3-c632-46ae-9ee0-9c0d43cd7f3d",
+            "role:59d46f88-662b-457b-bceb-5c3809e5908f",
+            "role:5b784334-f94b-471a-a387-e7219fc49ca2",
+            "role:5c4f9dcd-47dc-4cf7-8c9a-9e4207cbfc91",
+            "role:5d6b6bb7-de71-4623-b4af-96380a352509",
+            "role:5f2222b1-57c3-48ba-8ad5-d4759f1fde6f",
+            "role:62e90394-69f5-4237-9190-012177145e10",
+            "role:644ef478-e28f-4e28-b9dc-3fdde9aa0b1f",
+            "role:69091246-20e8-4a56-aa4d-066075b2a7a8",
+            "role:6b942400-691f-4bf0-9d12-d8a254a2baf5",
+            "role:6e591065-9bad-43ed-90f3-e9424366d2f0",
+            "role:729827e3-9c14-49f7-bb1b-9608f156bbb8",
+            "role:744ec460-397e-42ad-a462-8b3f9747a02c",
+            "role:7495fdc4-34c4-4d15-a289-98788ce399fd",
+            "role:74ef975b-6605-40af-a5d2-b9539d836353",
+            "role:75934031-6c7e-415a-99d7-48dbd49e875e",
+            "role:75941009-915a-4869-abe7-691bff18279e",
+            "role:7698a772-787b-4ac8-901f-60d6b08affd2",
+            "role:78b0ccd1-afc2-4f92-9116-b41aedd09592",
+            "role:790c1fb9-7f7d-4f88-86a1-ef1f95c05c1b",
+            "role:7be44c8a-adaf-4e2a-84d6-ab2649e08a13",
+            "role:810a2642-a034-447f-a5e8-41beaa378541",
+            "role:8329153b-31d0-4727-b945-745eb3bc5f31",
+            "role:8424c6f0-a189-499e-bbd0-26c1753c96d4",
+            "role:843318fb-79a6-4168-9e6f-aa9a07481cc4",
+            "role:87761b17-1ed2-4af3-9acd-92a150038160",
+            "role:8835291a-918c-4fd7-a9ce-faa49f0cf7d9",
+            "role:88d8e3e3-8f55-4a1e-953a-9b9898b8876b",
+            "role:892c5842-a9a6-463a-8041-72aa08ca3cf6",
+            "role:8ac3fc64-6eca-42ea-9e69-59f4c7b60eb2",
+            "role:8c8b803f-96e1-4129-9349-20738d9f9652",
+            "role:92b086b3-e367-4ef2-b869-1de128fb986e",
+            "role:92ed04bf-c94a-4b82-9729-b799a7a4c178",
+            "role:9360feb5-f418-4baa-8175-e2a00bac4301",
+            "role:95e79109-95c0-4d8e-aee3-d01accf2d47b",
+            "role:963797fb-eb3b-4cde-8ce3-5878b3f32a3f",
+            "role:966707d0-3269-4727-9be2-8c3a10f19b9d",
+            "role:99009c4a-3b3f-4957-82a9-9d35e12db77e",
+            "role:9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3",
+            "role:9c094953-4995-41c8-84c8-3ebb9b32c93f",
+            "role:9c6df0f2-1e7c-4dc3-b195-66dfbd24aa8f",
+            "role:9c99539d-8186-4804-835f-fd51ef9e2dcd",
+            "role:9d3e04ba-3ee4-4d1b-a3a7-9aef423a09be",
+            "role:9d70768a-0cbc-4b4c-aea3-2e124b2477f4",
+            "role:9f06204d-73c1-4d4c-880a-6edb90606fd8",
+            "role:a0b1b346-4d3e-4e8b-98f8-753987be4970",
+            "role:a92aed5d-d78a-4d16-b381-09adb37eb3b0",
+            "role:a9ea8996-122f-4c74-9520-8edcd192826c",
+            "role:aa38014f-0993-46e9-9b45-30501a20909d",
+            "role:aaf43236-0c0d-4d5f-883a-6955382ac081",
+            "role:ac16e43d-7b2d-40e0-ac05-243ff356ab5b",
+            "role:ac434307-12b9-4fa1-a708-88bf58caabc1",
+            "role:adb2368d-a9be-41b5-8667-d96778e081b0",
+            "role:af78dc32-cf4d-46f9-ba4e-4428526346b5",
+            "role:b0f54661-2d74-4c50-afa3-1ec803f12efe",
+            "role:b1be1c3e-b65d-4f19-8427-f6fa0d97feb9",
+            "role:b5a8dcf3-09d5-43a9-a639-8e29ef291470",
+            "role:baf37b3a-610e-45da-9e62-d9d1e5e8914b",
+            "role:be2f45a1-457d-42af-a067-6ec1fa63bc45",
+            "role:c34f683f-4d5a-4403-affd-6615e00e3a7f",
+            "role:c430b396-e693-46cc-96f3-db01bf8bb62a",
+            "role:c4e39bd9-1100-46d3-8c65-fb160da0071f",
+            "role:cf1c38e5-3621-4004-a7cb-879624dced7c",
+            "role:d2562ede-74db-457e-a7b6-544e236ebb61",
+            "role:d29b2b05-8046-44ba-8758-1e26182fcf32",
+            "role:d37c8bed-0711-4417-ba38-b4abe66ce4c2",
+            "role:d405c6df-0af8-4e3b-95e4-4d06e542189e",
+            "role:db506228-d27e-4b7d-95e5-295956d6615f",
+            "role:dd13091a-6207-4fc0-82ba-3641e056ab95",
+            "role:e00e864a-17c5-4a4b-9c06-f5b95a8d5bd8",
+            "role:e07494ad-1654-4dd2-922e-6f81a71bf00f",
+            "role:e300d9e7-4a2b-4295-9eff-f1c78b36cc98",
+            "role:e3973bdf-4987-49ae-837a-ba8e231c7286",
+            "role:e48398e2-f4bb-4074-8f31-4586725e205b",
+            "role:e6d1a23a-da11-4be4-9570-befc86d067a7",
+            "role:e8611ab8-c189-46e8-94e1-60213ab1f814",
+            "role:e8cef6f1-e4bd-4ea8-bc07-4b8d950f4477",
+            "role:e93e3737-fa85-474a-aee4-7d3fb86510f3",
+            "role:eb1f4a8d-243a-41f0-9fbd-c7cdf6c5ef7c",
+            "role:ecb2c6bf-0ab6-418e-bd87-7986f8d63bbe",
+            "role:ee67aa9c-e510-4759-b906-227085a7fd4d",
+            "role:f023fd81-a637-4b56-95fd-791ac0226033",
+            "role:f28a1f50-f6e7-4571-818b-6a12f2af6b6c",
+            "role:f2ef992c-3afb-46b9-b7cf-a126ee74c451",
+            "role:f70938a0-fc10-4177-9e90-2178f8765737",
+            "role:fcf91098-03e3-41a9-b5ba-6f0ec8188a12",
+            "role:fdd7a751-b60b-444a-984c-02652fe8fa1c",
+            "role:fe930be7-5e62-47db-91af-98c3a49a38b1",
+            "role:ffd52fa5-98dc-465c-991d-fc073eb59f8f"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "Conditional Access adaptive session lifetime policies",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "session-002",
+      "intent": "People with administrator roles sign in again at least every 4 hours.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "P1",
+      "mitigation": "Same as above, and it matters more for administrators. Without the licence the practical substitute is fewer permanent administrators, so there are fewer long lived administrator sessions to worry about.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "An administrator session is the most valuable thing in the tenant. Four hours keeps the window an attacker can use it in short, and administrators sign in far less often than everyone else so the cost is small.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "high",
+      "sourceName": "Core - Session - Reauthentication (Administrators)",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "category": "session",
+        "clientAppTypes": [
+          "all"
+        ],
+        "session": {
+          "persistentBrowser": {
+            "isEnabled": true,
+            "mode": "always"
+          }
+        },
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "role:024906de-61e5-49c8-8572-40335f1e0e10",
+            "role:02d5655b-c1cf-4e5f-98da-5fb919085bf6",
+            "role:0526716b-113d-4c15-b2c8-68e3c22b9f80",
+            "role:0964bb5e-9bdb-4d7b-ac29-58e794862a40",
+            "role:0ec3f692-38d6-4d14-9e69-0377ca7797ad",
+            "role:0f971eea-41eb-4569-a71e-57bb8a3eff1e",
+            "role:1076ac91-f3d9-41a7-a339-dcdf5f480acc",
+            "role:10dae51f-b6af-4016-8d66-8c2a99b929b3",
+            "role:112ca1a2-15ad-4102-995e-45b0bc479a6a",
+            "role:11451d60-acb2-45eb-a7d6-43d0f0125c13",
+            "role:11648597-926c-4cf3-9c36-bcebb0ba8dcc",
+            "role:1501b917-7653-4ff9-a4b5-203eaf33784f",
+            "role:158c047a-c907-4556-b7ef-446551a6b5f7",
+            "role:1707125e-0aa2-4d4d-8655-a7c786c76a25",
+            "role:17315797-102d-40b4-93e0-432062caca18",
+            "role:194ae4cb-b126-40b2-bd5b-6091b380977d",
+            "role:1a7d78b6-429f-476b-b8eb-35fb715fffd4",
+            "role:1d336d2c-4ae8-42ef-9711-b3604ce3fc2c",
+            "role:25a516ed-2fa0-40ea-a2d0-12923a21473a",
+            "role:25df335f-86eb-4119-b717-0ff02de207e9",
+            "role:27460883-1df1-4691-b032-3b79643e5e63",
+            "role:281fe777-fb20-4fbb-b7a3-ccebce5b0d96",
+            "role:29232cdf-9323-42fd-ade2-1d097af3e4de",
+            "role:2af84b1e-32c8-42b7-82bc-daa82404023b",
+            "role:2b499bcd-da44-4968-8aec-78e1674fa64d",
+            "role:2b745bdf-0803-4d80-aa65-822c4493daac",
+            "role:2ea5ce4c-b2d8-4668-bd81-3680bd2d227a",
+            "role:31392ffb-586c-42d1-9346-e59415a2cc4e",
+            "role:31e939ad-9672-4796-9c2e-873181342d2d",
+            "role:32696413-001a-46ae-978c-ce0f6b3620d2",
+            "role:38a96431-2bdf-4b4c-8b6e-5d3d8abac1a4",
+            "role:3a2c62db-5318-420d-8d74-23affee5d9d5",
+            "role:3d762c5a-1b6c-493f-843e-55a3b42923d4",
+            "role:3edaf663-341e-4475-9f94-5c398ef6c070",
+            "role:3f04f91a-4ad7-4bd3-bcfa-49882ea1a88a",
+            "role:3f1acade-1e04-4fbc-9b69-f0302cd84aef",
+            "role:422218e4-db15-4ef9-bbe0-8afb41546d79",
+            "role:44367163-eba1-44c3-98af-f5787879f96a",
+            "role:45d8d3c5-c802-45c6-b32a-1d70b5e1e86e",
+            "role:49eb8f75-97e9-4e37-9b2b-6c3ebfcffa31",
+            "role:4a5d8f65-41da-4de4-8968-e035b65339cf",
+            "role:4ba39ca4-527c-499a-b93d-d9b492c50246",
+            "role:4d6ac14f-3453-41d0-bef9-a3e0c569773a",
+            "role:507f53e4-4e52-4077-abd3-d2e1558b6ea2",
+            "role:58a13ea3-c632-46ae-9ee0-9c0d43cd7f3d",
+            "role:59d46f88-662b-457b-bceb-5c3809e5908f",
+            "role:5b784334-f94b-471a-a387-e7219fc49ca2",
+            "role:5c4f9dcd-47dc-4cf7-8c9a-9e4207cbfc91",
+            "role:5d6b6bb7-de71-4623-b4af-96380a352509",
+            "role:5f2222b1-57c3-48ba-8ad5-d4759f1fde6f",
+            "role:62e90394-69f5-4237-9190-012177145e10",
+            "role:644ef478-e28f-4e28-b9dc-3fdde9aa0b1f",
+            "role:69091246-20e8-4a56-aa4d-066075b2a7a8",
+            "role:6b942400-691f-4bf0-9d12-d8a254a2baf5",
+            "role:6e591065-9bad-43ed-90f3-e9424366d2f0",
+            "role:729827e3-9c14-49f7-bb1b-9608f156bbb8",
+            "role:744ec460-397e-42ad-a462-8b3f9747a02c",
+            "role:7495fdc4-34c4-4d15-a289-98788ce399fd",
+            "role:74ef975b-6605-40af-a5d2-b9539d836353",
+            "role:75934031-6c7e-415a-99d7-48dbd49e875e",
+            "role:75941009-915a-4869-abe7-691bff18279e",
+            "role:7698a772-787b-4ac8-901f-60d6b08affd2",
+            "role:78b0ccd1-afc2-4f92-9116-b41aedd09592",
+            "role:790c1fb9-7f7d-4f88-86a1-ef1f95c05c1b",
+            "role:7be44c8a-adaf-4e2a-84d6-ab2649e08a13",
+            "role:810a2642-a034-447f-a5e8-41beaa378541",
+            "role:8329153b-31d0-4727-b945-745eb3bc5f31",
+            "role:8424c6f0-a189-499e-bbd0-26c1753c96d4",
+            "role:843318fb-79a6-4168-9e6f-aa9a07481cc4",
+            "role:87761b17-1ed2-4af3-9acd-92a150038160",
+            "role:8835291a-918c-4fd7-a9ce-faa49f0cf7d9",
+            "role:88d8e3e3-8f55-4a1e-953a-9b9898b8876b",
+            "role:892c5842-a9a6-463a-8041-72aa08ca3cf6",
+            "role:8ac3fc64-6eca-42ea-9e69-59f4c7b60eb2",
+            "role:8c8b803f-96e1-4129-9349-20738d9f9652",
+            "role:92b086b3-e367-4ef2-b869-1de128fb986e",
+            "role:92ed04bf-c94a-4b82-9729-b799a7a4c178",
+            "role:9360feb5-f418-4baa-8175-e2a00bac4301",
+            "role:95e79109-95c0-4d8e-aee3-d01accf2d47b",
+            "role:963797fb-eb3b-4cde-8ce3-5878b3f32a3f",
+            "role:966707d0-3269-4727-9be2-8c3a10f19b9d",
+            "role:99009c4a-3b3f-4957-82a9-9d35e12db77e",
+            "role:9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3",
+            "role:9c094953-4995-41c8-84c8-3ebb9b32c93f",
+            "role:9c6df0f2-1e7c-4dc3-b195-66dfbd24aa8f",
+            "role:9c99539d-8186-4804-835f-fd51ef9e2dcd",
+            "role:9d3e04ba-3ee4-4d1b-a3a7-9aef423a09be",
+            "role:9d70768a-0cbc-4b4c-aea3-2e124b2477f4",
+            "role:9f06204d-73c1-4d4c-880a-6edb90606fd8",
+            "role:a0b1b346-4d3e-4e8b-98f8-753987be4970",
+            "role:a92aed5d-d78a-4d16-b381-09adb37eb3b0",
+            "role:a9ea8996-122f-4c74-9520-8edcd192826c",
+            "role:aa38014f-0993-46e9-9b45-30501a20909d",
+            "role:aaf43236-0c0d-4d5f-883a-6955382ac081",
+            "role:ac16e43d-7b2d-40e0-ac05-243ff356ab5b",
+            "role:ac434307-12b9-4fa1-a708-88bf58caabc1",
+            "role:adb2368d-a9be-41b5-8667-d96778e081b0",
+            "role:af78dc32-cf4d-46f9-ba4e-4428526346b5",
+            "role:b0f54661-2d74-4c50-afa3-1ec803f12efe",
+            "role:b1be1c3e-b65d-4f19-8427-f6fa0d97feb9",
+            "role:b5a8dcf3-09d5-43a9-a639-8e29ef291470",
+            "role:baf37b3a-610e-45da-9e62-d9d1e5e8914b",
+            "role:be2f45a1-457d-42af-a067-6ec1fa63bc45",
+            "role:c34f683f-4d5a-4403-affd-6615e00e3a7f",
+            "role:c430b396-e693-46cc-96f3-db01bf8bb62a",
+            "role:c4e39bd9-1100-46d3-8c65-fb160da0071f",
+            "role:cf1c38e5-3621-4004-a7cb-879624dced7c",
+            "role:d2562ede-74db-457e-a7b6-544e236ebb61",
+            "role:d29b2b05-8046-44ba-8758-1e26182fcf32",
+            "role:d37c8bed-0711-4417-ba38-b4abe66ce4c2",
+            "role:d405c6df-0af8-4e3b-95e4-4d06e542189e",
+            "role:db506228-d27e-4b7d-95e5-295956d6615f",
+            "role:dd13091a-6207-4fc0-82ba-3641e056ab95",
+            "role:e00e864a-17c5-4a4b-9c06-f5b95a8d5bd8",
+            "role:e07494ad-1654-4dd2-922e-6f81a71bf00f",
+            "role:e300d9e7-4a2b-4295-9eff-f1c78b36cc98",
+            "role:e3973bdf-4987-49ae-837a-ba8e231c7286",
+            "role:e48398e2-f4bb-4074-8f31-4586725e205b",
+            "role:e6d1a23a-da11-4be4-9570-befc86d067a7",
+            "role:e8611ab8-c189-46e8-94e1-60213ab1f814",
+            "role:e8cef6f1-e4bd-4ea8-bc07-4b8d950f4477",
+            "role:e93e3737-fa85-474a-aee4-7d3fb86510f3",
+            "role:eb1f4a8d-243a-41f0-9fbd-c7cdf6c5ef7c",
+            "role:ecb2c6bf-0ab6-418e-bd87-7986f8d63bbe",
+            "role:ee67aa9c-e510-4759-b906-227085a7fd4d",
+            "role:f023fd81-a637-4b56-95fd-791ac0226033",
+            "role:f28a1f50-f6e7-4571-818b-6a12f2af6b6c",
+            "role:f2ef992c-3afb-46b9-b7cf-a126ee74c451",
+            "role:f70938a0-fc10-4177-9e90-2178f8765737",
+            "role:fcf91098-03e3-41a9-b5ba-6f0ec8188a12",
+            "role:fdd7a751-b60b-444a-984c-02652fe8fa1c",
+            "role:fe930be7-5e62-47db-91af-98c3a49a38b1",
+            "role:ffd52fa5-98dc-465c-991d-fc073eb59f8f",
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "All"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "Conditional Access adaptive session lifetime policies",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "session-003",
+      "intent": "People who are not administrators can stay signed in in their browser.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "P1",
+      "mitigation": "There is no free way to set this. It is about how often people are prompted rather than what protects them, so of everything listed here it is the one that costs least to go without.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "Asking people to confirm who they are more often than the risk warrants makes them stop reading what they are approving, which is exactly what an attacker flooding someone with prompts is counting on. Staying signed in on a browser they already proved themselves on removes prompts that buy nothing.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "medium",
+      "sourceName": "Core - Session - Stay Signed In (Standard Users)",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "combos": [
+          "deviceBasedPush",
+          "federatedMultiFactor",
+          "federatedSingleFactor,hardwareOath",
+          "federatedSingleFactor,microsoftAuthenticatorPush",
+          "federatedSingleFactor,sms",
+          "federatedSingleFactor,softwareOath",
+          "federatedSingleFactor,voice",
+          "fido2",
+          "hardwareOath,password",
+          "microsoftAuthenticatorPush,password",
+          "password,sms",
+          "password,softwareOath",
+          "password,voice",
+          "password,x509CertificateMultiFactor",
+          "password,x509CertificateSingleFactor",
+          "temporaryAccessPassMultiUse",
+          "temporaryAccessPassOneTime",
+          "windowsHelloForBusiness",
+          "x509CertificateMultiFactor"
+        ],
+        "surface": "authenticationStrength"
+      },
+      "citations": [
+        {
+          "item": "Conditional Access authentication strength",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "strength-001",
+      "intent": "This named set of allowed sign in methods exists exactly as the standard defines it.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "P1",
+      "mitigation": "Named sets of allowed sign in methods only exist to be pointed at by policy, so without the licence there is nothing to point at them. Turning the strong methods on in the sign in methods policy is free and is the part that matters.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "Policies point at this set to control which sign in methods count as strong enough.",
+      "requiredState": "enabled",
+      "riskClass": "medium",
+      "sourceName": "Multifactor authentication",
+      "surface": "authenticationStrength"
+    },
+    {
+      "canonical": {
+        "combos": [
+          "deviceBasedPush",
+          "fido2",
+          "windowsHelloForBusiness",
+          "x509CertificateMultiFactor"
+        ],
+        "surface": "authenticationStrength"
+      },
+      "citations": [
+        {
+          "item": "Conditional Access authentication strength",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "strength-002",
+      "intent": "This named set of allowed sign in methods exists exactly as the standard defines it.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "P1",
+      "mitigation": "Named sets of allowed sign in methods only exist to be pointed at by policy, so without the licence there is nothing to point at them. Turning the strong methods on in the sign in methods policy is free and is the part that matters.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "Policies point at this set to control which sign in methods count as strong enough.",
+      "requiredState": "enabled",
+      "riskClass": "medium",
+      "sourceName": "Passwordless MFA",
+      "surface": "authenticationStrength"
+    },
+    {
+      "canonical": {
+        "combos": [
+          "fido2",
+          "windowsHelloForBusiness",
+          "x509CertificateMultiFactor"
+        ],
+        "surface": "authenticationStrength"
+      },
+      "citations": [
+        {
+          "item": "Conditional Access authentication strength",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "strength-003",
+      "intent": "This named set of allowed sign in methods exists exactly as the standard defines it.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "P1",
+      "mitigation": "Named sets of allowed sign in methods only exist to be pointed at by policy, so without the licence there is nothing to point at them. Turning the strong methods on in the sign in methods policy is free and is the part that matters.",
+      "needsIntentText": false,
+      "profile": "baseline",
+      "rationale": "Policies point at this set to control which sign in methods count as strong enough.",
+      "requiredState": "enabled",
+      "riskClass": "medium",
+      "sourceName": "Phishing-resistant MFA",
+      "surface": "authenticationStrength"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "category": "require",
+        "clientAppTypes": [
+          "all"
+        ],
+        "grant": {
+          "controls": [
+            "passwordChange"
+          ],
+          "operator": "AND",
+          "strengthCombos": [
+            "deviceBasedPush",
+            "federatedMultiFactor",
+            "federatedSingleFactor,hardwareOath",
+            "federatedSingleFactor,microsoftAuthenticatorPush",
+            "federatedSingleFactor,sms",
+            "federatedSingleFactor,softwareOath",
+            "federatedSingleFactor,voice",
+            "fido2",
+            "hardwareOath,password",
+            "microsoftAuthenticatorPush,password",
+            "password,sms",
+            "password,softwareOath",
+            "password,voice",
+            "temporaryAccessPassMultiUse",
+            "temporaryAccessPassOneTime",
+            "windowsHelloForBusiness",
+            "x509CertificateMultiFactor"
+          ]
+        },
+        "risk": {
+          "user": [
+            "high"
+          ]
+        },
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "All"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "Risk policies in Microsoft Entra ID Protection",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "strict-001",
+      "intent": "An account Microsoft flags as likely compromised must change its password before it can carry on.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "P2",
+      "mitigation": "Without this licence the tenant is not told which accounts look compromised, so there is nothing to react to and no free way to get it. What lowers the risk instead is removing passwords from the picture: passkeys turned on and in use mean a stolen password is not enough on its own. Reviewing sign in logs for unfamiliar locations is a manual stand in.",
+      "needsIntentText": false,
+      "profile": "strict",
+      "rationale": "Microsoft watches for signs an account has been taken over, such as its credentials turning up in a breach dump or sign ins from places it could not physically have travelled between. Catching that automatically and forcing a password change closes the account off before someone uses it, without waiting for a person to notice.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "high",
+      "sourceName": "Core - Risk - Compromised Account Response",
+      "surface": "conditionalAccess"
+    },
+    {
+      "canonical": {
+        "apps": {
+          "exclude": [],
+          "include": [
+            "All"
+          ]
+        },
+        "category": "require",
+        "clientAppTypes": [
+          "all"
+        ],
+        "grant": {
+          "operator": "OR",
+          "strengthCombos": [
+            "deviceBasedPush",
+            "federatedMultiFactor",
+            "federatedSingleFactor,hardwareOath",
+            "federatedSingleFactor,microsoftAuthenticatorPush",
+            "federatedSingleFactor,sms",
+            "federatedSingleFactor,softwareOath",
+            "federatedSingleFactor,voice",
+            "fido2",
+            "hardwareOath,password",
+            "microsoftAuthenticatorPush,password",
+            "password,sms",
+            "password,softwareOath",
+            "password,voice",
+            "temporaryAccessPassMultiUse",
+            "temporaryAccessPassOneTime",
+            "windowsHelloForBusiness",
+            "x509CertificateMultiFactor"
+          ]
+        },
+        "risk": {
+          "signIn": [
+            "high",
+            "medium"
+          ]
+        },
+        "surface": "conditionalAccess",
+        "users": {
+          "exclude": [
+            "slot:breakGlassAccounts"
+          ],
+          "include": [
+            "All"
+          ]
+        }
+      },
+      "citations": [
+        {
+          "item": "Risk policies in Microsoft Entra ID Protection",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "id": "strict-002",
+      "intent": "A sign in Microsoft judges suspicious has to prove itself again before it is let through.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "P2",
+      "mitigation": "Same as above. Nothing free supplies the risk signal. Requiring a second step for everyone, which security defaults does at no cost, covers the common case that this control would otherwise catch.",
+      "needsIntentText": false,
+      "profile": "strict",
+      "rationale": "Microsoft scores each sign in as it happens, using signals a person cannot see: whether the address is a known anonymiser, whether the same account just signed in from somewhere it could not have travelled from, whether the password appeared in a breach. Challenging only the sign ins that look wrong catches an intruder using a working password without asking everyone else to do anything extra.",
+      "requiredState": "enabledOrReportOnly",
+      "riskClass": "high",
+      "sourceName": "Core - Risk - Suspicious Sign In Response",
+      "surface": "conditionalAccess"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "guestUserRoleId",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "authorizationPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "MS.AAD.8.1v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Restrict guest access permissions",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "Guests have the same access to the directory as your own staff, so an invited outsider can read your users and groups the way an employee can.",
+      "id": "guest-001",
+      "intent": "Guests do not get the same view of the directory as your own staff.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "The guest access level could not be read from this tenant.",
+      "profile": "baseline",
+      "rationale": "A guest is somebody outside your organisation who was invited in, often for one project and often long ago. Giving them the same view of the directory as an employee hands them your staff list, your group structure and who reports to whom, which is the raw material for a convincing phishing message. Two settings below member level are acceptable: limited, which is the default, and restricted, which is tighter still. Restricted is the better of the two but it stops working with some services, so it is not required here.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "notEquals": "a0b1b346-4d3e-4e8b-98f8-753987be4970",
+          "path": "guestUserRoleId"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Guest access to the directory",
+      "surface": "authorizationPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "allowInvitesFrom",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "authorizationPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "MS.AAD.8.2v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Configure external collaboration settings",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "Anyone can invite a guest into the tenant, which means anybody can add an outside account nobody reviewed.",
+      "id": "guest-002",
+      "intent": "Only people in an administrator or guest inviter role can invite guests.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "The guest invitation setting could not be read from this tenant.",
+      "profile": "baseline",
+      "rationale": "The default in most tenants lets everyone invite guests, including existing guests, so an outsider can bring in more outsiders without anyone approving it. Keeping invitations with administrators and named inviters means every account from outside the organisation got there because somebody accountable decided so. Turning invitations off entirely is stricter and also passes.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "oneOf": [
+            "adminsAndGuestInviters",
+            "none"
+          ],
+          "path": "allowInvitesFrom"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Who can invite guests",
+      "surface": "authorizationPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "defaultUserRolePermissions.allowedToCreateApps",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "authorizationPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "MS.AAD.5.1v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Default user permissions in Microsoft Entra ID",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "Anybody in the tenant can register an application.",
+      "id": "apps-001",
+      "intent": "Only administrators can register applications.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "The application registration setting could not be read from this tenant.",
+      "profile": "baseline",
+      "rationale": "A registered application is an identity that can hold permissions and keep working after the person who made it leaves. Letting everyone create them means nobody has a list of what exists. Where individuals genuinely need this, the application developer role gives it back to named people rather than to everybody.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "equals": false,
+          "path": "defaultUserRolePermissions.allowedToCreateApps"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Who can register applications",
+      "surface": "authorizationPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "defaultUserRolePermissions.permissionGrantPoliciesAssigned",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "authorizationPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "Configure how users consent to applications",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "People can approve applications for themselves. If this tenant is on the setting Microsoft manages for you, which is the default for tenants created recently, then the most sensitive permissions such as mail, files and calendars are held back and everything else is still theirs to approve. That is better than the old setting and it is not the same as deciding who may approve what.",
+      "id": "consent-001",
+      "intent": "People cannot grant an application any permission it asks for.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "The user consent setting could not be read from this tenant.",
+      "profile": "baseline",
+      "rationale": "Consent phishing does not steal a password. It shows the person a real sign in page and asks them to approve an application, and once approved that application keeps its access even after the password changes and the second step is passed. Two answers pass: turning user consent off entirely, or limiting it to low impact permissions from applications whose publisher has been verified. Everything else fails, including the setting Microsoft manages on your behalf, because that one still lets people approve applications and only holds back a list of permissions Microsoft maintains and can change. A setting this tool has never seen fails too, since a permission that lets people approve applications is not one to assume the best about.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "path": "defaultUserRolePermissions.permissionGrantPoliciesAssigned",
+          "withPrefixOnlyAllows": {
+            "allows": [
+              "ManagePermissionGrantsForSelf.microsoft-user-default-low"
+            ],
+            "prefix": "ManagePermissionGrantsForSelf."
+          }
+        }
+      ],
+      "riskClass": "high",
+      "sourceName": "User consent to applications",
+      "surface": "authorizationPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "defaultUserRolePermissions.permissionGrantPoliciesAssigned",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "authorizationPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "MS.AAD.5.2v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Configure how users consent to applications",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "People can still approve some application requests without an administrator.",
+      "id": "consent-002",
+      "intent": "Only administrators can approve an application's access.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "The user consent setting could not be read from this tenant.",
+      "profile": "strict",
+      "rationale": "The stricter reading of the same risk. Any route by which a person can approve an application is a route a convincing request can travel, so this asks that every approval go to an administrator. It costs more in day to day friction than the baseline version, which is why it is here rather than there, and it is the bar the published baseline sets.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "noneStartWith": [
+            "ManagePermissionGrantsForSelf."
+          ],
+          "path": "defaultUserRolePermissions.permissionGrantPoliciesAssigned"
+        }
+      ],
+      "riskClass": "high",
+      "sourceName": "No user consent to applications",
+      "surface": "authorizationPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "isEnabled",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "adminConsentRequestPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "MS.AAD.5.3v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Configure the admin consent workflow",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "There is no way for somebody to request an application, so the answer to a real need is silence.",
+      "id": "consent-003",
+      "intent": "Somebody who needs an application has a way to ask, and a named person receives it.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "The admin consent workflow could not be read from this tenant.",
+      "profile": "baseline",
+      "rationale": "This is the other half of restricting who may approve applications. If people cannot consent and cannot ask either, they do not stop needing the tool; they find a way around, usually a personal account holding company data. A request queue with named reviewers turns a dead end into a decision somebody makes on purpose.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "equals": true,
+          "path": "isEnabled"
+        },
+        {
+          "path": "reviewers",
+          "present": true
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Admin consent workflow",
+      "surface": "adminConsentRequestPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "defaultUserRolePermissions.allowedToCreateTenants",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "authorizationPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "Protect tenants with Zero Trust",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "Anybody in the tenant can create a new tenant and become its global administrator.",
+      "id": "tenants-001",
+      "intent": "People who are not administrators cannot create new tenants.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "The tenant creation setting could not be read from this tenant.",
+      "profile": "baseline",
+      "rationale": "Whoever creates a tenant is automatically its global administrator. Left on, this lets any employee stand up a directory outside everything described in this report, which nobody is monitoring and nobody knows exists, while it holds company data and carries the company name. Where somebody genuinely needs it, the tenant creator role gives it to that person by name.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "equals": false,
+          "path": "defaultUserRolePermissions.allowedToCreateTenants"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Who can create tenants",
+      "surface": "authorizationPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "allowUserConsentForRiskyApps",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "authorizationPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "Configure risk-based step-up consent",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "People can approve applications the tenant itself has flagged as risky, which removes the safety net from the one case it exists for.",
+      "id": "riskyapps-001",
+      "intent": "An application that looks risky needs an administrator, even where people may consent.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "This tenant has never changed the risky application setting, so it is running on the default, which is the safe one.",
+      "profile": "baseline",
+      "rationale": "Where user consent is allowed at all, this is the backstop: a newly registered application from an unverified publisher asking for more than basic permissions gets sent to an administrator instead of being approved by whoever it asked. It is on by default and the recommendation is to leave it that way.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "equals": false,
+          "path": "allowUserConsentForRiskyApps"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Step up for risky application requests",
+      "surface": "authorizationPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "path": "defaultUserRolePermissions.allowedToReadBitlockerKeysForOwnedDevice",
+          "present": true
+        }
+      ],
+      "canonical": {
+        "surface": "authorizationPolicy"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "Protect tenants with Zero Trust",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "Anybody can retrieve the disk recovery key for a device they own.",
+      "id": "bitlocker-001",
+      "intent": "People who are not administrators cannot read the recovery keys for their own devices.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "The recovery key setting could not be read from this tenant.",
+      "profile": "strict",
+      "rationale": "Disk encryption is what protects a laptop once it is out of the hands of the person carrying it. If the account can fetch its own recovery key, then one stolen account is enough to unlock everything on that laptop, and the encryption stops being the thing it was bought to be. It is in the stricter set because it puts recovery through a help desk, which is a real cost.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "equals": false,
+          "path": "defaultUserRolePermissions.allowedToReadBitlockerKeysForOwnedDevice"
+        }
+      ],
+      "riskClass": "low",
+      "sourceName": "Recovery keys for owned devices",
+      "surface": "authorizationPolicy"
+    }
+  ],
+  "parameters": [
+    {
+      "boundGuids": [],
+      "slot": "breakGlassAccounts"
+    },
+    {
+      "boundGuids": [],
+      "slot": "trustedLocations"
+    },
+    {
+      "boundGuids": [],
+      "slot": "serviceAccounts"
+    },
+    {
+      "boundGuids": [],
+      "slot": "pilotGroups"
+    }
+  ],
+  "schemaVersion": 2
+}

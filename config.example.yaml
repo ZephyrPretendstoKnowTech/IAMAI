@@ -1,0 +1,8 @@
+# IAMAI configuration. Copy to config.yaml (gitignored) or run: iamai setup
+appId: 00000000-0000-0000-0000-000000000000
+homeTenantId: 00000000-0000-0000-0000-000000000000
+certPath: certs/iamai.pem
+goldenTenantId: 00000000-0000-0000-0000-000000000000
+tenants:
+  golden: 00000000-0000-0000-0000-000000000000
+  target: 00000000-0000-0000-0000-000000000000

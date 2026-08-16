@@ -1,0 +1,29 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#subscribedSkus",
+  "value": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111_06ebc4ee-1bb5-47dd-8120-11324bc54e06",
+      "accountId": "11111111-1111-1111-1111-111111111111",
+      "accountName": "tenant",
+      "appliesTo": "User",
+      "capabilityStatus": "Enabled",
+      "consumedUnits": 3,
+      "prepaidUnits": {
+        "enabled": 5,
+        "suspended": 0,
+        "warning": 0,
+        "lockedOut": 0
+      },
+      "skuId": "06ebc4ee-1bb5-47dd-8120-11324bc54e06",
+      "skuPartNumber": "ENTERPRISEPREMIUM",
+      "servicePlans": [
+        {
+          "servicePlanId": "eec0eb4f-6444-4f95-aba0-50c24d67f998",
+          "servicePlanName": "AAD_PREMIUM_P2",
+          "provisioningStatus": "Success",
+          "appliesTo": "User"
+        }
+      ]
+    }
+  ]
+}

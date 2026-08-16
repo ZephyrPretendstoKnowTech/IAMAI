@@ -1,0 +1,46 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#reports/authenticationMethods/userRegistrationDetails",
+  "value": [
+    {
+      "id": "20000000-0000-0000-0000-000000000001",
+      "userPrincipalName": "user1@tenant.example",
+      "userDisplayName": "User 1",
+      "userType": "member",
+      "isAdmin": true,
+      "isSsprRegistered": true,
+      "isSsprEnabled": true,
+      "isSsprCapable": true,
+      "isMfaRegistered": true,
+      "isMfaCapable": true,
+      "isPasswordlessCapable": false,
+      "lastUpdatedDateTime": "2026-06-09T10:00:00Z",
+      "methodsRegistered": [
+        "microsoftAuthenticatorPush",
+        "softwareOneTimePasscode"
+      ],
+      "isSystemPreferredAuthenticationMethodEnabled": true,
+      "systemPreferredAuthenticationMethods": [
+        "PhoneAppNotification"
+      ],
+      "userPreferredMethodForSecondaryAuthentication": "push"
+    },
+    {
+      "id": "20000000-0000-0000-0000-000000000002",
+      "userPrincipalName": "user2@tenant.example",
+      "userDisplayName": "User 2",
+      "userType": "member",
+      "isAdmin": false,
+      "isSsprRegistered": false,
+      "isSsprEnabled": false,
+      "isSsprCapable": false,
+      "isMfaRegistered": false,
+      "isMfaCapable": false,
+      "isPasswordlessCapable": false,
+      "lastUpdatedDateTime": "2026-06-09T10:00:00Z",
+      "methodsRegistered": [],
+      "isSystemPreferredAuthenticationMethodEnabled": true,
+      "systemPreferredAuthenticationMethods": [],
+      "userPreferredMethodForSecondaryAuthentication": "none"
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Identity security assessment: {{ alias }}</title>
+<style>{{ base_css }}</style>
+</head>
+<body>
+<main>
+
+<div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; identity posture assessment</span></div>
+<h1>Identity security assessment</h1>
+<p class="meta">Tenant: {{ alias }}. Generated {{ generated_at }}.
+{% if collected_at %}Based on data collected {{ collected_at }}.{% endif %}</p>
+
+{% for warning in data_warnings %}
+<div class="banner"><strong>Some data is incomplete.</strong> {{ warning }}</div>
+{% endfor %}
+
+<h2>Summary</h2>
+<p>This report grades the tenant against the standard, a reference configuration
+captured from a known good setup. Each area below is judged conservatively:
+when the data is ambiguous, the grade goes down, never up.</p>
+
+<div class="tiles">
+{% for group in groups %}
+  <div class="tile {{ group.status }}">
+    <h3>{{ group.label }}</h3>
+    <span class="status"><span class="icon">{{ group.statusIcon }}</span>{{ group.statusLabel }}</span>
+    <div class="count">{{ group.met }} of {{ group.total }} control{{ 's' if group.total != 1 }} meet the standard</div>
+  </div>
+{% endfor %}
+</div>
+
+<p class="totals">Across all {{ total_controls }} controls:
+{% for grade in grade_order %}{{ grade }} {{ grade_counts[grade] }}{{ ", " if not loop.last }}{% endfor %}.</p>
+
+<dl class="legend">
+{% for grade in grade_order %}
+  <dt>{{ grade }}</dt><dd>{{ grade_meanings[grade] }}</dd>
+{% endfor %}
+</dl>
+
+{% for group in groups %}
+<h2>{{ group.label }}</h2>
+{% for control in group.controls %}
+<section class="control">
+  <header>
+    <h3>{{ control.intent or "This control matches the standard's configuration." }}</h3>
+    <span class="grade {{ grade_status[control.grade] }}"><span class="dot"></span>{{ control.grade }}</span>
+  </header>
+  {% if control.rationale %}<p class="rationale">{{ control.rationale }}</p>{% endif %}
+  <div class="detail">
+    {% if control.coverageGaps %}
+    <p><strong>What is not covered:</strong></p>
+    <ul>{% for gap in control.coverageGaps[:8] %}<li>{{ gap }}</li>{% endfor %}</ul>
+    {% if control.coverageGaps | length > 8 %}
+    <details>
+      <summary>Show the remaining {{ control.coverageGaps | length - 8 }} of {{ control.coverageGaps | length }} gaps</summary>
+      <ul>{% for gap in control.coverageGaps[8:] %}<li>{{ gap }}</li>{% endfor %}</ul>
+    </details>
+    {% endif %}
+    {% endif %}
+    {% if control.notes %}
+    <ul>{% for note in control.notes[:8] %}<li>{{ note }}</li>{% endfor %}</ul>
+    {% if control.notes | length > 8 %}
+    <details>
+      <summary>Show the remaining {{ control.notes | length - 8 }} of {{ control.notes | length }} notes</summary>
+      <ul>{% for note in control.notes[8:] %}<li>{{ note }}</li>{% endfor %}</ul>
+    </details>
+    {% endif %}
+    {% endif %}
+    {% if control.matchedPolicies %}
+    <p>Evidence: {% for policy in control.matchedPolicies %}{{ policy.displayName }}{{ ", " if not loop.last }}{% endfor %}</p>
+    {% endif %}
+    <p>Accounts this applies to: {{ control.affected.count }}{% if control.affected.sampleUPNs %}
+    (for example {% for upn in control.affected.sampleUPNs %}{{ upn }}{{ ", " if not loop.last }}{% endfor %}){% endif %}</p>
+    <p class="id">Control {{ control.controlId }}</p>
+  </div>
+</section>
+{% endfor %}
+{% endfor %}
+
+{% if crosswalk %}
+<h2>Compliance crosswalk</h2>
+<p>Where the standard's controls line up with published guidance. Each status
+is read straight from the grades above, never claimed beyond them: meets
+means every control for that item matches, partially meets means at least one
+is present but weaker, misses means a control is absent, and not assessed
+means the data could not judge it.</p>
+<p><strong>What this is not.</strong> Only the items listed here were mapped.
+Each published source contains a great deal this standard does not cover, so
+meeting every row below is not the same as meeting the source, and nothing
+here is a certification or an audit. Where this standard asks for less than a
+source does, the row is left out rather than counted, so a source is never
+credited with something the tenant has not actually done.</p>
+{% for source in crosswalk %}
+<h3>{{ source.source }}</h3>
+{% set parts = [] %}
+{%- for status in ["meets", "partially meets", "not assessed", "misses"] %}
+{%- if source.counts[status] %}{{ parts.append(source.counts[status] ~ " " ~ status) or "" }}{% endif %}
+{%- endfor %}
+<p class="totals">{{ source.total }} item{{ 's' if source.total != 1 }}: {{ parts | join(", ") }}.</p>
+<table>
+  <tr><th>Item</th><th>Status</th></tr>
+  {% for row in source.rows[:8] %}
+  <tr><td>{{ row.item }}</td><td>{{ row.status }}</td></tr>
+  {% endfor %}
+</table>
+{% if source.rows | length > 8 %}
+<details>
+  <summary>Show the remaining {{ source.rows | length - 8 }} of {{ source.rows | length }} items</summary>
+  <table>
+    <tr><th>Item</th><th>Status</th></tr>
+    {% for row in source.rows[8:] %}
+    <tr><td>{{ row.item }}</td><td>{{ row.status }}</td></tr>
+    {% endfor %}
+  </table>
+</details>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if out_of_reach %}
+<h2>Not included, because your licensing does not cover it</h2>
+<p>These protections are part of the standard but need a licence this tenant
+does not have. They are not counted in any grade above, and none of them means
+you are doing something wrong. They are listed so the choice is visible: you
+can decide whether the protection is worth the licence, rather than never
+hearing about it.</p>
+<dl class="out-of-reach">
+  {% for item in out_of_reach %}
+  <dt>{{ item.intent or item.controlId }}</dt>
+  <dd>{{ item.note }}{% if item.protects %} What it protects against: {{ item.protects }}{% endif %}
+    {% if item.mitigation %}<br>What you can do without the licence: {{ item.mitigation }}
+    {% else %}<br>There is no partial alternative recorded for this one, so the
+    protection is either licensed or absent.{% endif %}</dd>
+  {% endfor %}
+</dl>
+{% endif %}
+
+<h2>How your setup is organized</h2>
+{% if structural %}
+<p>These notes are about organization, not security. Nothing here affects any
+grade above, and nothing here means you are less protected. The protection is
+already in place. They are worth reading only because a tenant that is
+organized the same way the standard describes is easier to review later, and
+easier to hand to someone else.</p>
+<dl class="structural">
+  {% for item in structural %}
+  <dt>{{ item.intent or item.controlId }}</dt>
+  {% for finding in item.findings %}
+  <dd>{{ finding }}</dd>
+  {% endfor %}
+  {% endfor %}
+</dl>
+{% else %}
+<p>Nothing to note. Where your tenant protects something, it is built the way
+the standard describes.</p>
+{% endif %}
+
+<h2>Outside the standard</h2>
+{% if surplus %}
+<p>These exist in the tenant but are not part of the standard. They are never
+penalized in the grades. Review them before any rollout, because a policy
+outside the standard can conflict with a planned change.</p>
+<table>
+  <tr><th>Name</th><th>Type</th><th>State</th></tr>
+  {% for item in surplus[:8] %}
+  <tr><td>{{ item.displayName }}</td><td>{{ surplus_type_labels.get(item.type, item.type) }}</td><td>{{ item.state }}</td></tr>
+  {% endfor %}
+</table>
+{% if surplus | length > 8 %}
+<details>
+  <summary>Show the remaining {{ surplus | length - 8 }} of {{ surplus | length }} items</summary>
+  <table>
+    <tr><th>Name</th><th>Type</th><th>State</th></tr>
+    {% for item in surplus[8:] %}
+    <tr><td>{{ item.displayName }}</td><td>{{ surplus_type_labels.get(item.type, item.type) }}</td><td>{{ item.state }}</td></tr>
+    {% endfor %}
+  </table>
+</details>
+{% endif %}
+{% else %}
+<p>Nothing in the tenant sits outside the standard.</p>
+{% endif %}
+
+<h2>What this assessment cannot see</h2>
+<p>An honest list of blind spots. Nothing here was guessed around.</p>
+<ul>
+{% for item in unknowns[:8] %}<li>{{ item }}</li>{% endfor %}
+</ul>
+{% if unknowns | length > 8 %}
+<details>
+  <summary>Show the remaining {{ unknowns | length - 8 }} of {{ unknowns | length }} items</summary>
+  <ul>
+  {% for item in unknowns[8:] %}<li>{{ item }}</li>{% endfor %}
+  </ul>
+</details>
+{% endif %}
+
+<h2>Tenant context</h2>
+<table>
+  <tr><th>Licenses</th>
+      <td>{{ context.licenses.skuPartNumbers | join(", ") if context.licenses.skuPartNumbers else "None detected" }}.
+      Entra ID P1: {{ "yes" if context.licenses.entraP1 else "no" }}.
+      Entra ID P2: {{ "yes" if context.licenses.entraP2 else "no" }}.</td></tr>
+  <tr><th>Sign in method registration</th>
+      <td class="num">{{ context.registration.mfaRegistered }} of {{ context.registration.totalUsers }} users have registered
+      a second sign in factor; {{ context.registration.mfaCapable }} are capable of one.</td></tr>
+  <tr><th>Legacy authentication</th>
+      <td>{% if context.legacyAuth.eventCount %}{{ context.legacyAuth.eventCount }} sign in event{{ 's' if context.legacyAuth.eventCount != 1 }}
+      used older protocols that cannot do modern security checks
+      ({{ context.legacyAuth.clients | join(", ") }}).{% else %}No legacy authentication seen in the collection window.{% endif %}</td></tr>
+  <tr><th>Global administrators</th>
+      <td class="num">{{ context.globalAdministrators.count }}</td></tr>
+  <tr><th>Security defaults</th>
+      <td>{{ "Enabled" if context.securityDefaultsEnabled else "Disabled" }}. Security defaults are Microsoft's
+      basic protections for tenants without their own policies.</td></tr>
+  <tr><th>Federated domains</th>
+      <td>{{ context.federatedDomains | join(", ") if context.federatedDomains else "None" }}</td></tr>
+</table>
+
+<footer>
+<p>{{ scope_note }}</p>
+<p>Grades are conservative by design: the report claims protection only when the
+collected data proves it.{% if collected_at %} All findings reflect the data collected {{ collected_at }}.{% endif %}
+Sign in analysis covers a 30 day window.</p>
+<p>To keep a copy, print this page to PDF from the browser.</p>
+</footer>
+
+</main>
+</body>
+</html>

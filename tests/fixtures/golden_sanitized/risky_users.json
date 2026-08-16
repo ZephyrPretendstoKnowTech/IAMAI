@@ -1,0 +1,4 @@
+{
+  "reason": "Entra ID P2 not detected in subscribed SKUs; risky users not collected.",
+  "skipped": true
+}

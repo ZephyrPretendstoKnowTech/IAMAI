@@ -1,0 +1,124 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+  "value": [
+    {
+      "id": "60000000-0000-0000-0000-000000000001",
+      "createdDateTime": "2026-06-01T01:00:00Z",
+      "userDisplayName": "User 1",
+      "userPrincipalName": "user1@tenant.example",
+      "userId": "20000000-0000-0000-0000-000000000001",
+      "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+      "appDisplayName": "Graph explorer",
+      "ipAddress": "203.0.113.5",
+      "clientAppUsed": "Browser",
+      "correlationId": "b0000000-0000-0000-0000-000000000001",
+      "conditionalAccessStatus": "success",
+      "isInteractive": true,
+      "riskDetail": "none",
+      "riskLevelAggregated": "none",
+      "riskLevelDuringSignIn": "none",
+      "riskState": "none",
+      "riskEventTypes": [],
+      "resourceDisplayName": "Microsoft Graph",
+      "resourceId": "00000003-0000-0000-c000-000000000000",
+      "status": {
+        "errorCode": 0,
+        "failureReason": null,
+        "additionalDetails": null
+      },
+      "deviceDetail": {
+        "deviceId": "",
+        "displayName": null,
+        "operatingSystem": "Windows 11",
+        "browser": "Edge 137.0.0",
+        "isCompliant": null,
+        "isManaged": null,
+        "trustType": null
+      },
+      "location": {
+        "city": "Sydney",
+        "state": "New South Wales",
+        "countryOrRegion": "AU",
+        "geoCoordinates": {
+          "altitude": null,
+          "latitude": -33.8,
+          "longitude": 151.2
+        }
+      },
+      "appliedConditionalAccessPolicies": [
+        {
+          "id": "40000000-0000-0000-0000-000000000001",
+          "displayName": "CA001 Require MFA for all users",
+          "enforcedGrantControls": [
+            "Mfa"
+          ],
+          "enforcedSessionControls": [],
+          "result": "success"
+        },
+        {
+          "id": "40000000-0000-0000-0000-000000000002",
+          "displayName": "CA002 Block legacy authentication",
+          "enforcedGrantControls": [],
+          "enforcedSessionControls": [],
+          "result": "reportOnlyNotApplied"
+        }
+      ]
+    },
+    {
+      "id": "60000000-0000-0000-0000-000000000003",
+      "createdDateTime": "2026-05-20T07:00:00Z",
+      "userDisplayName": "User 2",
+      "userPrincipalName": "user2@tenant.example",
+      "userId": "20000000-0000-0000-0000-000000000002",
+      "appId": "00000002-0000-0ff1-ce00-000000000000",
+      "appDisplayName": "Office 365 Exchange Online",
+      "ipAddress": "198.51.100.7",
+      "clientAppUsed": "Exchange ActiveSync",
+      "correlationId": "b0000000-0000-0000-0000-000000000002",
+      "conditionalAccessStatus": "reportOnly",
+      "isInteractive": true,
+      "riskDetail": "none",
+      "riskLevelAggregated": "none",
+      "riskLevelDuringSignIn": "none",
+      "riskState": "none",
+      "riskEventTypes": [],
+      "resourceDisplayName": "Office 365 Exchange Online",
+      "resourceId": "00000002-0000-0ff1-ce00-000000000000",
+      "status": {
+        "errorCode": 0,
+        "failureReason": null,
+        "additionalDetails": null
+      },
+      "deviceDetail": {
+        "deviceId": "",
+        "displayName": null,
+        "operatingSystem": "Android",
+        "browser": "",
+        "isCompliant": null,
+        "isManaged": null,
+        "trustType": null
+      },
+      "location": {
+        "city": "Sydney",
+        "state": "New South Wales",
+        "countryOrRegion": "AU",
+        "geoCoordinates": {
+          "altitude": null,
+          "latitude": -33.8,
+          "longitude": 151.2
+        }
+      },
+      "appliedConditionalAccessPolicies": [
+        {
+          "id": "40000000-0000-0000-0000-000000000002",
+          "displayName": "CA002 Block legacy authentication",
+          "enforcedGrantControls": [
+            "Block"
+          ],
+          "enforcedSessionControls": [],
+          "result": "reportOnlyFailure"
+        }
+      ]
+    }
+  ]
+}

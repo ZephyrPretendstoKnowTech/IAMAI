@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Identity security assessment: Example Corp</title>
+<style>
+  :root {
+    /* Paper and ink */
+    --page: #f7f7f4;
+    --surface: #ffffff;
+    --surface-2: #fbfbf9;
+    --ink: #14140f;
+    --ink-2: #565550;
+    /* Secondary text. Darkened to clear WCAG AA (4.5:1) on white -- the
+       earlier #8a887f sat at 3.5:1, which is below AA for normal text. */
+    --muted: #726f6a;
+    --hairline: rgba(20, 20, 15, 0.10);
+    --rule: #e5e4dc;
+
+    /* Brand: a deep, steady green. Used for the wordmark, links, and the
+       primary action. */
+    --brand: #1f5137;
+    --brand-ink: #ffffff;
+    --brand-tint: #eef3ee;
+    --accent-bar: #2f6b47;
+
+    /* Semantic status. Each grade and risk level maps to exactly one. */
+    --ok: #157f3b;
+    --ok-tint: #e9f4ec;
+    --info: #0f6e6a;
+    --info-tint: #e6f2f1;
+    --warn: #b7791f;
+    --warn-tint: #fbf1de;
+    --bad: #c23b3b;
+    --bad-tint: #fbeaea;
+    --neutral: #6b6a64;
+    --neutral-tint: #efefea;
+
+    /* Shape */
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 1px 2px rgba(20, 20, 15, 0.04), 0 1px 8px rgba(20, 20, 15, 0.04);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  main { max-width: 56rem; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  h1 { font-size: 1.65rem; line-height: 1.25; margin: 0 0 0.3rem; letter-spacing: -0.01em; }
+  h2 { font-size: 1.2rem; margin: 2.75rem 0 0.85rem; letter-spacing: -0.005em; }
+  h3 { font-size: 1rem; margin: 0; }
+  h4 { font-size: 0.9rem; margin: 1rem 0 0.25rem; }
+  p { margin: 0.45rem 0; }
+  a { color: var(--brand); text-underline-offset: 0.15em; }
+  strong { font-weight: 650; }
+  .eyebrow {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 650;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .meta { color: var(--ink-2); margin-bottom: 1.5rem; }
+  .query { color: var(--muted); font-size: 0.85rem; }
+
+  /* A quiet wordmark, so every page is recognisably the same product. */
+  .brandbar {
+    display: flex; align-items: center; gap: 0.55rem;
+    color: var(--brand); font-weight: 700; letter-spacing: 0.02em;
+    margin-bottom: 1.75rem;
+  }
+  .brandbar .mark {
+    width: 1.5rem; height: 1.5rem; border-radius: 6px;
+    background: var(--brand); color: var(--brand-ink);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 800;
+  }
+  .brandbar .sub { color: var(--muted); font-weight: 500; letter-spacing: 0; }
+
+  .banner, .why {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 4px solid var(--accent-bar);
+    border-radius: var(--radius-sm);
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+  }
+  .banner strong { display: block; }
+  .why { background: var(--brand-tint); border-left-color: var(--brand); font-size: 0.95rem; }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 0.75rem;
+    margin: 1.25rem 0;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+    padding: 0.85rem 1rem;
+    border-top: 3px solid var(--neutral);
+  }
+  .tile.green { border-top-color: var(--ok); }
+  .tile.amber { border-top-color: var(--warn); }
+  .tile.red { border-top-color: var(--bad); }
+  .tile .status { font-weight: 650; }
+  .tile .icon { display: inline-block; width: 1.1em; }
+  .tile.green .icon { color: var(--ok); }
+  .tile.amber .icon { color: var(--warn); }
+  .tile.red .icon { color: var(--bad); }
+  .tile .count { color: var(--ink-2); font-size: 0.9rem; }
+  .totals { color: var(--ink-2); margin: 0.5rem 0 0; }
+  .legend { color: var(--ink-2); font-size: 0.9rem; margin-top: 0.5rem; }
+  .legend dt { font-weight: 650; float: left; clear: left; width: 8.5rem; color: var(--ink); }
+  .legend dd { margin: 0 0 0.15rem 9rem; }
+
+  .control, .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.15rem 1.4rem;
+    margin: 0.85rem 0;
+    break-inside: avoid;
+  }
+  .card { padding: 1.4rem 1.6rem 1.15rem; margin: 1.35rem 0; }
+  .control header, .card header {
+    display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;
+  }
+  .card .title-row { display: flex; gap: 0.6rem; align-items: baseline; margin-top: 0.15rem; }
+  .control .rationale, .control .detail { color: var(--ink-2); }
+  .control .detail { font-size: 0.9rem; margin-top: 0.5rem; }
+  .control ul, .card ul { margin: 0.3rem 0 0.3rem 1.2rem; padding: 0; }
+  .control .id, .card .id { color: var(--muted); font-size: 0.8rem; }
+
+  /* A small square marker in front of a plan step's actions. */
+  .tick {
+    flex: none; display: inline-block; width: 0.85em; height: 0.85em;
+    border-radius: 3px; position: relative; top: 0.08em; background: var(--brand);
+  }
+  ol.actions { padding-left: 1.3rem; }
+  ol.actions > li { margin: 0.3rem 0; }
+
+  .grade, .risk {
+    white-space: nowrap;
+    font-size: 0.78rem;
+    font-weight: 650;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 0.12rem 0.65rem 0.12rem 0.5rem;
+    background: var(--surface-2);
+  }
+  .grade .dot, .risk .dot {
+    display: inline-block; width: 0.55em; height: 0.55em;
+    border-radius: 50%; margin-right: 0.4em; position: relative; top: -0.02em;
+  }
+  .grade.green .dot { background: var(--ok); }
+  .grade.teal .dot  { background: var(--info); }
+  .grade.amber .dot { background: var(--warn); }
+  .grade.red .dot   { background: var(--bad); }
+  .grade.gray .dot  { background: var(--neutral); }
+  .grade.green { background: var(--ok-tint); }
+  .grade.teal  { background: var(--info-tint); }
+  .grade.amber { background: var(--warn-tint); }
+  .grade.red   { background: var(--bad-tint); }
+  .grade.gray  { background: var(--neutral-tint); }
+  .risk.high .dot   { background: var(--bad); }
+  .risk.medium .dot { background: var(--warn); }
+  .risk.low .dot    { background: var(--ok); }
+  .risk.high   { background: var(--bad-tint); }
+  .risk.medium { background: var(--warn-tint); }
+  .risk.low    { background: var(--ok-tint); }
+
+  table { border-collapse: collapse; width: 100%; background: var(--surface); border-radius: var(--radius-sm); overflow: hidden; }
+  th, td { text-align: left; padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-weight: 650; background: var(--surface-2); font-size: 0.92rem; }
+  td.num { font-variant-numeric: tabular-nums; }
+  .table-wrap { overflow-x: auto; }
+
+  details {
+    margin: 0.75rem 0;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.95rem;
+    background: var(--surface-2);
+  }
+  details summary { cursor: pointer; color: var(--ink-2); font-size: 0.92rem; font-weight: 650; }
+  details[open] summary { margin-bottom: 0.4rem; }
+
+  form { margin-top: 1.5rem; }
+  .progress { color: var(--muted); font-size: 0.9rem; letter-spacing: 0.02em; }
+  .opt {
+    display: block; padding: 0.55rem 0.7rem; margin: 0.3rem 0;
+    background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm); cursor: pointer;
+  }
+  .opt:hover { border-color: var(--brand); }
+  .extra { display: block; margin-top: 0.8rem; font-size: 0.9rem; }
+  input[type="text"], textarea {
+    width: 100%; box-sizing: border-box; padding: 0.5rem; margin-top: 0.3rem;
+    border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+    font: inherit; background: var(--surface);
+  }
+  select.dropdown {
+    width: 100%; box-sizing: border-box; padding: 0.5rem; margin-top: 0.3rem;
+    border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+    font: inherit; background: var(--surface); color: var(--ink);
+  }
+  input[type="text"]:focus, textarea:focus, select.dropdown:focus { outline: 2px solid var(--accent-bar); outline-offset: 1px; }
+  button, .btn {
+    display: inline-block; margin-top: 1.2rem; padding: 0.62rem 1.5rem;
+    font: inherit; font-weight: 650; background: var(--brand); color: var(--brand-ink);
+    border: none; border-radius: var(--radius-sm); cursor: pointer; text-decoration: none;
+  }
+  button:hover, .btn:hover { background: var(--accent-bar); }
+  .btn.ghost { background: transparent; color: var(--brand); border: 1px solid var(--hairline); }
+  .btn.ghost:hover { background: var(--brand-tint); }
+  /* Keyboard focus must be visible on every interactive element, not just
+     text inputs (WCAG 2.4.7). :focus-visible keeps mouse clicks ringless. */
+  button:focus-visible, .btn:focus-visible, a:focus-visible, .opt:focus-within {
+    outline: 2px solid var(--accent-bar); outline-offset: 2px;
+  }
+  .wizard-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+  .wizard-nav .btn { margin-top: 0; padding: 0.45rem 1rem; }
+  .error { background: var(--bad-tint); border-left: 4px solid var(--bad); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); }
+
+  footer {
+    margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
+    color: var(--ink-2); font-size: 0.9rem;
+  }
+
+  /* Narrow screens: let a wide table scroll within itself rather than push
+     the whole page sideways. display:block turns the table into a scroll box;
+     it reverts to a normal table above this width and in print. */
+  @media (max-width: 40rem) {
+    table { display: block; overflow-x: auto; }
+    main { padding: 1.75rem 1rem 3rem; }
+    .hero h1 { font-size: 1.8rem; }
+  }
+
+  @media print {
+    body { background: #ffffff; }
+    main { max-width: none; padding: 0; }
+    .control, .card, .tile, .banner, .why, table, details { background: #ffffff; box-shadow: none; }
+    a { color: var(--ink); text-decoration: none; }
+    .brandbar { margin-bottom: 1rem; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; identity posture assessment</span></div>
+<h1>Identity security assessment</h1>
+<p class="meta">Tenant: Example Corp. Generated .
+</p>
+
+
+<div class="banner"><strong>Some data is incomplete.</strong> 1 control was graded UNKNOWN because the data behind them could not be read completely. Those grades are honest gaps, not guesses.</div>
+
+
+<h2>Summary</h2>
+<p>This report grades the tenant against the standard, a reference configuration
+captured from a known good setup. Each area below is judged conservatively:
+when the data is ambiguous, the grade goes down, never up.</p>
+
+<div class="tiles">
+
+  <div class="tile red">
+    <h3>Access policies</h3>
+    <span class="status"><span class="icon">✕</span>Protection missing</span>
+    <div class="count">1 of 9 controls meet the standard</div>
+  </div>
+
+  <div class="tile green">
+    <h3>Sign in strength definitions</h3>
+    <span class="status"><span class="icon">✓</span>Meets the standard</span>
+    <div class="count">3 of 3 controls meet the standard</div>
+  </div>
+
+  <div class="tile green">
+    <h3>Sign in methods</h3>
+    <span class="status"><span class="icon">✓</span>Meets the standard</span>
+    <div class="count">6 of 6 controls meet the standard</div>
+  </div>
+
+  <div class="tile green">
+    <h3>Registration campaign</h3>
+    <span class="status"><span class="icon">✓</span>Meets the standard</span>
+    <div class="count">1 of 1 control meet the standard</div>
+  </div>
+
+  <div class="tile amber">
+    <h3>privilegedAccess</h3>
+    <span class="status"><span class="icon">!</span>Needs attention</span>
+    <div class="count">0 of 1 control meet the standard</div>
+  </div>
+
+  <div class="tile amber">
+    <h3>authorizationPolicy</h3>
+    <span class="status"><span class="icon">!</span>Needs attention</span>
+    <div class="count">1 of 7 controls meet the standard</div>
+  </div>
+
+  <div class="tile amber">
+    <h3>adminConsentRequestPolicy</h3>
+    <span class="status"><span class="icon">!</span>Needs attention</span>
+    <div class="count">0 of 1 control meet the standard</div>
+  </div>
+
+</div>
+
+<p class="totals">Across all 28 controls:
+FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
+
+<dl class="legend">
+
+  <dt>FULL</dt><dd>Matches the standard.</dd>
+
+  <dt>FUNCTIONAL</dt><dd>Protected, but built differently from the standard.</dd>
+
+  <dt>PARTIAL</dt><dd>Present but weaker than the standard.</dd>
+
+  <dt>MISSING</dt><dd>This protection does not exist in the tenant.</dd>
+
+  <dt>UNKNOWN</dt><dd>The collected data was not good enough to judge. Never guessed.</dd>
+
+</dl>
+
+
+<h2>Access policies</h2>
+
+<section class="control">
+  <header>
+    <h3>People with administrator roles must prove who they are with a strong, phishing resistant sign in method.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">Administrator accounts can change anything in the company&#39;s systems, so they are the first target for attackers. Requiring the strongest sign in proof protects the accounts with the most power.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    
+    
+    
+    <ul><li>Accounts or groups are excluded that the standard does not sanction. The questionnaire can classify them.</li></ul>
+    
+    
+    
+    <p>Evidence: Core - Allow - MFA for Admins</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control cap-001</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>Everyone must confirm their identity with a second step when signing in.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">A password alone is not enough. If a password is stolen, the second step stops the attacker from getting in.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    
+    
+    
+    <ul><li>Accounts or groups are excluded that the standard does not sanction. The questionnaire can classify them.</li></ul>
+    
+    
+    
+    <p>Evidence: Core - Allow - MFA for Internal Users</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control cap-002</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>Transferring a sign in from one device to another is blocked.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">Attackers abuse sign in transfer to move a stolen session onto their own device. Blocking it closes that path.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    
+    
+    
+    <ul><li>Accounts or groups are excluded that the standard does not sanction. The questionnaire can classify them.</li></ul>
+    
+    
+    
+    <p>Evidence: Core - Block - Authentication Transfer Flow</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control cap-003</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>The device code sign in flow is blocked.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">This sign in style is designed for TVs and shared devices, and attackers abuse it to trick people into approving a sign in they did not start.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    
+    
+    
+    <ul><li>Accounts or groups are excluded that the standard does not sanction. The questionnaire can classify them.</li></ul>
+    
+    
+    
+    <p>Evidence: Core - Block - Device Code Flow</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control cap-004</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>Old sign in methods that cannot do a second identity check are blocked.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">Older apps and protocols skip modern security checks entirely. Attackers use them as a back door, so they are shut off.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: Core - Block - Legacy Authentication</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control cap-005</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>Sign in sessions on Windows are locked to the device they were created on.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">If someone steals a session token, it will not work from any other device, so a stolen token is useless.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    
+    
+    
+    <ul><li>Accounts or groups are excluded that the standard does not sanction. The questionnaire can classify them.</li></ul>
+    
+    
+    
+    <p>Evidence: Core - Require - Token Protection (Windows)</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control cap-006</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>People who are not administrators sign in again at least every 14 days.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">A session that never expires is a session an attacker can keep using. Fourteen days bounds how long a stolen session stays useful without asking people to sign in so often that they stop reading the prompt.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    
+    
+    
+    <ul><li>Accounts or groups are excluded that the standard does not sanction. The questionnaire can classify them.</li></ul>
+    
+    
+    
+    <p>Evidence: Core - Allow - MFA for Internal Users</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control session-001</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>People with administrator roles sign in again at least every 4 hours.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">An administrator session is the most valuable thing in the tenant. Four hours keeps the window an attacker can use it in short, and administrators sign in far less often than everyone else so the cost is small.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>The session requirement is weaker than the standard.</li></ul>
+    
+    
+    
+    <ul><li>People are asked to sign in again every 14 days, where the standard asks every 4 hours.</li></ul>
+    
+    
+    
+    <p>Evidence: Core - Allow - MFA for Internal Users</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control session-002</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>People who are not administrators can stay signed in in their browser.</h3>
+    <span class="grade red"><span class="dot"></span>MISSING</span>
+  </header>
+  <p class="rationale">Asking people to confirm who they are more often than the risk warrants makes them stop reading what they are approving, which is exactly what an attacker flooding someone with prompts is counting on. Staying signed in on a browser they already proved themselves on removes prompts that buy nothing.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>No target policy contributes coverage of this intent.</li></ul>
+    
+    
+    
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control session-003</p>
+  </div>
+</section>
+
+
+<h2>Sign in strength definitions</h2>
+
+<section class="control">
+  <header>
+    <h3>This named set of allowed sign in methods exists exactly as the standard defines it.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">Policies point at this set to control which sign in methods count as strong enough.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: Multifactor authentication</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control strength-001</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>This named set of allowed sign in methods exists exactly as the standard defines it.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">Policies point at this set to control which sign in methods count as strong enough.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: Passwordless MFA</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control strength-002</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>This named set of allowed sign in methods exists exactly as the standard defines it.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">Policies point at this set to control which sign in methods count as strong enough.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: Phishing-resistant MFA</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control strength-003</p>
+  </div>
+</section>
+
+
+<h2>Sign in methods</h2>
+
+<section class="control">
+  <header>
+    <h3>The Email sign in method is turned off.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: Email</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control method-Email</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>Passkeys can be set up and used to sign in.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">A passkey cannot be phished: it only works on the site it was created for, so a convincing fake page gets nothing. This is the strongest sign in method available and everything else in the standard assumes people can register one.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: Fido2</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control method-Fido2</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>The Microsoft Authenticator app can be used to sign in.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">For people without a security key, Authenticator on a phone is where their passkey lives. It is also the fallback when a key is lost, so turning it off removes the recovery path for everyone who does not carry hardware.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: MicrosoftAuthenticator</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control method-MicrosoftAuthenticator</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>The Sms sign in method is turned off.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: Sms</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control method-Sms</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>A time limited pass can be issued so someone can set up a passkey when they have none, or when they have lost the one they had.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">Setting up a passkey requires already being able to sign in, which a new starter cannot do and someone who lost their phone can no longer do. A short lived pass closes that gap without handing out a password. Its lifetime and length are checked because a long lived pass is a password by another name. A tenant that also makes the pass single use is stricter than this and passes.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: TemporaryAccessPass</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control method-TemporaryAccessPass</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>The Voice sign in method is turned off.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: Voice</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control method-Voice</p>
+  </div>
+</section>
+
+
+<h2>Registration campaign</h2>
+
+<section class="control">
+  <header>
+    <h3>People are prompted to register a second sign in step until they complete it.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">Everyone needs a second step registered before it can be required. The prompt moves people to register without blocking their work.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Evidence: registrationCampaign</p>
+    
+    <p>Accounts this applies to: 2
+    (for example user2@tenant.example, user3@tenant.example)</p>
+    <p class="id">Control campaign-001</p>
+  </div>
+</section>
+
+
+<h2>privilegedAccess</h2>
+
+<section class="control">
+  <header>
+    <h3>Nobody holds Global Administrator permanently except the emergency accounts.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">Global Administrator can do anything in the tenant, so an account holding it around the clock is the most valuable target there is, and it is dangerous every hour of every day rather than only while someone is using it. The emergency accounts are the deliberate exception: they exist precisely to always work. Everyone else should hold the role only while doing the work that needs it.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>An account other than the emergency accounts holds Global Administrator permanently.</li></ul>
+    
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control privileged-001</p>
+  </div>
+</section>
+
+
+<h2>authorizationPolicy</h2>
+
+<section class="control">
+  <header>
+    <h3>Guests do not get the same view of the directory as your own staff.</h3>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+  </header>
+  <p class="rationale">A guest is somebody outside your organisation who was invited in, often for one project and often long ago. Giving them the same view of the directory as an employee hands them your staff list, your group structure and who reports to whom, which is the raw material for a convincing phishing message. Two settings below member level are acceptable: limited, which is the default, and restricted, which is tighter still. Restricted is the better of the two but it stops working with some services, so it is not required here.</p>
+  <div class="detail">
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control guest-001</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>Only people in an administrator or guest inviter role can invite guests.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">The default in most tenants lets everyone invite guests, including existing guests, so an outsider can bring in more outsiders without anyone approving it. Keeping invitations with administrators and named inviters means every account from outside the organisation got there because somebody accountable decided so. Turning invitations off entirely is stricter and also passes.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Anyone can invite a guest into the tenant, which means anybody can add an outside account nobody reviewed.</li></ul>
+    
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control guest-002</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>Only administrators can register applications.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">A registered application is an identity that can hold permissions and keep working after the person who made it leaves. Letting everyone create them means nobody has a list of what exists. Where individuals genuinely need this, the application developer role gives it back to named people rather than to everybody.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Anybody in the tenant can register an application.</li></ul>
+    
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control apps-001</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>People cannot grant an application any permission it asks for.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">Consent phishing does not steal a password. It shows the person a real sign in page and asks them to approve an application, and once approved that application keeps its access even after the password changes and the second step is passed. Two answers pass: turning user consent off entirely, or limiting it to low impact permissions from applications whose publisher has been verified. Everything else fails, including the setting Microsoft manages on your behalf, because that one still lets people approve applications and only holds back a list of permissions Microsoft maintains and can change. A setting this tool has never seen fails too, since a permission that lets people approve applications is not one to assume the best about.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>People can approve applications for themselves. If this tenant is on the setting Microsoft manages for you, which is the default for tenants created recently, then the most sensitive permissions such as mail, files and calendars are held back and everything else is still theirs to approve. That is better than the old setting and it is not the same as deciding who may approve what.</li></ul>
+    
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control consent-001</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>Only administrators can approve an application&#39;s access.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">The stricter reading of the same risk. Any route by which a person can approve an application is a route a convincing request can travel, so this asks that every approval go to an administrator. It costs more in day to day friction than the baseline version, which is why it is here rather than there, and it is the bar the published baseline sets.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>People can still approve some application requests without an administrator.</li></ul>
+    
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control consent-002</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>People who are not administrators cannot create new tenants.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">Whoever creates a tenant is automatically its global administrator. Left on, this lets any employee stand up a directory outside everything described in this report, which nobody is monitoring and nobody knows exists, while it holds company data and carries the company name. Where somebody genuinely needs it, the tenant creator role gives it to that person by name.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Anybody in the tenant can create a new tenant and become its global administrator.</li></ul>
+    
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control tenants-001</p>
+  </div>
+</section>
+
+<section class="control">
+  <header>
+    <h3>People who are not administrators cannot read the recovery keys for their own devices.</h3>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+  </header>
+  <p class="rationale">Disk encryption is what protects a laptop once it is out of the hands of the person carrying it. If the account can fetch its own recovery key, then one stolen account is enough to unlock everything on that laptop, and the encryption stops being the thing it was bought to be. It is in the stricter set because it puts recovery through a help desk, which is a real cost.</p>
+  <div class="detail">
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>Anybody can retrieve the disk recovery key for a device they own.</li></ul>
+    
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control bitlocker-001</p>
+  </div>
+</section>
+
+
+<h2>adminConsentRequestPolicy</h2>
+
+<section class="control">
+  <header>
+    <h3>Somebody who needs an application has a way to ask, and a named person receives it.</h3>
+    <span class="grade gray"><span class="dot"></span>UNKNOWN</span>
+  </header>
+  <p class="rationale">This is the other half of restricting who may approve applications. If people cannot consent and cannot ask either, they do not stop needing the tool; they find a way around, usually a personal account holding company data. A request queue with named reviewers turns a dead end into a decision somebody makes on purpose.</p>
+  <div class="detail">
+    
+    
+    <ul><li>The configuration this check depends on is not in the snapshot.</li></ul>
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control consent-003</p>
+  </div>
+</section>
+
+
+
+
+<h2>Compliance crosswalk</h2>
+<p>Where the standard's controls line up with published guidance. Each status
+is read straight from the grades above, never claimed beyond them: meets
+means every control for that item matches, partially meets means at least one
+is present but weaker, misses means a control is absent, and not assessed
+means the data could not judge it.</p>
+<p><strong>What this is not.</strong> Only the items listed here were mapped.
+Each published source contains a great deal this standard does not cover, so
+meeting every row below is not the same as meeting the source, and nothing
+here is a certification or an audit. Where this standard asks for less than a
+source does, the row is left out rather than counted, so a source is never
+credited with something the tenant has not actually done.</p>
+
+<h3>CISA SCuBA M365 Entra ID v1.8.0</h3>
+
+<p class="totals">13 items: 4 meets, 7 partially meets, 2 not assessed.</p>
+<table>
+  <tr><th>Item</th><th>Status</th></tr>
+  
+  <tr><td>MS.AAD.1.1v1</td><td>meets</td></tr>
+  
+  <tr><td>MS.AAD.3.1v1</td><td>partially meets</td></tr>
+  
+  <tr><td>MS.AAD.3.2v2</td><td>partially meets</td></tr>
+  
+  <tr><td>MS.AAD.3.3v2</td><td>meets</td></tr>
+  
+  <tr><td>MS.AAD.3.4v1</td><td>not assessed</td></tr>
+  
+  <tr><td>MS.AAD.3.5v2</td><td>meets</td></tr>
+  
+  <tr><td>MS.AAD.3.6v1</td><td>partially meets</td></tr>
+  
+  <tr><td>MS.AAD.3.9v1</td><td>partially meets</td></tr>
+  
+</table>
+
+<details>
+  <summary>Show the remaining 5 of 13 items</summary>
+  <table>
+    <tr><th>Item</th><th>Status</th></tr>
+    
+    <tr><td>MS.AAD.5.1v1</td><td>partially meets</td></tr>
+    
+    <tr><td>MS.AAD.5.2v1</td><td>partially meets</td></tr>
+    
+    <tr><td>MS.AAD.5.3v1</td><td>not assessed</td></tr>
+    
+    <tr><td>MS.AAD.8.1v1</td><td>meets</td></tr>
+    
+    <tr><td>MS.AAD.8.2v1</td><td>partially meets</td></tr>
+    
+  </table>
+</details>
+
+
+<h3>Microsoft Entra documentation</h3>
+
+<p class="totals">24 items: 7 meets, 9 partially meets, 7 not assessed, 1 misses.</p>
+<table>
+  <tr><th>Item</th><th>Status</th></tr>
+  
+  <tr><td>Authentication methods policy</td><td>meets</td></tr>
+  
+  <tr><td>Block authentication flows with Conditional Access policy</td><td>partially meets</td></tr>
+  
+  <tr><td>Block legacy authentication with Conditional Access</td><td>meets</td></tr>
+  
+  <tr><td>Conditional Access adaptive session lifetime policies</td><td>misses</td></tr>
+  
+  <tr><td>Conditional Access authentication strength</td><td>meets</td></tr>
+  
+  <tr><td>Configure a Temporary Access Pass</td><td>meets</td></tr>
+  
+  <tr><td>Configure external collaboration settings</td><td>partially meets</td></tr>
+  
+  <tr><td>Configure how users consent to applications</td><td>partially meets</td></tr>
+  
+</table>
+
+<details>
+  <summary>Show the remaining 16 of 24 items</summary>
+  <table>
+    <tr><th>Item</th><th>Status</th></tr>
+    
+    <tr><td>Configure risk-based step-up consent</td><td>not assessed</td></tr>
+    
+    <tr><td>Configure the admin consent workflow</td><td>not assessed</td></tr>
+    
+    <tr><td>Default user permissions in Microsoft Entra ID</td><td>partially meets</td></tr>
+    
+    <tr><td>Enable and support passkeys in Microsoft Authenticator</td><td>not assessed</td></tr>
+    
+    <tr><td>Enable passkeys (FIDO2) for your organization</td><td>meets</td></tr>
+    
+    <tr><td>How to migrate to the Authentication methods policy</td><td>not assessed</td></tr>
+    
+    <tr><td>How token protection enhances Conditional Access policies</td><td>partially meets</td></tr>
+    
+    <tr><td>Plan a Privileged Identity Management deployment</td><td>partially meets</td></tr>
+    
+    <tr><td>Protect tenants with Zero Trust</td><td>partially meets</td></tr>
+    
+    <tr><td>QR code authentication method in Microsoft Entra ID</td><td>not assessed</td></tr>
+    
+    <tr><td>Require phishing-resistant MFA for Microsoft Entra administrator roles</td><td>partially meets</td></tr>
+    
+    <tr><td>Require phishing-resistant MFA for all users</td><td>partially meets</td></tr>
+    
+    <tr><td>Restrict guest access permissions</td><td>meets</td></tr>
+    
+    <tr><td>Risk policies in Microsoft Entra ID Protection</td><td>not assessed</td></tr>
+    
+    <tr><td>Run a registration campaign to set up a passkey or Microsoft Authenticator</td><td>meets</td></tr>
+    
+    <tr><td>Security defaults in Microsoft Entra ID</td><td>not assessed</td></tr>
+    
+  </table>
+</details>
+
+
+
+
+
+<h2>Not included, because your licensing does not cover it</h2>
+<p>These protections are part of the standard but need a licence this tenant
+does not have. They are not counted in any grade above, and none of them means
+you are doing something wrong. They are listed so the choice is visible: you
+can decide whether the protection is worth the licence, rather than never
+hearing about it.</p>
+<dl class="out-of-reach">
+  
+  <dt>An account Microsoft flags as likely compromised must change its password before it can carry on.</dt>
+  <dd>This protection needs Entra ID P2, which this tenant&#39;s current licensing does not include. It is not counted in the grades and nothing here says the tenant is failing. It is listed so the choice is visible. What it protects against: Microsoft watches for signs an account has been taken over, such as its credentials turning up in a breach dump or sign ins from places it could not physically have travelled between. Catching that automatically and forcing a password change closes the account off before someone uses it, without waiting for a person to notice.
+    <br>What you can do without the licence: Without this licence the tenant is not told which accounts look compromised, so there is nothing to react to and no free way to get it. What lowers the risk instead is removing passwords from the picture: passkeys turned on and in use mean a stolen password is not enough on its own. Reviewing sign in logs for unfamiliar locations is a manual stand in.
+    </dd>
+  
+  <dt>A sign in Microsoft judges suspicious has to prove itself again before it is let through.</dt>
+  <dd>This protection needs Entra ID P2, which this tenant&#39;s current licensing does not include. It is not counted in the grades and nothing here says the tenant is failing. It is listed so the choice is visible. What it protects against: Microsoft scores each sign in as it happens, using signals a person cannot see: whether the address is a known anonymiser, whether the same account just signed in from somewhere it could not have travelled from, whether the password appeared in a breach. Challenging only the sign ins that look wrong catches an intruder using a working password without asking everyone else to do anything extra.
+    <br>What you can do without the licence: Same as above. Nothing free supplies the risk signal. Requiring a second step for everyone, which security defaults does at no cost, covers the common case that this control would otherwise catch.
+    </dd>
+  
+</dl>
+
+
+<h2>How your setup is organized</h2>
+
+<p>These notes are about organization, not security. Nothing here affects any
+grade above, and nothing here means you are less protected. The protection is
+already in place. They are worth reading only because a tenant that is
+organized the same way the standard describes is easier to review later, and
+easier to hand to someone else.</p>
+<dl class="structural">
+  
+  <dt>People are prompted to register a second sign in step until they complete it.</dt>
+  
+  <dd>The campaign does not leave out the emergency accounts, so they can be prompted to register a method during an emergency sign in.</dd>
+  
+  
+</dl>
+
+
+<h2>Outside the standard</h2>
+
+<p>Nothing in the tenant sits outside the standard.</p>
+
+
+<h2>What this assessment cannot see</h2>
+<p>An honest list of blind spots. Nothing here was guessed around.</p>
+<ul>
+<li>risky_users: skipped during collection (not licensed).</li><li>Role eligibility (PIM) could not be read; eligible role holders are unknown.</li><li>Sign in analysis covers a 30 day window. Rarer activity, such as a monthly job using legacy authentication, can hide outside the window.</li>
+</ul>
+
+
+<h2>Tenant context</h2>
+<table>
+  <tr><th>Licenses</th>
+      <td>SPB.
+      Entra ID P1: yes.
+      Entra ID P2: no.</td></tr>
+  <tr><th>Sign in method registration</th>
+      <td class="num">2 of 2 users have registered
+      a second sign in factor; 2 are capable of one.</td></tr>
+  <tr><th>Legacy authentication</th>
+      <td>No legacy authentication seen in the collection window.</td></tr>
+  <tr><th>Global administrators</th>
+      <td class="num">2</td></tr>
+  <tr><th>Security defaults</th>
+      <td>Disabled. Security defaults are Microsoft's
+      basic protections for tenants without their own policies.</td></tr>
+  <tr><th>Federated domains</th>
+      <td>None</td></tr>
+</table>
+
+<footer>
+<p>Evaluation is constrained to the standard&#39;s specific protections. This is not a general policy equivalence engine. Device posture is not assessed in this version.</p>
+<p>Grades are conservative by design: the report claims protection only when the
+collected data proves it.
+Sign in analysis covers a 30 day window.</p>
+<p>To keep a copy, print this page to PDF from the browser.</p>
+</footer>
+
+</main>
+</body>
+</html>

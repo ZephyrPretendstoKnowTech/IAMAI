@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ZephyrPretendstoKnowTech/IAMAI/schemas/assessment.schema.json",
+  "title": "IAMAI assessment record",
+  "description": "The shape of data/<alias>/assessments/<timestamp>-assessment.json. See ARTIFACTS.md for the contract a consumer must respect.",
+  "type": "object",
+  "required": ["schemaVersion", "alias", "generatedAt", "controls", "gradeCounts"],
+  "properties": {
+    "schemaVersion": {"type": "integer", "const": 1},
+    "alias": {"type": "string"},
+    "tenantId": {"type": "string", "description": "Real tenant id; present in the raw file, absent from a sanitized copy."},
+    "generatedAt": {"type": "string"},
+    "baseline": {
+      "type": "object",
+      "properties": {
+        "pack": {"type": "string"},
+        "tool": {"type": "string"},
+        "version": {"type": ["string", "integer"]}
+      }
+    },
+    "gradeCounts": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "controls": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/control"}
+    },
+    "notApplicable": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["controlId"],
+        "properties": {
+          "controlId": {"type": "string"},
+          "intent": {"type": "string"},
+          "note": {"type": "string"},
+          "citations": {"$ref": "#/$defs/citations"}
+        }
+      }
+    },
+    "outOfReach": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["controlId"],
+        "properties": {
+          "controlId": {"type": "string"},
+          "intent": {"type": "string"},
+          "requires": {"type": "string"},
+          "protects": {"type": "string"},
+          "mitigation": {"type": "string"},
+          "note": {"type": "string"},
+          "citations": {"$ref": "#/$defs/citations"}
+        }
+      }
+    },
+    "surplus": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "string"},
+          "displayName": {"type": "string"},
+          "type": {"type": "string"},
+          "state": {"type": "string"},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "licensing": {
+      "type": "object",
+      "properties": {
+        "known": {"type": "boolean"},
+        "entraP1": {"type": "boolean"},
+        "entraP2": {"type": "boolean"}
+      }
+    },
+    "context": {"type": "object"},
+    "names": {
+      "type": "object",
+      "description": "Display-only {guid: displayName}. Never use for comparison.",
+      "additionalProperties": {"type": "string"}
+    },
+    "unknowns": {"type": "array", "items": {"type": "string"}},
+    "scopeNote": {"type": "string"}
+  },
+  "$defs": {
+    "grade": {
+      "type": "string",
+      "enum": ["FULL", "FUNCTIONAL", "PARTIAL", "MISSING", "UNKNOWN"]
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "item"],
+        "properties": {
+          "source": {"type": "string"},
+          "item": {"type": "string"}
+        }
+      }
+    },
+    "control": {
+      "type": "object",
+      "required": ["controlId", "surface", "grade", "intent"],
+      "properties": {
+        "controlId": {"type": "string"},
+        "surface": {"type": "string"},
+        "grade": {"$ref": "#/$defs/grade"},
+        "intent": {"type": "string"},
+        "rationale": {"type": "string"},
+        "riskClass": {"type": "string", "enum": ["high", "medium", "low"]},
+        "profile": {"type": "string", "enum": ["baseline", "strict"]},
+        "coverageGaps": {"type": "array", "items": {"type": "string"}},
+        "notes": {"type": "array", "items": {"type": "string"}},
+        "structural": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Advisory axis. Never affects the grade."
+        },
+        "matchedPolicies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "displayName": {"type": "string"}
+            }
+          }
+        },
+        "affected": {
+          "type": "object",
+          "properties": {
+            "count": {"type": "integer", "minimum": 0},
+            "sampleUPNs": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "citations": {"$ref": "#/$defs/citations"},
+        "tenantId": {"type": "string"}
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users('20000000-0000-0000-0000-000000000001')/authentication/methods",
+  "value": [
+    {
+      "@odata.type": "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod",
+      "id": "c0000000-0000-0000-0000-000000000001",
+      "displayName": "Pixel 9",
+      "deviceTag": "SoftwareTokenActivated",
+      "phoneAppVersion": "6.2506.0",
+      "createdDateTime": "2025-06-01T00:00:00Z"
+    }
+  ]
+}

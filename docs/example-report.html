@@ -295,34 +295,116 @@
     .control > summary { cursor: default; }
   }
 </style>
+<style>
+  :root {
+    color-scheme: dark;
+    --page: #0b1a30;
+    --surface: #12273f;
+    --surface-2: #0f2138;
+    --ink: #eef3fb;
+    --ink-2: #c4d1e2;
+    --muted: #9fb0c6;
+    --hairline: rgba(148, 176, 214, 0.18);
+    --rule: rgba(148, 176, 214, 0.22);
+    --brand: #6cb0ff;
+    --brand-ink: #06152a;
+    --brand-tint: #14314f;
+    --accent-bar: #4f93f0;
+    --ok: #56d364; --ok-tint: #10301c;
+    --info: #56d4ca; --info-tint: #0f2f2d;
+    --warn: #e3b341; --warn-tint: #2c2412;
+    --bad: #ff6b64; --bad-tint: #331a19;
+    --neutral: #9fb0c6; --neutral-tint: #1a2942;
+    --code-bg: #061223; --code-ink: #d7e3f5;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 10px 30px rgba(0,0,0,0.28);
+  }
+  body {
+    background:
+      radial-gradient(1100px 480px at 82% -8%, rgba(108,176,255,0.12), transparent 62%),
+      radial-gradient(900px 420px at 0% 0%, rgba(86,212,202,0.06), transparent 60%),
+      var(--page);
+    background-attachment: fixed;
+  }
+  .accent-strip { height: 3px; background: linear-gradient(90deg, #6cb0ff, #4f93f0, #56d4ca); }
+
+  .site-header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--hairline);
+    background: rgba(9, 20, 38, 0.82); backdrop-filter: saturate(160%) blur(8px); }
+  .site-header-inner { max-width: 60rem; margin: 0 auto; padding: 0.65rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .wordmark { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 800;
+    letter-spacing: -0.01em; color: var(--ink); text-decoration: none; font-size: 1.05rem; }
+  .wordmark .mark { display: inline-flex; align-items: center; justify-content: center;
+    width: 1.7rem; height: 1.7rem; border-radius: 7px; background: var(--brand); color: var(--brand-ink);
+    font-weight: 800; font-size: 0.85rem; }
+  .byline { display: flex; align-items: center; gap: 0.55rem; font-size: 0.85rem; color: var(--muted); }
+  .byline strong { color: var(--ink-2); font-weight: 650; }
+  .byline a.li { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--brand);
+    text-decoration: none; padding: 0.22rem 0.6rem; border: 1px solid var(--hairline); border-radius: 999px; }
+  .byline a.li:hover { border-color: var(--brand); background: var(--brand-tint); }
+  .byline svg { width: 14px; height: 14px; fill: currentColor; }
+  .site-nav { border-top: 1px solid var(--hairline); background: rgba(7, 16, 31, 0.55); }
+  .site-nav-inner { max-width: 60rem; margin: 0 auto; padding: 0.35rem 1.25rem; display: flex;
+    gap: 0.35rem; flex-wrap: wrap; }
+  .site-nav a { color: var(--ink-2); text-decoration: none; font-size: 0.9rem; font-weight: 550;
+    padding: 0.4rem 0.7rem; border-radius: var(--radius-sm); }
+  .site-nav a:hover { color: var(--ink); background: var(--brand-tint); }
+  .site-nav a[aria-current="page"] { color: var(--brand); background: var(--brand-tint); }
+
+  main { padding-top: 1.75rem; }
+  a { color: var(--brand); }
+  .brandbar { color: var(--muted); }
+
+  /* Collapsible section (used in the guide). Open by default so the table of
+     contents still jumps to visible content with no script, and print shows all. */
+  details.sect { border: 1px solid var(--hairline); border-radius: var(--radius);
+    background: var(--surface); box-shadow: var(--shadow); margin: 1rem 0; }
+  details.sect > summary { cursor: pointer; list-style: none; padding: 0.95rem 1.25rem;
+    font-size: 1.15rem; font-weight: 650; letter-spacing: -0.005em; color: var(--ink);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  details.sect > summary::-webkit-details-marker { display: none; }
+  details.sect > summary::after { content: "\25be"; color: var(--muted); font-size: 0.9rem;
+    transition: transform 0.15s ease; }
+  details.sect[open] > summary::after { transform: rotate(180deg); }
+  details.sect[open] > summary { border-bottom: 1px solid var(--hairline); }
+  details.sect .sect-body { padding: 0.4rem 1.25rem 1.25rem; }
+  details.sect .sect-body > *:first-child { margin-top: 0.6rem; }
+  .toplink { color: var(--muted); font-weight: 400; font-size: 0.8rem; }
+
+  footer { color: var(--muted); border-top: 1px solid var(--hairline); }
+  footer a { color: var(--brand); }
+
+  /* Command block: a Copy button in a header bar above the command, so it
+     never overlaps a command that is wider than the window (docs pages only). */
+  .codeblock { border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+    overflow: hidden; margin: 0.75rem 0; }
+  .codeblock-bar { display: flex; justify-content: flex-end; padding: 0.3rem 0.4rem;
+    background: rgba(148,176,214,0.08); border-bottom: 1px solid var(--hairline); }
+  .codeblock .copy { margin: 0; padding: 0.2rem 0.8rem; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; color: var(--ink-2); background: transparent; border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm); }
+  .codeblock .copy:hover { color: var(--ink); border-color: var(--brand); }
+  .codeblock .copy.done { color: var(--brand); border-color: var(--brand); }
+  .codeblock pre.code { margin: 0; border: 0; border-radius: 0; }
+
+  @media print {
+    .codeblock-bar { display: none; }
+    details.sect > .sect-body { display: block !important; }
+    details.sect > summary::after { display: none; }
+    .site-header, .accent-strip { position: static; }
+  }
+  @media (max-width: 40rem) {
+    .site-header-inner { padding: 0.6rem 1rem; }
+    .hero h1 { font-size: 1.9rem; }
+  }
+
+  .brandbar { display: none; }
+  .sample-note { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 0.75rem 1.1rem; margin: 1.25rem 0; color: var(--ink-2); font-size: 0.92rem; }
+  .sample-note a { color: var(--brand); }</style>
 </head>
 <body>
-<style>
-.sample-topbar { position: sticky; top: 0; z-index: 20; background: #0a1526;
-  border-bottom: 1px solid rgba(148,176,214,0.18); }
-.sample-topbar .inner { max-width: 56rem; margin: 0 auto; padding: 0.6rem 1.5rem;
-  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
-  flex-wrap: wrap; font: 14px system-ui, -apple-system, "Segoe UI", sans-serif; }
-.sample-topbar .wm { color: #eef3fb; font-weight: 800; text-decoration: none; font-size: 1.05rem; }
-.sample-topbar nav a { color: #c4d1e2; text-decoration: none; margin-left: 1.1rem; font-weight: 550; }
-.sample-topbar nav a:hover { color: #6cb0ff; }
-.sample-note { background: #12273f; color: #c4d1e2; text-align: center;
-  padding: 0.5rem 1rem; font: 13px system-ui, -apple-system, "Segoe UI", sans-serif; }
-.sample-note a { color: #6cb0ff; }
-@media print { .sample-topbar, .sample-note { display: none; } }
-</style>
-<div class="sample-topbar"><div class="inner">
-  <a class="wm" href="index.html">IAMAI</a>
-  <nav>
-    <a href="index.html">Overview</a>
-    <a href="use-cases.html">Use cases</a>
-    <a href="guide.html">Guide</a>
-    <a href="https://github.com/ZephyrPretendstoKnowTech/IAMAI">GitHub</a>
-  </nav>
-</div></div>
-<div class="sample-note">A sample report, rendered from sanitized data, so every
-name is a stand in. This is exactly what your own report looks like. <a href="index.html">Back to the site</a>.</div>
+<div class="accent-strip"></div><header class="site-header"><div class="site-header-inner"><a class="wordmark" href="index.html">IAMAI</a><div class="byline">Built by <strong>Lachlan Robinette</strong><a class="li" href="https://www.linkedin.com/in/lachlanrobinette/" aria-label="Lachlan Robinette on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg><span>LinkedIn</span></a></div></div><nav class="site-nav" aria-label="Site"><div class="site-nav-inner"><a href="index.html">Overview</a><a href="use-cases.html">Use cases</a><a href="guide.html">Guide</a><a href="example-report.html" aria-current="page">Sample report</a><a href="https://github.com/ZephyrPretendstoKnowTech/IAMAI">GitHub</a></div></nav></header>
 <main>
+<div class="sample-note">A sample report, rendered from sanitized data, so every name in it is a stand in. It shows exactly what the tool produces, in the site theme. <a href="index.html">Back to the site</a>.</div>
 
 <div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; identity posture assessment</span></div>
 <h1>Identity security assessment</h1>

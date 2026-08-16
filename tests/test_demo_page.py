@@ -97,8 +97,9 @@ def test_example_report_is_clean_and_loads_nothing_external():
     # No external asset and no script; navigational links are allowed.
     for external in ("<script", "<link ", "@import", "http://", "url("):
         assert external not in html, external
-    # It carries graded controls, the shared theme, and the site nav to get back.
-    assert 'class="grade' in html and 'class="brandbar"' in html
-    assert 'class="sample-topbar"' in html and 'href="index.html"' in html
+    # It carries graded controls and now wears the site's dark theme and header,
+    # so it reads as one of the docs pages rather than a stray light document.
+    assert 'class="grade' in html and "--page: #0b1a30" in html
+    assert 'class="site-header"' in html and 'href="index.html"' in html
     # The demo page points at it.
     assert "example-report.html" in DOCS.read_text(encoding="utf-8")

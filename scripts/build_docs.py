@@ -227,8 +227,9 @@ def _build_sections():
         "index serves that day.</p>"))
 
     parts.append(_section("setup", "Connecting a tenant",
-        "<p>Run <code>iamai setup</code>. It creates the read-only collector app, generates the "
-        "certificate it uses, and walks you through granting consent.</p>"
+        "<p>The one-line installer starts this for you the first time. It creates the read-only "
+        "collector app, generates the certificate it uses, and walks you through granting consent. "
+        "To connect another tenant later, or to run it again, use <code>iamai setup</code>.</p>"
         "<p><strong>A one-time helper app.</strong> Before the very first setup you register a small "
         "\"IAMAI Setup\" app in the tenant. This is deliberate: the alternative is a shared app "
         "controlled by whoever publishes this tool, which is its own trust problem. If you have the "

@@ -65,9 +65,10 @@ def test_guide_is_self_contained_and_shares_the_theme():
     from iamai.theme import BASE_CSS
 
     html = GUIDE.read_text(encoding="utf-8")
-    assert "--brand:" in html and 'class="brandbar"' in html
-    # No external asset of any kind (navigational https links are allowed).
-    for external in ("<script", "<link ", "@import", "http://", "url("):
+    assert "--brand:" in html and 'class="site-header"' in html
+    # No external asset (navigational https links allowed). An inline <script>
+    # for copy buttons and section anchors is fine; an external one is not.
+    for external in ("<script src", "<link ", "@import", "http://", "url("):
         assert external not in html, external
     assert "http" not in BASE_CSS
     # Command signatures with <alias> etc. must be escaped, not left as tags.

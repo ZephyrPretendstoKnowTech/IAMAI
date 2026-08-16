@@ -40,7 +40,22 @@ def render() -> str:
     assessment["generatedAt"] = ""
     if manifest:
         manifest = {**manifest, "collectedAt": ""}
-    return render_assessment(assessment, manifest)
+    html = render_assessment(assessment, manifest)
+    # This published sample is part of the docs site, so give it a way back.
+    # Injected here only, never into a real report (which stays self-contained
+    # with no outbound links). Internal doc links only; no external URL, because
+    # a report must carry none.
+    link = 'style="color:#6cb0ff;text-decoration:none;font-weight:600;"'
+    banner = (
+        '<div style="background:#0b1a30;color:#c4d1e2;padding:0.6rem 1.5rem;'
+        'font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;text-align:center;">'
+        'A sample IAMAI report, rendered from sanitized data. &nbsp;'
+        f'<a href="index.html" {link}>Overview</a> &middot; '
+        f'<a href="use-cases.html" {link}>Use cases</a> &middot; '
+        f'<a href="guide.html" {link}>Guide</a>'
+        '</div>'
+    )
+    return html.replace("<body>", "<body>\n" + banner, 1)
 
 
 def main() -> None:

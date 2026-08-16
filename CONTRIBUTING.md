@@ -32,7 +32,10 @@ These are not style preferences; they protect the tool's promises.
   or commit messages. Test fixtures are sanitized; keep them that way.
 - **Nothing leaves the machine.** No telemetry, no new network destinations
   beyond Microsoft's own endpoints. Published pages under `docs/` must be
-  self-contained: no external script, stylesheet, font or image.
+  self-contained: no external script, stylesheet, font or image. A small
+  *inline* script is allowed on the docs pages (for example the copy buttons),
+  but the report, plan and wizard, which handle real tenant data, stay strictly
+  script-free.
 - **Plain language in anything a user sees**, and no em dashes in user-facing
   copy (reports, plans, the wizard, the docs pages).
 - **Grades are conservative.** Ambiguity grades down, never up. `UNKNOWN` is a

@@ -41,12 +41,13 @@ def test_demo_page_shares_the_theme_and_is_self_contained():
     from iamai.theme import BASE_CSS
 
     html = DOCS.read_text(encoding="utf-8")
-    # Same design foundation as the app pages.
-    assert "--brand:" in html and 'class="brandbar"' in html
+    # Same design foundation as the app pages, now with the shared site header.
+    assert "--brand:" in html and 'class="site-header"' in html
     assert "ol.actions > li" in html and "&gt; li" not in html
     # No external asset of any kind: GitHub Pages serves this publicly and the
-    # tool's whole promise is that its pages make no outbound request.
-    for external in ("<script", "<link ", "@import", "http://", "url("):
+    # tool's promise is that its pages make no outbound request. An inline
+    # <script> (copy buttons) is allowed on docs pages; an external one is not.
+    for external in ("<script src", "<link ", "@import", "http://", "url("):
         assert external not in html, external
     # BASE_CSS itself must carry no external reference.
     assert "http" not in BASE_CSS
@@ -68,8 +69,8 @@ def test_use_cases_page_matches_and_is_clean():
     assert USECASES.exists(), "docs/use-cases.html is missing; run scripts/build_usecases.py"
     html = _build_module("build_usecases").render()
     assert USECASES.read_text(encoding="utf-8") == html, "use-cases page is stale; regenerate it"
-    assert 'class="brandbar"' in html and "--brand:" in html
-    for external in ("<script", "<link ", "@import", "http://", "url("):
+    assert 'class="site-header"' in html and "--brand:" in html
+    for external in ("<script src", "<link ", "@import", "http://", "url("):
         assert external not in html, external
     for banned in ("onmicrosoft.com",):  # generic tenant-domain check; test_publication_safety.py is the full guard
         assert banned not in html.lower(), banned

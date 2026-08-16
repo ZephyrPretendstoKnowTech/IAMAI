@@ -19,7 +19,9 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from iamai.theme import BASE_CSS  # noqa: E402
-from build_demo import REPO_URL, LANDING_CSS  # noqa: E402  (reuse hero/grid/feature)
+from build_demo import (  # noqa: E402  (reuse slug, theme, and shared chrome)
+    DARK_CSS, LANDING_CSS, REPO_URL, site_footer, site_header,
+)
 
 EXTRA_CSS = """
   .scenario { border: 1px solid var(--hairline); border-radius: var(--radius);
@@ -115,9 +117,8 @@ def _pillars():
 
 
 BODY = f"""<body>
+{site_header("usecases")}
 <main>
-  <div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; use cases</span></div>
-
   <section class="hero">
     <h1>Know where a tenant stands, and what to do about it.</h1>
     <p class="lead">IAMAI is for the people responsible for an identity they did not set up:
@@ -156,10 +157,7 @@ BODY = f"""<body>
   the <a href="guide.html">full guide</a>, or <a href="{REPO_URL}">get it on GitHub</a> and run it
   against a tenant of your own. From install to a report in hand is about fifteen minutes.</p>
 
-  <footer>
-    IAMAI is open source under the Apache License 2.0. Read only, local, no telemetry.
-    &middot; <a href="{REPO_URL}">Source on GitHub</a>
-  </footer>
+  {site_footer()}
 </main>
 </body>
 </html>"""
@@ -171,7 +169,7 @@ HEAD = f"""<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IAMAI use cases: who it is for and the value it delivers</title>
 <meta name="description" content="Who IAMAI is for and how it fits real work: baseline a new client, review what changed, turn findings into a staged remediation plan, and hand over a sanitized report. Read only, local, open source.">
-<style>{BASE_CSS}{LANDING_CSS}{EXTRA_CSS}</style>
+<style>{BASE_CSS}{LANDING_CSS}{EXTRA_CSS}{DARK_CSS}</style>
 </head>
 """
 

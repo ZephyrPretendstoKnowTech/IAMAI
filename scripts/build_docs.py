@@ -20,28 +20,28 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from iamai.theme import BASE_CSS  # noqa: E402
-from build_demo import REPO_URL  # noqa: E402  (single source for the repo slug)
+from build_demo import (  # noqa: E402  (single source for slug, theme, chrome)
+    COPY_SCRIPT, DARK_CSS, REPO_URL, code_block, site_footer, site_header,
+)
 
 DOCS_CSS = """
   main { max-width: 60rem; }
+  .lead { font-size: 1.15rem; color: var(--ink-2); max-width: 48ch; }
   .toc { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius);
     box-shadow: var(--shadow); padding: 1.1rem 1.4rem; margin: 1.25rem 0 2rem; }
-  .toc h2 { margin-top: 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  .toc h2 { margin-top: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
   .toc ol { columns: 2; column-gap: 2rem; margin: 0.4rem 0 0; padding-left: 1.2rem; }
   .toc li { margin: 0.3rem 0; break-inside: avoid; }
-  section { scroll-margin-top: 1rem; padding-top: 0.5rem; }
-  section > h2 { border-bottom: 2px solid var(--brand-tint); padding-bottom: 0.3rem; }
   .cmd { border: 1px solid var(--hairline); border-radius: var(--radius); margin: 1rem 0; overflow: hidden; }
-  .cmd > .sig { background: var(--ink); color: #eef3ee; font-family: ui-monospace, Menlo, Consolas, monospace;
+  .cmd > .sig { background: var(--code-bg); color: var(--code-ink); font-family: ui-monospace, Menlo, Consolas, monospace;
     padding: 0.7rem 1rem; font-size: 0.95rem; overflow-x: auto; }
   .cmd > .body { padding: 0.9rem 1.1rem; }
   .cmd > .body p { margin: 0 0 0.5rem; }
   .cmd .opts { width: 100%; margin-top: 0.5rem; }
   .cmd .opts td { vertical-align: top; padding: 0.3rem 0.6rem 0.3rem 0; }
   .cmd .opts td.flag { font-family: ui-monospace, Menlo, Consolas, monospace; white-space: nowrap; color: var(--brand); }
-  pre.code { background: var(--ink); color: #eef3ee; border-radius: var(--radius-sm);
+  pre.code { background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius-sm);
     padding: 1rem 1.25rem; overflow-x: auto; font-size: 0.9rem; line-height: 1.5; }
-  .toplink { font-size: 0.85rem; }
   .grade-key td:first-child { font-weight: 700; white-space: nowrap; }
   dl.gloss dt { font-weight: 700; margin-top: 0.7rem; }
   dl.gloss dd { margin: 0.15rem 0 0; color: var(--ink-2); }
@@ -169,10 +169,13 @@ def _cmd_html(name, sig, desc, opts):
     )
 
 
-def _section(anchor, title, inner):
+def _section(anchor, title, inner, open=False):
+    """A collapsible section. Closed by default so the long guide is scannable;
+    a table-of-contents link opens the target via the shared hash handler."""
+    attr = " open" if open else ""
     return (
-        f'<section id="{anchor}"><h2>{title} '
-        f'<a class="toplink" href="#top">back to top</a></h2>{inner}</section>'
+        f'<details class="sect" id="{anchor}"{attr}><summary>{title}</summary>'
+        f'<div class="sect-body">{inner}</div></details>'
     )
 
 
@@ -202,14 +205,15 @@ def _build_sections():
         "asks for is a read permission. It cannot create, edit or delete a policy, an account or a "
         "setting. The plan it writes is a document a person carries out by hand. It sends nothing "
         "anywhere: the only traffic is to Microsoft's own Graph and login endpoints, and everything "
-        "it collects stays in a folder on your machine.</div>"))
+        "it collects stays in a folder on your machine.</div>", open=True))
 
     parts.append(_section("install", "Installing it",
-        "<p>You need Windows, macOS or Linux and Python 3.12. You do not need to know Python.</p>"
-        f"<pre class=\"code\">git clone {REPO_URL}.git iamai\ncd iamai\npython -m venv .venv\n"
-        ".venv\\Scripts\\python.exe -m pip install --require-hashes -r requirements.txt\n"
-        ".venv\\Scripts\\python.exe -m pip install --no-deps -e .</pre>"
-        "<p>On macOS or Linux the last two lines use <code>.venv/bin/python</code>. Installing from "
+        "<p>You need Windows, macOS or Linux and Python 3.12. You do not need to know Python. "
+        "Run these four commands (each has a Copy button):</p>"
+        + code_block("git clone " + REPO_URL + ".git iamai\ncd iamai\npython -m venv .venv\n"
+          ".venv\\Scripts\\python.exe -m pip install --require-hashes -r requirements.txt\n"
+          ".venv\\Scripts\\python.exe -m pip install --no-deps -e .")
+        + "<p>On macOS or Linux the last two lines use <code>.venv/bin/python</code>. Installing from "
         "<code>requirements.txt</code> checks every dependency against a recorded hash, rather than "
         "trusting whatever a package index serves that day.</p>"))
 
@@ -220,10 +224,9 @@ def _build_sections():
         "\"IAMAI Setup\" app in the tenant. This is deliberate: the alternative is a shared app "
         "controlled by whoever publishes this tool, which is its own trust problem. If you have the "
         "Azure CLI and are signed in as a Global Administrator, one command does it:</p>"
-        '<pre class="code">az ad app create --display-name "IAMAI Setup" '
-        "--sign-in-audience AzureADMultipleOrgs --is-fallback-public-client true "
-        "--query appId -o tsv</pre>"
-        "<p>Otherwise setup prints the handful of portal steps with a direct link. Then it prints an "
+        + code_block('az ad app create --display-name "IAMAI Setup" '
+          "--sign-in-audience AzureADMultipleOrgs --is-fallback-public-client true --query appId -o tsv")
+        + "<p>Otherwise setup prints the handful of portal steps with a direct link. Then it prints an "
         "admin-consent link: open it as a Global Administrator and review the list. Every permission "
         "on it is a read permission.</p>"
         "<p><strong>The certificate.</strong> Setup generates a certificate valid for 180 days. It "
@@ -234,12 +237,12 @@ def _build_sections():
 
     parts.append(_section("workflow", "The workflow",
         "<p>Five commands, in order. Each writes files and is safe to run again.</p>"
-        "<pre class=\"code\">iamai verify  &lt;alias&gt;   # check every permission actually works\n"
-        "iamai collect &lt;alias&gt;   # read the tenant into a dated snapshot\n"
-        "iamai assess  &lt;alias&gt;   # grade it and write the report\n"
-        "iamai wizard  &lt;alias&gt;   # answer the questions in your browser\n"
-        "iamai plan    &lt;alias&gt;   # write the plan</pre>"
-        "<p>Run <code>assess</code> again after the wizard and the grades reflect what you told it. "
+        + code_block("iamai verify  &lt;alias&gt;   # check every permission actually works\n"
+          "iamai collect &lt;alias&gt;   # read the tenant into a dated snapshot\n"
+          "iamai assess  &lt;alias&gt;   # grade it and write the report\n"
+          "iamai wizard  &lt;alias&gt;   # answer the questions in your browser\n"
+          "iamai plan    &lt;alias&gt;   # write the plan")
+        + "<p>Run <code>assess</code> again after the wizard and the grades reflect what you told it. "
         "Everything lands under <code>data/&lt;alias&gt;/</code>. Reports and plans are HTML: open "
         "them in a browser, and print to PDF to keep or send a copy.</p>"))
 
@@ -346,19 +349,16 @@ def _build_sections():
 
 
 BODY = f"""<body>
+{site_header("guide")}
 <main id="top">
-  <div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; user guide</span></div>
   <h1>IAMAI user guide</h1>
-  <p class="lead" style="font-size:1.15rem;color:var(--ink-2);max-width:48ch;">
-    Everything the tool does, in plain English: install it, connect a tenant, run the
-    assessment, and read what comes out.</p>
+  <p class="lead">Everything the tool does, in plain English: install it, connect a tenant,
+    run the assessment, and read what comes out. Each section below expands.</p>
   {_toc()}
   {_build_sections()}
-  <footer>
-    IAMAI is open source under the Apache License 2.0. Read only, local, no telemetry.
-    &middot; <a href="{REPO_URL}">Source on GitHub</a>
-  </footer>
+  {site_footer()}
 </main>
+{COPY_SCRIPT}
 </body>
 </html>"""
 
@@ -369,7 +369,7 @@ HEAD = f"""<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IAMAI user guide: every command and feature in plain English</title>
 <meta name="description" content="The full IAMAI user guide: install, connect a Microsoft Entra tenant, run the assessment, read the report and plan, share safely, and a complete command reference. Read only, local, no telemetry.">
-<style>{BASE_CSS}{DOCS_CSS}</style>
+<style>{BASE_CSS}{DOCS_CSS}{DARK_CSS}</style>
 </head>
 """
 

@@ -460,18 +460,19 @@
   <h2>Where it fits</h2>
   <div class="scenario"><div class="step">Onboarding</div><h3>Baseline a new client in minutes</h3><p>A new tenant lands on your plate. Run <code>collect</code> then <code>assess</code> and you have a graded report of where its identity security actually stands, against a clear standard, before your first call. No clicking through a dozen blades to piece it together.</p></div><div class="scenario"><div class="step">Review</div><h3>See what changed since last time</h3><p>Every collect is a dated, immutable snapshot. Re-run it next quarter and the assessment reflects the tenant as it is now, so a recurring check-up is one command, not a fresh manual audit.</p></div><div class="scenario"><div class="step">Remediation</div><h3>Turn findings into a rollout a person can run</h3><p>The plan is the report turned into staged work: each phase ends at a checkpoint you confirm, and every step says what it will cost the people who use the tenant, how to verify it worked, and how to undo it. It even carries announcement and helpdesk templates. The tool writes it; a person carries it out.</p></div><div class="scenario"><div class="step">Reporting</div><h3>Hand over something the client can trust</h3><p>Run <code>sanitize</code> and every real name, sign-in name, IP and tenant id becomes a stable stand-in. The result shows exactly what the real report says, with nobody exposed, so it is safe to attach to an email or a ticket.</p></div><div class="scenario"><div class="step">Triage</div><h3>Understand an unfamiliar tenant fast</h3><p>Inherited a tenant nobody documented? A single read-only pass gives you an honest picture of its policies, admins, sign-in methods and gaps, so you know what you are dealing with before you change a thing.</p></div>
 
-  <h2>Why this tool, and not a script or a spreadsheet</h2>
-  <div class="pillars"><div class="pillar"><h3>It cannot break anything</h3><p>Every permission is a read permission. It cannot create, edit or delete a policy, an account or a setting. Running it on a live production tenant is safe by construction.</p></div><div class="pillar"><h3>Nothing leaves the machine</h3><p>No telemetry, no accounts, no uploads. The only traffic is to Microsoft's own endpoints, and everything it collects stays in a folder you control. Sharing is a deliberate, sanitized step you take on purpose.</p></div><div class="pillar"><h3>It never overstates</h3><p>A grade is never better than the evidence. Where the data cannot judge something it says UNKNOWN rather than guessing, and there is no single vanity score to chase, so you always see which specific protection is weak.</p></div><div class="pillar"><h3>It is free and open</h3><p>Open source under the Apache License 2.0. Read the standard it grades against, read the code, run it on your own machine, forever.</p></div></div>
+  <h2>Why not just a script or a spreadsheet?</h2>
+  <div class="pillars"><div class="pillar"><h3>It cannot break anything</h3><p>Every permission it asks for is a read permission. It cannot create, edit or delete a policy, an account or a setting, so you can run it against a live production tenant without a second thought.</p></div><div class="pillar"><h3>Nothing leaves the machine</h3><p>No telemetry, no accounts, no uploads. The only traffic is to Microsoft's own endpoints, and everything it collects stays in a folder you control. Sharing is a deliberate, sanitized step you take on purpose.</p></div><div class="pillar"><h3>It never overstates</h3><p>A grade is never better than the evidence. Where the data cannot judge something it says UNKNOWN rather than guessing, and there is no single vanity score to chase, so you always see which specific protection is weak.</p></div><div class="pillar"><h3>It is free and open</h3><p>Open source under the Apache License 2.0. Read the standard it grades against, read the code, run it on your own machine, forever.</p></div></div>
 
   <div class="never">
     <strong>The honest part.</strong>
     <ul>
-      <li>It is an enablement tool, not a replacement for judgement. It will tell you nobody
-      should hold Global Administrator around the clock. It does not know that the account
-      holding it runs your payroll export. Every recommendation is a starting point to weigh
+      <li>IAMAI gives you the findings and a plan; the judgement calls stay yours. It will
+      tell you nobody should hold Global Administrator around the clock. What it cannot know
+      is that the account holding it runs your payroll export. Weigh every recommendation
       against the tenant in front of you.</li>
-      <li>It is not a compliance certification and it is not an audit. It reads what Microsoft
-      Graph exposes and grades it against a clear, published standard, no more and no less.</li>
+      <li>It reads what Microsoft Graph exposes and grades it against a clear, published
+      standard. That is the whole scope: a working tool, not a compliance certificate
+      or an audit.</li>
     </ul>
   </div>
 

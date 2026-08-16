@@ -81,8 +81,9 @@ SCENARIOS = [
 
 PILLARS = [
     ("It cannot break anything",
-     "Every permission is a read permission. It cannot create, edit or delete a policy, an "
-     "account or a setting. Running it on a live production tenant is safe by construction."),
+     "Every permission it asks for is a read permission. It cannot create, edit or delete a "
+     "policy, an account or a setting, so you can run it against a live production tenant "
+     "without a second thought."),
     ("Nothing leaves the machine",
      "No telemetry, no accounts, no uploads. The only traffic is to Microsoft's own endpoints, "
      "and everything it collects stays in a folder you control. Sharing is a deliberate, "
@@ -137,18 +138,19 @@ BODY = f"""<body>
   <h2>Where it fits</h2>
   {_scenarios()}
 
-  <h2>Why this tool, and not a script or a spreadsheet</h2>
+  <h2>Why not just a script or a spreadsheet?</h2>
   <div class="pillars">{_pillars()}</div>
 
   <div class="never">
     <strong>The honest part.</strong>
     <ul>
-      <li>It is an enablement tool, not a replacement for judgement. It will tell you nobody
-      should hold Global Administrator around the clock. It does not know that the account
-      holding it runs your payroll export. Every recommendation is a starting point to weigh
+      <li>IAMAI gives you the findings and a plan; the judgement calls stay yours. It will
+      tell you nobody should hold Global Administrator around the clock. What it cannot know
+      is that the account holding it runs your payroll export. Weigh every recommendation
       against the tenant in front of you.</li>
-      <li>It is not a compliance certification and it is not an audit. It reads what Microsoft
-      Graph exposes and grades it against a clear, published standard, no more and no less.</li>
+      <li>It reads what Microsoft Graph exposes and grades it against a clear, published
+      standard. That is the whole scope: a working tool, not a compliance certificate
+      or an audit.</li>
     </ul>
   </div>
 

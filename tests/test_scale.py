@@ -27,7 +27,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from synth_snapshot import build  # noqa: E402
 
-PACK = json.loads((ROOT / "packs" / "basics-v1.json").read_text(encoding="utf-8"))
+PACK = json.loads((ROOT / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8"))
 
 
 def _distinct_ips(feed: Path) -> set[str]:

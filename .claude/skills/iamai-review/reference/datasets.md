@@ -3,8 +3,8 @@
 Every file the collector writes under `data/<alias>/<timestamp>/raw/`. These are
 raw Microsoft Graph objects, trimmed to the fields IAMAI selected (`$select`), not
 the engine's conclusions. For the graded view, read `assessment.json` instead
-(contract in `ARTIFACTS.md`). For grading logic, the standard pack lives in
-`packs/`.
+(contract in `ARTIFACTS.md`). For grading logic, the standard pack ships in
+`src/iamai/packs/`.
 
 All of this is real, unsanitised identity data. Read the two hard rules in
 `SKILL.md` before querying it: quote sparingly, never transmit it off the machine.

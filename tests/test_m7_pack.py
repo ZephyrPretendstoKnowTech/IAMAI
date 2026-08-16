@@ -193,7 +193,7 @@ def test_import_missing_file_exits_nonzero(workspace):
 
 # --- The committed standard pack: proven-deployable checkpoint proxy ----------
 
-REPO_PACK = Path(__file__).resolve().parents[1] / "packs" / "standard-v1.json"
+REPO_PACK = Path(__file__).resolve().parents[1] / "src" / "iamai" / "packs" / "standard-v1.json"
 
 
 def test_committed_standard_pack_validates():

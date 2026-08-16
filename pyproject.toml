@@ -37,6 +37,7 @@ iamai = "iamai.cli:app"
 where = ["src"]
 
 [tool.setuptools.package-data]
+"iamai" = ["packs/*.json"]
 "iamai.report" = ["templates/*.j2"]
 "iamai.web" = ["templates/*.j2"]
 

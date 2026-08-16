@@ -18,7 +18,7 @@ pytestmark = pytest.mark.m12
 
 FIXTURES = Path(__file__).parent / "fixtures" / "golden_sanitized"
 PACK = json.loads(
-    (Path(__file__).parents[1] / "packs" / "basics-v1.json").read_text(encoding="utf-8")
+    (Path(__file__).parents[1] / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8")
 )
 
 MEMBER_EQUIVALENT = "a0b1b346-4d3e-4e8b-98f8-753987be4970"

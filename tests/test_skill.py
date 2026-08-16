@@ -48,7 +48,7 @@ def test_skill_only_references_files_that_exist():
     referenced = {
         "ARTIFACTS.md": ROOT / "ARTIFACTS.md",
         "schemas/": ROOT / "schemas",
-        "packs/": ROOT / "packs",
+        "src/iamai/packs/": ROOT / "src" / "iamai" / "packs",
         "reference/datasets.md": DATASETS,
     }
     for token, target in referenced.items():

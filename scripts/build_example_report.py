@@ -25,7 +25,7 @@ from iamai.report import render_assessment  # noqa: E402
 from iamai.store import load_snapshot_data  # noqa: E402
 
 FIXTURE = ROOT / "tests" / "fixtures" / "golden_sanitized"
-PACK = ROOT / "packs" / "basics-v1.json"
+PACK = ROOT / "src" / "iamai" / "packs" / "basics-v1.json"
 
 
 def render() -> str:

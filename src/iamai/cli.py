@@ -715,11 +715,11 @@ def purge(
         except typer.BadParameter:
             is_golden = False
         if is_golden:
-            baselines = sorted(BASELINES_DIR.glob("baseline-v*.json")) if BASELINES_DIR.exists() else []
+            baselines = sorted(_baselines_dir().glob("baseline-v*.json")) if _baselines_dir().exists() else []
             if baselines:
                 typer.echo(
                     f"Note: {len(baselines)} baseline artifact(s) built from this "
-                    f"tenant remain under {BASELINES_DIR}/. Delete them by hand if "
+                    f"tenant remain under {_baselines_dir()}/. Delete them by hand if "
                     "this tenant's data should not persist there."
                 )
         return
@@ -749,10 +749,19 @@ baseline_app = typer.Typer(
 )
 app.add_typer(baseline_app, name="baseline")
 
-BASELINES_DIR = Path("baselines")
 # The standard that ships with the tool, used when no baseline has been built.
-DEFAULT_PACK = Path(__file__).resolve().parents[2] / "packs" / "basics-v1.json"
+# Loaded as bundled package data (importlib.resources), so it is found whether
+# the tool runs from a checkout, a pipx install, or a frozen binary, rather than
+# from a path relative to the source tree that only exists in a checkout.
+import importlib.resources  # noqa: E402
+
+DEFAULT_PACK = importlib.resources.files("iamai") / "packs" / "basics-v1.json"
 TOOL_VERSION = "1.0.0"
+
+
+def _baselines_dir():
+    from iamai.paths import baselines_dir
+    return baselines_dir()
 
 
 def _golden_alias(config: Config) -> str:
@@ -765,16 +774,16 @@ def _golden_alias(config: Config) -> str:
 
 
 def _next_baseline_path() -> Path:
-    BASELINES_DIR.mkdir(exist_ok=True)
+    _baselines_dir().mkdir(parents=True, exist_ok=True)
     version = 1
-    while (BASELINES_DIR / f"baseline-v{version}.json").exists():
+    while (_baselines_dir() / f"baseline-v{version}.json").exists():
         version += 1
-    return BASELINES_DIR / f"baseline-v{version}.json"
+    return _baselines_dir() / f"baseline-v{version}.json"
 
 
 def _latest_baseline_path() -> Path:
     candidates = sorted(
-        BASELINES_DIR.glob("baseline-v*.json"),
+        _baselines_dir().glob("baseline-v*.json"),
         key=lambda p: int(p.stem.split("-v")[-1]) if p.stem.split("-v")[-1].isdigit() else 0,
     )
     if not candidates:
@@ -783,7 +792,7 @@ def _latest_baseline_path() -> Path:
         # one is advice they cannot take, so fall back to the standard that
         # ships with the tool. The pack is the default answer for that reader;
         # the baseline is the option for somebody who has a tenant to copy.
-        if DEFAULT_PACK.exists():
+        if DEFAULT_PACK.is_file():
             return DEFAULT_PACK
         raise FileNotFoundError(
             "No standard to grade against. Either pass --pack with a standard "

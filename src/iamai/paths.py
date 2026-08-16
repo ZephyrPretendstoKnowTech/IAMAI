@@ -49,3 +49,8 @@ def config_path() -> Path:
 def cert_dir() -> Path:
     """The certificate the tool authenticates with."""
     return app_home() / "certs"
+
+
+def baselines_dir() -> Path:
+    """Frozen baseline artifacts, for the advanced reference-tenant workflow."""
+    return app_home() / "baselines"

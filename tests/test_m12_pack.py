@@ -72,7 +72,7 @@ ANDROID = "de1e552d-db1d-4423-a619-566b625cdc84"
 IOS = "90a3ccdf-635c-4729-a248-9b709135078f"
 
 AAGUID_CONTROL = json.loads(
-    (Path(__file__).parents[1] / "packs" / "basics-v1.json").read_text(encoding="utf-8")
+    (Path(__file__).parents[1] / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8")
 )
 AAGUID_CONTROL = next(
     c for c in AAGUID_CONTROL["controls"] if c["id"] == "method-Fido2-aaguid"
@@ -139,7 +139,7 @@ def test_a_block_list_is_a_different_thing_and_does_not_apply():
 
 SECDEFAULTS_CONTROL = next(
     c for c in json.loads(
-        (Path(__file__).parents[1] / "packs" / "basics-v1.json").read_text(encoding="utf-8")
+        (Path(__file__).parents[1] / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8")
     )["controls"] if c["id"] == "secdefaults-001"
 )
 
@@ -162,7 +162,7 @@ def test_security_defaults_tenant_is_not_failed_on_every_policy_control():
     structurally cannot do."""
     cap_controls = [
         c for c in json.loads(
-            (Path(__file__).parents[1] / "packs" / "basics-v1.json").read_text(encoding="utf-8")
+            (Path(__file__).parents[1] / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8")
         )["controls"] if c["surface"] == "conditionalAccess"
     ]
     assert cap_controls, "fixture pack must carry policy controls"
@@ -187,7 +187,7 @@ def test_security_defaults_tenant_is_not_failed_on_every_policy_control():
 def test_a_tenant_without_security_defaults_is_graded_normally():
     cap_controls = [
         c for c in json.loads(
-            (Path(__file__).parents[1] / "packs" / "basics-v1.json").read_text(encoding="utf-8")
+            (Path(__file__).parents[1] / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8")
         )["controls"] if c["surface"] == "conditionalAccess"
     ]
     result = assess_with_security_defaults(False, cap_controls)
@@ -323,7 +323,7 @@ def test_a_setting_with_no_agreed_direction_is_compared_exactly():
 
 CAMPAIGN_CONTROL = next(
     c for c in json.loads(
-        (Path(__file__).parents[1] / "packs" / "basics-v1.json").read_text(encoding="utf-8")
+        (Path(__file__).parents[1] / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8")
     )["controls"] if c["id"] == "campaign-001"
 )
 
@@ -381,7 +381,7 @@ def test_not_excluding_the_emergency_accounts_never_moves_the_grade():
 
 QR_CONTROL = next(
     c for c in json.loads(
-        (Path(__file__).parents[1] / "packs" / "basics-v1.json").read_text(encoding="utf-8")
+        (Path(__file__).parents[1] / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8")
     )["controls"] if c["id"] == "method-QRCodePin"
 )
 FRONTLINE_GROUP = "44444444-4444-4444-4444-444444444444"
@@ -433,7 +433,7 @@ def test_qr_sign_in_switched_off_is_nothing_to_grade():
 # --- The pack no longer carries controls no source supports ------------------
 
 PACK = json.loads(
-    (Path(__file__).parents[1] / "packs" / "basics-v1.json").read_text(encoding="utf-8")
+    (Path(__file__).parents[1] / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8")
 )
 
 
@@ -468,6 +468,6 @@ def test_every_licensed_control_says_what_to_do_without_the_licence():
 
 def test_no_pack_text_uses_an_em_dash():
     """Operator's house style, and it survives into customer facing reports."""
-    raw = (Path(__file__).parents[1] / "packs" / "basics-v1.json").read_text(encoding="utf-8")
+    raw = (Path(__file__).parents[1] / "src" / "iamai" / "packs" / "basics-v1.json").read_text(encoding="utf-8")
     assert "—" not in raw
     assert "–" not in raw

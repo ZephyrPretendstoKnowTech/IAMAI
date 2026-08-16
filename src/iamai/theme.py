@@ -154,24 +154,57 @@ _CALLOUTS = """
 
 # --- Cards: one control, or one plan step -----------------------------------
 _CARDS = """
-  .control, .card {
+  .card {
     background: var(--surface);
     border: 1px solid var(--hairline);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 1.15rem 1.4rem;
-    margin: 0.85rem 0;
+    padding: 1.4rem 1.6rem 1.15rem;
+    margin: 1.35rem 0;
     break-inside: avoid;
   }
-  .card { padding: 1.4rem 1.6rem 1.15rem; margin: 1.35rem 0; }
-  .control header, .card header {
-    display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;
-  }
+  .card header { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
   .card .title-row { display: flex; gap: 0.6rem; align-items: baseline; margin-top: 0.15rem; }
-  .control .rationale, .control .detail { color: var(--ink-2); }
-  .control .detail { font-size: 0.9rem; margin-top: 0.5rem; }
-  .control ul, .card ul { margin: 0.3rem 0 0.3rem 1.2rem; padding: 0; }
-  .control .id, .card .id { color: var(--muted); font-size: 0.8rem; }
+  .card ul { margin: 0.3rem 0 0.3rem 1.2rem; padding: 0; }
+  .card .id { color: var(--muted); font-size: 0.8rem; }
+
+  /* One graded control: a scannable summary line that expands to the full
+     detail. A grade-coloured left edge lets the eye run down the page. */
+  .control {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left-width: 3px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin: 0.7rem 0;
+    break-inside: avoid;
+    overflow: hidden;
+  }
+  .control.green { border-left-color: var(--ok); }
+  .control.teal  { border-left-color: var(--info); }
+  .control.amber { border-left-color: var(--warn); }
+  .control.red   { border-left-color: var(--bad); }
+  .control.gray  { border-left-color: var(--neutral); }
+  .control > summary {
+    cursor: pointer; list-style: none; display: flex; gap: 0.85rem;
+    align-items: flex-start; padding: 0.95rem 1.3rem;
+  }
+  .control > summary:hover { background: var(--surface-2); }
+  .control > summary::-webkit-details-marker { display: none; }
+  .control > summary::after {
+    content: "\\25be"; margin-left: auto; align-self: center;
+    color: var(--muted); transition: transform 0.15s ease;
+  }
+  .control[open] > summary::after { transform: rotate(180deg); }
+  .control[open] > summary { border-bottom: 1px solid var(--hairline); }
+  .control .grade { flex: none; margin-top: 0.05rem; }
+  .control .control-head { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+  .control .control-intent { font-weight: 650; color: var(--ink); line-height: 1.35; }
+  .control .control-oneline { color: var(--ink-2); font-size: 0.9rem; }
+  .control > .control-body { padding: 0.4rem 1.3rem 1.15rem; color: var(--ink-2); font-size: 0.92rem; }
+  .control .rationale { color: var(--ink-2); }
+  .control ul { margin: 0.3rem 0 0.3rem 1.2rem; padding: 0; }
+  .control .id { color: var(--muted); font-size: 0.8rem; }
 
   /* A small square marker in front of a plan step's actions. */
   .tick {
@@ -274,6 +307,7 @@ _ELEMENTS = """
     margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
     color: var(--ink-2); font-size: 0.9rem;
   }
+  footer .attribution { color: var(--muted); font-size: 0.82rem; margin-top: 0.8rem; }
 """
 
 # --- Print: flatten to plain paper ------------------------------------------
@@ -293,6 +327,11 @@ _PRINT = """
     .control, .card, .tile, .banner, .why, table, details { background: #ffffff; box-shadow: none; }
     a { color: var(--ink); text-decoration: none; }
     .brandbar { margin-bottom: 1rem; }
+    /* A printed report shows everything: force every collapsible open and drop
+       the expand affordance so nothing is hidden on paper. */
+    details > *:not(summary) { display: block !important; }
+    details > summary::after { display: none !important; }
+    .control > summary { cursor: default; }
   }
 """
 

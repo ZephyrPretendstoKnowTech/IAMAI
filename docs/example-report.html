@@ -124,24 +124,57 @@
   .legend dt { font-weight: 650; float: left; clear: left; width: 8.5rem; color: var(--ink); }
   .legend dd { margin: 0 0 0.15rem 9rem; }
 
-  .control, .card {
+  .card {
     background: var(--surface);
     border: 1px solid var(--hairline);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 1.15rem 1.4rem;
-    margin: 0.85rem 0;
+    padding: 1.4rem 1.6rem 1.15rem;
+    margin: 1.35rem 0;
     break-inside: avoid;
   }
-  .card { padding: 1.4rem 1.6rem 1.15rem; margin: 1.35rem 0; }
-  .control header, .card header {
-    display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;
-  }
+  .card header { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
   .card .title-row { display: flex; gap: 0.6rem; align-items: baseline; margin-top: 0.15rem; }
-  .control .rationale, .control .detail { color: var(--ink-2); }
-  .control .detail { font-size: 0.9rem; margin-top: 0.5rem; }
-  .control ul, .card ul { margin: 0.3rem 0 0.3rem 1.2rem; padding: 0; }
-  .control .id, .card .id { color: var(--muted); font-size: 0.8rem; }
+  .card ul { margin: 0.3rem 0 0.3rem 1.2rem; padding: 0; }
+  .card .id { color: var(--muted); font-size: 0.8rem; }
+
+  /* One graded control: a scannable summary line that expands to the full
+     detail. A grade-coloured left edge lets the eye run down the page. */
+  .control {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left-width: 3px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin: 0.7rem 0;
+    break-inside: avoid;
+    overflow: hidden;
+  }
+  .control.green { border-left-color: var(--ok); }
+  .control.teal  { border-left-color: var(--info); }
+  .control.amber { border-left-color: var(--warn); }
+  .control.red   { border-left-color: var(--bad); }
+  .control.gray  { border-left-color: var(--neutral); }
+  .control > summary {
+    cursor: pointer; list-style: none; display: flex; gap: 0.85rem;
+    align-items: flex-start; padding: 0.95rem 1.3rem;
+  }
+  .control > summary:hover { background: var(--surface-2); }
+  .control > summary::-webkit-details-marker { display: none; }
+  .control > summary::after {
+    content: "\25be"; margin-left: auto; align-self: center;
+    color: var(--muted); transition: transform 0.15s ease;
+  }
+  .control[open] > summary::after { transform: rotate(180deg); }
+  .control[open] > summary { border-bottom: 1px solid var(--hairline); }
+  .control .grade { flex: none; margin-top: 0.05rem; }
+  .control .control-head { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+  .control .control-intent { font-weight: 650; color: var(--ink); line-height: 1.35; }
+  .control .control-oneline { color: var(--ink-2); font-size: 0.9rem; }
+  .control > .control-body { padding: 0.4rem 1.3rem 1.15rem; color: var(--ink-2); font-size: 0.92rem; }
+  .control .rationale { color: var(--ink-2); }
+  .control ul { margin: 0.3rem 0 0.3rem 1.2rem; padding: 0; }
+  .control .id { color: var(--muted); font-size: 0.8rem; }
 
   /* A small square marker in front of a plan step's actions. */
   .tick {
@@ -238,6 +271,7 @@
     margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
     color: var(--ink-2); font-size: 0.9rem;
   }
+  footer .attribution { color: var(--muted); font-size: 0.82rem; margin-top: 0.8rem; }
 
   /* Narrow screens: let a wide table scroll within itself rather than push
      the whole page sideways. display:block turns the table into a scroll box;
@@ -254,6 +288,11 @@
     .control, .card, .tile, .banner, .why, table, details { background: #ffffff; box-shadow: none; }
     a { color: var(--ink); text-decoration: none; }
     .brandbar { margin-bottom: 1rem; }
+    /* A printed report shows everything: force every collapsible open and drop
+       the expand affordance so nothing is hidden on paper. */
+    details > *:not(summary) { display: block !important; }
+    details > summary::after { display: none !important; }
+    .control > summary { cursor: default; }
   }
 </style>
 </head>
@@ -341,13 +380,16 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
 
 <h2>Access policies</h2>
 
-<section class="control">
-  <header>
-    <h3>People with administrator roles must prove who they are with a strong, phishing resistant sign in method.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">Administrator accounts can change anything in the company&#39;s systems, so they are the first target for attackers. Requiring the strongest sign in proof protects the accounts with the most power.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">People with administrator roles must prove who they are with a strong, phishing resistant sign in method.</span>
+      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Administrator accounts can change anything in the company&#39;s systems, so they are the first target for attackers. Requiring the strongest sign in proof protects the accounts with the most power.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
@@ -364,15 +406,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control cap-001</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>Everyone must confirm their identity with a second step when signing in.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">A password alone is not enough. If a password is stolen, the second step stops the attacker from getting in.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Everyone must confirm their identity with a second step when signing in.</span>
+      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">A password alone is not enough. If a password is stolen, the second step stops the attacker from getting in.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
@@ -389,15 +434,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control cap-002</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>Transferring a sign in from one device to another is blocked.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">Attackers abuse sign in transfer to move a stolen session onto their own device. Blocking it closes that path.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Transferring a sign in from one device to another is blocked.</span>
+      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Attackers abuse sign in transfer to move a stolen session onto their own device. Blocking it closes that path.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
@@ -414,15 +462,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control cap-003</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>The device code sign in flow is blocked.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">This sign in style is designed for TVs and shared devices, and attackers abuse it to trick people into approving a sign in they did not start.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">The device code sign in flow is blocked.</span>
+      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">This sign in style is designed for TVs and shared devices, and attackers abuse it to trick people into approving a sign in they did not start.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
@@ -439,15 +490,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control cap-004</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>Old sign in methods that cannot do a second identity check are blocked.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">Older apps and protocols skip modern security checks entirely. Attackers use them as a back door, so they are shut off.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Old sign in methods that cannot do a second identity check are blocked.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Older apps and protocols skip modern security checks entirely. Attackers use them as a back door, so they are shut off.</p>
     
     
     
@@ -457,15 +511,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control cap-005</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>Sign in sessions on Windows are locked to the device they were created on.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">If someone steals a session token, it will not work from any other device, so a stolen token is useless.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Sign in sessions on Windows are locked to the device they were created on.</span>
+      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">If someone steals a session token, it will not work from any other device, so a stolen token is useless.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
@@ -482,15 +539,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control cap-006</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>People who are not administrators sign in again at least every 14 days.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">A session that never expires is a session an attacker can keep using. Fourteen days bounds how long a stolen session stays useful without asking people to sign in so often that they stop reading the prompt.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">People who are not administrators sign in again at least every 14 days.</span>
+      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">A session that never expires is a session an attacker can keep using. Fourteen days bounds how long a stolen session stays useful without asking people to sign in so often that they stop reading the prompt.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
@@ -507,15 +567,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control session-001</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>People with administrator roles sign in again at least every 4 hours.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">An administrator session is the most valuable thing in the tenant. Four hours keeps the window an attacker can use it in short, and administrators sign in far less often than everyone else so the cost is small.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">People with administrator roles sign in again at least every 4 hours.</span>
+      <span class="control-oneline">The session requirement is weaker than the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">An administrator session is the most valuable thing in the tenant. Four hours keeps the window an attacker can use it in short, and administrators sign in far less often than everyone else so the cost is small.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>The session requirement is weaker than the standard.</li></ul>
@@ -532,15 +595,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control session-002</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>People who are not administrators can stay signed in in their browser.</h3>
+<details class="control red">
+  <summary>
     <span class="grade red"><span class="dot"></span>MISSING</span>
-  </header>
-  <p class="rationale">Asking people to confirm who they are more often than the risk warrants makes them stop reading what they are approving, which is exactly what an attacker flooding someone with prompts is counting on. Staying signed in on a browser they already proved themselves on removes prompts that buy nothing.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">People who are not administrators can stay signed in in their browser.</span>
+      <span class="control-oneline">No target policy contributes coverage of this intent.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Asking people to confirm who they are more often than the risk warrants makes them stop reading what they are approving, which is exactly what an attacker flooding someone with prompts is counting on. Staying signed in on a browser they already proved themselves on removes prompts that buy nothing.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>No target policy contributes coverage of this intent.</li></ul>
@@ -552,18 +618,21 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control session-003</p>
   </div>
-</section>
+</details>
 
 
 <h2>Sign in strength definitions</h2>
 
-<section class="control">
-  <header>
-    <h3>This named set of allowed sign in methods exists exactly as the standard defines it.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">Policies point at this set to control which sign in methods count as strong enough.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">This named set of allowed sign in methods exists exactly as the standard defines it.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Policies point at this set to control which sign in methods count as strong enough.</p>
     
     
     
@@ -573,15 +642,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control strength-001</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>This named set of allowed sign in methods exists exactly as the standard defines it.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">Policies point at this set to control which sign in methods count as strong enough.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">This named set of allowed sign in methods exists exactly as the standard defines it.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Policies point at this set to control which sign in methods count as strong enough.</p>
     
     
     
@@ -591,15 +663,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control strength-002</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>This named set of allowed sign in methods exists exactly as the standard defines it.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">Policies point at this set to control which sign in methods count as strong enough.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">This named set of allowed sign in methods exists exactly as the standard defines it.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Policies point at this set to control which sign in methods count as strong enough.</p>
     
     
     
@@ -609,18 +684,21 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control strength-003</p>
   </div>
-</section>
+</details>
 
 
 <h2>Sign in methods</h2>
 
-<section class="control">
-  <header>
-    <h3>The Email sign in method is turned off.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">The Email sign in method is turned off.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
     
     
     
@@ -630,15 +708,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control method-Email</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>Passkeys can be set up and used to sign in.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">A passkey cannot be phished: it only works on the site it was created for, so a convincing fake page gets nothing. This is the strongest sign in method available and everything else in the standard assumes people can register one.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Passkeys can be set up and used to sign in.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">A passkey cannot be phished: it only works on the site it was created for, so a convincing fake page gets nothing. This is the strongest sign in method available and everything else in the standard assumes people can register one.</p>
     
     
     
@@ -648,15 +729,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control method-Fido2</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>The Microsoft Authenticator app can be used to sign in.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">For people without a security key, Authenticator on a phone is where their passkey lives. It is also the fallback when a key is lost, so turning it off removes the recovery path for everyone who does not carry hardware.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">The Microsoft Authenticator app can be used to sign in.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">For people without a security key, Authenticator on a phone is where their passkey lives. It is also the fallback when a key is lost, so turning it off removes the recovery path for everyone who does not carry hardware.</p>
     
     
     
@@ -666,15 +750,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control method-MicrosoftAuthenticator</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>The Sms sign in method is turned off.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">The Sms sign in method is turned off.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
     
     
     
@@ -684,15 +771,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control method-Sms</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>A time limited pass can be issued so someone can set up a passkey when they have none, or when they have lost the one they had.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">Setting up a passkey requires already being able to sign in, which a new starter cannot do and someone who lost their phone can no longer do. A short lived pass closes that gap without handing out a password. Its lifetime and length are checked because a long lived pass is a password by another name. A tenant that also makes the pass single use is stricter than this and passes.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">A time limited pass can be issued so someone can set up a passkey when they have none, or when they have lost the one they had.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Setting up a passkey requires already being able to sign in, which a new starter cannot do and someone who lost their phone can no longer do. A short lived pass closes that gap without handing out a password. Its lifetime and length are checked because a long lived pass is a password by another name. A tenant that also makes the pass single use is stricter than this and passes.</p>
     
     
     
@@ -702,15 +792,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control method-TemporaryAccessPass</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>The Voice sign in method is turned off.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">The Voice sign in method is turned off.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
     
     
     
@@ -720,18 +813,21 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control method-Voice</p>
   </div>
-</section>
+</details>
 
 
 <h2>Registration campaign</h2>
 
-<section class="control">
-  <header>
-    <h3>People are prompted to register a second sign in step until they complete it.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">Everyone needs a second step registered before it can be required. The prompt moves people to register without blocking their work.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">People are prompted to register a second sign in step until they complete it.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Everyone needs a second step registered before it can be required. The prompt moves people to register without blocking their work.</p>
     
     
     
@@ -741,18 +837,21 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     (for example user2@tenant.example, user3@tenant.example)</p>
     <p class="id">Control campaign-001</p>
   </div>
-</section>
+</details>
 
 
 <h2>privilegedAccess</h2>
 
-<section class="control">
-  <header>
-    <h3>Nobody holds Global Administrator permanently except the emergency accounts.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">Global Administrator can do anything in the tenant, so an account holding it around the clock is the most valuable target there is, and it is dangerous every hour of every day rather than only while someone is using it. The emergency accounts are the deliberate exception: they exist precisely to always work. Everyone else should hold the role only while doing the work that needs it.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Nobody holds Global Administrator permanently except the emergency accounts.</span>
+      <span class="control-oneline">An account other than the emergency accounts holds Global Administrator permanently.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Global Administrator can do anything in the tenant, so an account holding it around the clock is the most valuable target there is, and it is dangerous every hour of every day rather than only while someone is using it. The emergency accounts are the deliberate exception: they exist precisely to always work. Everyone else should hold the role only while doing the work that needs it.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>An account other than the emergency accounts holds Global Administrator permanently.</li></ul>
@@ -763,33 +862,39 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <p>Accounts this applies to: 0</p>
     <p class="id">Control privileged-001</p>
   </div>
-</section>
+</details>
 
 
 <h2>authorizationPolicy</h2>
 
-<section class="control">
-  <header>
-    <h3>Guests do not get the same view of the directory as your own staff.</h3>
+<details class="control green">
+  <summary>
     <span class="grade green"><span class="dot"></span>FULL</span>
-  </header>
-  <p class="rationale">A guest is somebody outside your organisation who was invited in, often for one project and often long ago. Giving them the same view of the directory as an employee hands them your staff list, your group structure and who reports to whom, which is the raw material for a convincing phishing message. Two settings below member level are acceptable: limited, which is the default, and restricted, which is tighter still. Restricted is the better of the two but it stops working with some services, so it is not required here.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Guests do not get the same view of the directory as your own staff.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">A guest is somebody outside your organisation who was invited in, often for one project and often long ago. Giving them the same view of the directory as an employee hands them your staff list, your group structure and who reports to whom, which is the raw material for a convincing phishing message. Two settings below member level are acceptable: limited, which is the default, and restricted, which is tighter still. Restricted is the better of the two but it stops working with some services, so it is not required here.</p>
     
     
     
     <p>Accounts this applies to: 0</p>
     <p class="id">Control guest-001</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>Only people in an administrator or guest inviter role can invite guests.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">The default in most tenants lets everyone invite guests, including existing guests, so an outsider can bring in more outsiders without anyone approving it. Keeping invitations with administrators and named inviters means every account from outside the organisation got there because somebody accountable decided so. Turning invitations off entirely is stricter and also passes.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Only people in an administrator or guest inviter role can invite guests.</span>
+      <span class="control-oneline">Anyone can invite a guest into the tenant, which means anybody can add an outside account nobody reviewed.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">The default in most tenants lets everyone invite guests, including existing guests, so an outsider can bring in more outsiders without anyone approving it. Keeping invitations with administrators and named inviters means every account from outside the organisation got there because somebody accountable decided so. Turning invitations off entirely is stricter and also passes.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Anyone can invite a guest into the tenant, which means anybody can add an outside account nobody reviewed.</li></ul>
@@ -800,15 +905,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <p>Accounts this applies to: 0</p>
     <p class="id">Control guest-002</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>Only administrators can register applications.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">A registered application is an identity that can hold permissions and keep working after the person who made it leaves. Letting everyone create them means nobody has a list of what exists. Where individuals genuinely need this, the application developer role gives it back to named people rather than to everybody.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Only administrators can register applications.</span>
+      <span class="control-oneline">Anybody in the tenant can register an application.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">A registered application is an identity that can hold permissions and keep working after the person who made it leaves. Letting everyone create them means nobody has a list of what exists. Where individuals genuinely need this, the application developer role gives it back to named people rather than to everybody.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Anybody in the tenant can register an application.</li></ul>
@@ -819,15 +927,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <p>Accounts this applies to: 0</p>
     <p class="id">Control apps-001</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>People cannot grant an application any permission it asks for.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">Consent phishing does not steal a password. It shows the person a real sign in page and asks them to approve an application, and once approved that application keeps its access even after the password changes and the second step is passed. Two answers pass: turning user consent off entirely, or limiting it to low impact permissions from applications whose publisher has been verified. Everything else fails, including the setting Microsoft manages on your behalf, because that one still lets people approve applications and only holds back a list of permissions Microsoft maintains and can change. A setting this tool has never seen fails too, since a permission that lets people approve applications is not one to assume the best about.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">People cannot grant an application any permission it asks for.</span>
+      <span class="control-oneline">People can approve applications for themselves. If this tenant is on the setting Microsoft manages for you, which is the default for tenants created recently, then the most sensitive permissions such as mail, files and calendars are held back and everything else is still theirs to approve. That is better than the old setting and it is not the same as deciding who may approve what.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Consent phishing does not steal a password. It shows the person a real sign in page and asks them to approve an application, and once approved that application keeps its access even after the password changes and the second step is passed. Two answers pass: turning user consent off entirely, or limiting it to low impact permissions from applications whose publisher has been verified. Everything else fails, including the setting Microsoft manages on your behalf, because that one still lets people approve applications and only holds back a list of permissions Microsoft maintains and can change. A setting this tool has never seen fails too, since a permission that lets people approve applications is not one to assume the best about.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>People can approve applications for themselves. If this tenant is on the setting Microsoft manages for you, which is the default for tenants created recently, then the most sensitive permissions such as mail, files and calendars are held back and everything else is still theirs to approve. That is better than the old setting and it is not the same as deciding who may approve what.</li></ul>
@@ -838,15 +949,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <p>Accounts this applies to: 0</p>
     <p class="id">Control consent-001</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>Only administrators can approve an application&#39;s access.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">The stricter reading of the same risk. Any route by which a person can approve an application is a route a convincing request can travel, so this asks that every approval go to an administrator. It costs more in day to day friction than the baseline version, which is why it is here rather than there, and it is the bar the published baseline sets.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Only administrators can approve an application&#39;s access.</span>
+      <span class="control-oneline">People can still approve some application requests without an administrator.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">The stricter reading of the same risk. Any route by which a person can approve an application is a route a convincing request can travel, so this asks that every approval go to an administrator. It costs more in day to day friction than the baseline version, which is why it is here rather than there, and it is the bar the published baseline sets.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>People can still approve some application requests without an administrator.</li></ul>
@@ -857,15 +971,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <p>Accounts this applies to: 0</p>
     <p class="id">Control consent-002</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>People who are not administrators cannot create new tenants.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">Whoever creates a tenant is automatically its global administrator. Left on, this lets any employee stand up a directory outside everything described in this report, which nobody is monitoring and nobody knows exists, while it holds company data and carries the company name. Where somebody genuinely needs it, the tenant creator role gives it to that person by name.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">People who are not administrators cannot create new tenants.</span>
+      <span class="control-oneline">Anybody in the tenant can create a new tenant and become its global administrator.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Whoever creates a tenant is automatically its global administrator. Left on, this lets any employee stand up a directory outside everything described in this report, which nobody is monitoring and nobody knows exists, while it holds company data and carries the company name. Where somebody genuinely needs it, the tenant creator role gives it to that person by name.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Anybody in the tenant can create a new tenant and become its global administrator.</li></ul>
@@ -876,15 +993,18 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <p>Accounts this applies to: 0</p>
     <p class="id">Control tenants-001</p>
   </div>
-</section>
+</details>
 
-<section class="control">
-  <header>
-    <h3>People who are not administrators cannot read the recovery keys for their own devices.</h3>
+<details class="control amber">
+  <summary>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-  </header>
-  <p class="rationale">Disk encryption is what protects a laptop once it is out of the hands of the person carrying it. If the account can fetch its own recovery key, then one stolen account is enough to unlock everything on that laptop, and the encryption stops being the thing it was bought to be. It is in the stricter set because it puts recovery through a help desk, which is a real cost.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">People who are not administrators cannot read the recovery keys for their own devices.</span>
+      <span class="control-oneline">Anybody can retrieve the disk recovery key for a device they own.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Disk encryption is what protects a laptop once it is out of the hands of the person carrying it. If the account can fetch its own recovery key, then one stolen account is enough to unlock everything on that laptop, and the encryption stops being the thing it was bought to be. It is in the stricter set because it puts recovery through a help desk, which is a real cost.</p>
     
     <p><strong>What is not covered:</strong></p>
     <ul><li>Anybody can retrieve the disk recovery key for a device they own.</li></ul>
@@ -895,18 +1015,21 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <p>Accounts this applies to: 0</p>
     <p class="id">Control bitlocker-001</p>
   </div>
-</section>
+</details>
 
 
 <h2>adminConsentRequestPolicy</h2>
 
-<section class="control">
-  <header>
-    <h3>Somebody who needs an application has a way to ask, and a named person receives it.</h3>
+<details class="control gray">
+  <summary>
     <span class="grade gray"><span class="dot"></span>UNKNOWN</span>
-  </header>
-  <p class="rationale">This is the other half of restricting who may approve applications. If people cannot consent and cannot ask either, they do not stop needing the tool; they find a way around, usually a personal account holding company data. A request queue with named reviewers turns a dead end into a decision somebody makes on purpose.</p>
-  <div class="detail">
+    <span class="control-head">
+      <span class="control-intent">Somebody who needs an application has a way to ask, and a named person receives it.</span>
+      <span class="control-oneline">The collected data was not good enough to judge. Never guessed.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">This is the other half of restricting who may approve applications. If people cannot consent and cannot ask either, they do not stop needing the tool; they find a way around, usually a personal account holding company data. A request queue with named reviewers turns a dead end into a decision somebody makes on purpose.</p>
     
     
     <ul><li>The configuration this check depends on is not in the snapshot.</li></ul>
@@ -916,7 +1039,7 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <p>Accounts this applies to: 0</p>
     <p class="id">Control consent-003</p>
   </div>
-</section>
+</details>
 
 
 
@@ -1121,6 +1244,8 @@ easier to hand to someone else.</p>
 collected data proves it.
 Sign in analysis covers a 30 day window.</p>
 <p>To keep a copy, print this page to PDF from the browser.</p>
+<p class="attribution">Generated by IAMAI, a read only, open source Microsoft Entra
+identity posture tool. This report is self contained and links to nothing.</p>
 </footer>
 
 </main>

@@ -33,6 +33,18 @@ def test_every_internal_docs_link_resolves():
     assert not broken, f"broken internal links: {broken}"
 
 
+def test_one_command_installers_exist_and_are_advertised():
+    """The easy install path is a one-line bootstrap. The scripts must exist and
+    the landing page and guide must point at them."""
+    root = DOCS.parent
+    assert (root / "scripts" / "install.ps1").exists()
+    assert (root / "scripts" / "install.sh").exists()
+    for page in ("index.html", "guide.html"):
+        html = (DOCS / page).read_text(encoding="utf-8")
+        assert "scripts/install.ps1" in html, page
+        assert "scripts/install.sh" in html, page
+
+
 def test_docs_pages_agree_on_one_repository_url():
     bases = set()
     for page in DOCS.glob("*.html"):

@@ -57,10 +57,18 @@ artifact field you are unsure of; this skill does not repeat it.
 
 ## Find the files
 
-Everything lives under `data/<alias>/`. One tenant is one `alias`. Layout:
+IAMAI keeps everything in one per-user folder, not the working directory. Find
+that folder first:
+
+- If `IAMAI_HOME` is set, it is `$IAMAI_HOME`.
+- Otherwise, on Windows `%LOCALAPPDATA%\IAMAI` (typically
+  `C:\Users\<user>\AppData\Local\IAMAI`); on macOS
+  `~/Library/Application Support/IAMAI`; on Linux `~/.local/share/iamai`.
+
+Under that folder, `data/<alias>/` holds one tenant per `alias`. Layout:
 
 ```
-data/<alias>/
+<IAMAI home>/data/<alias>/
   <timestamp>/                 one snapshot per `iamai collect`
     manifest.json              what was pulled, when, and whether it is complete
     raw/                       the raw Graph datasets (see reference/datasets.md)

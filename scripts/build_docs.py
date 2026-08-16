@@ -21,7 +21,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from iamai.theme import BASE_CSS  # noqa: E402
 from build_demo import (  # noqa: E402  (single source for slug, theme, chrome)
-    COPY_SCRIPT, DARK_CSS, REPO_URL, code_block, site_footer, site_header,
+    COPY_SCRIPT, DARK_CSS, INSTALL_PS1, INSTALL_SH, REPO_URL, code_block,
+    site_footer, site_header,
 )
 
 DOCS_CSS = """
@@ -208,14 +209,22 @@ def _build_sections():
         "it collects stays in a folder on your machine.</div>", open=True))
 
     parts.append(_section("install", "Installing it",
-        "<p>You need Windows, macOS or Linux and Python 3.12. You do not need to know Python. "
-        "Run these four commands (each has a Copy button):</p>"
+        "<p>You do not need to know Python. On <strong>Windows</strong>, open PowerShell and paste "
+        "one line; it installs everything and starts setup:</p>"
+        + code_block("irm " + INSTALL_PS1 + " | iex")
+        + "<p>On <strong>macOS or Linux</strong>, in a terminal:</p>"
+        + code_block("curl -fsSL " + INSTALL_SH + " | bash")
+        + "<p>The installer finds or installs Python, puts IAMAI in its own per-user place (so it "
+        "never clutters your folders), adds the <code>iamai</code> command, and launches the guided "
+        "setup. It installs for your user only and needs no administrator rights.</p>"
+        "<p><strong>The careful way.</strong> If you would rather read every step and have each "
+        "dependency verified against a recorded hash, clone the repository and follow the README:</p>"
         + code_block("git clone " + REPO_URL + ".git iamai\ncd iamai\npython -m venv .venv\n"
           ".venv\\Scripts\\python.exe -m pip install --require-hashes -r requirements.txt\n"
           ".venv\\Scripts\\python.exe -m pip install --no-deps -e .")
-        + "<p>On macOS or Linux the last two lines use <code>.venv/bin/python</code>. Installing from "
-        "<code>requirements.txt</code> checks every dependency against a recorded hash, rather than "
-        "trusting whatever a package index serves that day.</p>"))
+        + "<p>On macOS or Linux the last two lines use <code>.venv/bin/python</code>. That path "
+        "verifies every dependency against a recorded hash, rather than trusting whatever a package "
+        "index serves that day.</p>"))
 
     parts.append(_section("setup", "Connecting a tenant",
         "<p>Run <code>iamai setup</code>. It creates the read-only collector app, generates the "
@@ -283,8 +292,12 @@ def _build_sections():
         "safe to move off the machine.</p>"))
 
     parts.append(_section("data", "Where your data lives",
-        "<p>Everything is under <code>data/&lt;alias&gt;/</code>, one folder per tenant.</p>"
-        "<pre class=\"code\">data/&lt;alias&gt;/\n"
+        "<p>IAMAI keeps everything in one per-user folder, not wherever you run it. On Windows "
+        "that is <code>%LOCALAPPDATA%\\IAMAI</code>; on macOS "
+        "<code>~/Library/Application Support/IAMAI</code>; on Linux "
+        "<code>~/.local/share/iamai</code>. Set <code>IAMAI_HOME</code> to put it somewhere else. "
+        "Inside it, one folder per tenant:</p>"
+        "<pre class=\"code\">&lt;IAMAI data folder&gt;/data/&lt;alias&gt;/\n"
         "  &lt;timestamp&gt;/            one snapshot per collect\n"
         "    manifest.json        what was pulled, when, and whether it was complete\n"
         "    raw/                 the raw datasets, plus gzipped sign-in feeds\n"

@@ -64,19 +64,37 @@ same thing in the words that actually matter.
 You need a Windows, macOS or Linux machine and Python 3.12. You do not need to
 know Python.
 
-**1. Install it.**
+**1. Install it.** One line, no Python knowledge needed. It finds or installs
+Python, installs IAMAI into its own isolated place (nothing clutters your
+folders), and starts the guided setup.
+
+On **Windows**, in PowerShell:
 
 ```
+irm https://raw.githubusercontent.com/ZephyrPretendstoKnowTech/IAMAI/master/scripts/install.ps1 | iex
+```
+
+On **macOS or Linux**, in a terminal:
+
+```
+curl -fsSL https://raw.githubusercontent.com/ZephyrPretendstoKnowTech/IAMAI/master/scripts/install.sh | bash
+```
+
+**The careful way (verifies every dependency against a recorded hash).** Clone
+the repository and install from the locked `requirements.txt`:
+
+```
+git clone https://github.com/ZephyrPretendstoKnowTech/IAMAI.git iamai
+cd iamai
 python -m venv .venv
 .venv\Scripts\python.exe -m pip install --require-hashes -r requirements.txt
 .venv\Scripts\python.exe -m pip install --no-deps -e .
 ```
 
-On macOS or Linux the second and third lines use `.venv/bin/python`.
-
-Installing from `requirements.txt` verifies every dependency, direct and
-transitive, against a hash recorded when it was locked, rather than
-whatever a package index happens to serve on the day of install.
+On macOS or Linux the last two lines use `.venv/bin/python`. This path verifies
+every dependency, direct and transitive, against a hash recorded when it was
+locked, rather than whatever a package index happens to serve on the day of
+install.
 
 **2. Connect it to a tenant.**
 

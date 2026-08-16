@@ -21,6 +21,9 @@ from iamai.theme import BASE_CSS  # noqa: E402
 
 # GitHub repository slug and the author's public credit. Shared by every page.
 REPO_URL = "https://github.com/ZephyrPretendstoKnowTech/IAMAI"
+_RAW = REPO_URL.replace("github.com", "raw.githubusercontent.com") + "/master"
+INSTALL_PS1 = _RAW + "/scripts/install.ps1"   # Windows one-line installer
+INSTALL_SH = _RAW + "/scripts/install.sh"     # macOS / Linux one-line installer
 AUTHOR = "Lachlan Robinette"
 LINKEDIN = "https://www.linkedin.com/in/lachlanrobinette/"
 # Inline (self-contained) LinkedIn glyph. No external asset.
@@ -306,13 +309,18 @@ BODY = f"""<body>
   you. It is not a compliance certification and it is not an audit.</p>
 
   <h2>Getting it</h2>
-  <p>You need a Windows, macOS or Linux machine and Python 3.12. You do not need
-  to know Python. Clone the repository and follow the README:</p>
-  {code_block("git clone " + REPO_URL + ".git iamai\ncd iamai\npython -m venv .venv\n.venv/bin/python -m pip install --require-hashes -r requirements.txt\n.venv/bin/python -m pip install --no-deps -e .")}
-  <p>Then <code>iamai setup</code> walks you through connecting a tenant, and
-  <code>iamai collect</code>, <code>assess</code>, <code>wizard</code> and
-  <code>plan</code> produce the report and plan. Every dependency is verified
-  against a recorded hash at install time.</p>
+  <p><strong>Windows.</strong> Open PowerShell and paste one line. It installs
+  everything and starts the guided setup:</p>
+  {code_block("irm " + INSTALL_PS1 + " | iex")}
+  <p><strong>macOS or Linux.</strong> In a terminal:</p>
+  {code_block("curl -fsSL " + INSTALL_SH + " | bash")}
+  <p>That is the whole install. It finds or installs Python, puts IAMAI in its
+  own place so nothing clutters your folders, adds the <code>iamai</code>
+  command, and walks you through connecting a tenant. Then <code>iamai
+  collect</code>, <code>assess</code>, <code>wizard</code> and <code>plan</code>
+  produce the report and plan.</p>
+  <p class="query">Prefer to read every step, or want each dependency verified
+  against a recorded hash? Clone the repository and follow the README instead.</p>
 
   {site_footer()}
 </main>

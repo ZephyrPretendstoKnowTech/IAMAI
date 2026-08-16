@@ -444,17 +444,18 @@
   you. It is not a compliance certification and it is not an audit.</p>
 
   <h2>Getting it</h2>
-  <p>You need a Windows, macOS or Linux machine and Python 3.12. You do not need
-  to know Python. Clone the repository and follow the README:</p>
-  <div class="codeblock"><button class="copy" type="button" aria-label="Copy to clipboard">Copy</button><pre class="code">git clone https://github.com/ZephyrPretendstoKnowTech/IAMAI.git iamai
-cd iamai
-python -m venv .venv
-.venv/bin/python -m pip install --require-hashes -r requirements.txt
-.venv/bin/python -m pip install --no-deps -e .</pre></div>
-  <p>Then <code>iamai setup</code> walks you through connecting a tenant, and
-  <code>iamai collect</code>, <code>assess</code>, <code>wizard</code> and
-  <code>plan</code> produce the report and plan. Every dependency is verified
-  against a recorded hash at install time.</p>
+  <p><strong>Windows.</strong> Open PowerShell and paste one line. It installs
+  everything and starts the guided setup:</p>
+  <div class="codeblock"><button class="copy" type="button" aria-label="Copy to clipboard">Copy</button><pre class="code">irm https://raw.githubusercontent.com/ZephyrPretendstoKnowTech/IAMAI/master/scripts/install.ps1 | iex</pre></div>
+  <p><strong>macOS or Linux.</strong> In a terminal:</p>
+  <div class="codeblock"><button class="copy" type="button" aria-label="Copy to clipboard">Copy</button><pre class="code">curl -fsSL https://raw.githubusercontent.com/ZephyrPretendstoKnowTech/IAMAI/master/scripts/install.sh | bash</pre></div>
+  <p>That is the whole install. It finds or installs Python, puts IAMAI in its
+  own place so nothing clutters your folders, adds the <code>iamai</code>
+  command, and walks you through connecting a tenant. Then <code>iamai
+  collect</code>, <code>assess</code>, <code>wizard</code> and <code>plan</code>
+  produce the report and plan.</p>
+  <p class="query">Prefer to read every step, or want each dependency verified
+  against a recorded hash? Clone the repository and follow the README instead.</p>
 
   <footer>IAMAI is open source under the Apache License 2.0. Read only, local, no telemetry.<br>Built by <strong>Lachlan Robinette</strong> &middot; <a href="https://www.linkedin.com/in/lachlanrobinette/">LinkedIn</a> &middot; <a href="https://github.com/ZephyrPretendstoKnowTech/IAMAI">Source on GitHub</a></footer>
 </main>

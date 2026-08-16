@@ -152,18 +152,21 @@ DARK_CSS = """
   footer { color: var(--muted); border-top: 1px solid var(--hairline); }
   footer a { color: var(--brand); }
 
-  /* Command block with a copy button (docs pages only). */
-  .codeblock { position: relative; }
-  .codeblock pre.code { margin: 0.6rem 0; }
-  .codeblock .copy { position: absolute; top: 0.5rem; right: 0.5rem; margin: 0;
-    padding: 0.3rem 0.7rem; font-size: 0.78rem; font-weight: 600; cursor: pointer;
-    color: var(--ink-2); background: rgba(148,176,214,0.12); border: 1px solid var(--hairline);
+  /* Command block: a Copy button in a header bar above the command, so it
+     never overlaps a command that is wider than the window (docs pages only). */
+  .codeblock { border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+    overflow: hidden; margin: 0.75rem 0; }
+  .codeblock-bar { display: flex; justify-content: flex-end; padding: 0.3rem 0.4rem;
+    background: rgba(148,176,214,0.08); border-bottom: 1px solid var(--hairline); }
+  .codeblock .copy { margin: 0; padding: 0.2rem 0.8rem; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; color: var(--ink-2); background: transparent; border: 1px solid var(--hairline);
     border-radius: var(--radius-sm); }
   .codeblock .copy:hover { color: var(--ink); border-color: var(--brand); }
   .codeblock .copy.done { color: var(--brand); border-color: var(--brand); }
+  .codeblock pre.code { margin: 0; border: 0; border-radius: 0; }
 
   @media print {
-    .codeblock .copy { display: none; }
+    .codeblock-bar { display: none; }
     details.sect > .sect-body { display: block !important; }
     details.sect > summary::after { display: none; }
     .site-header, .accent-strip { position: static; }
@@ -193,7 +196,7 @@ def site_header(active: str) -> str:
         '<div class="accent-strip"></div>'
         '<header class="site-header">'
         '<div class="site-header-inner">'
-        '<a class="wordmark" href="index.html"><span class="mark">iA</span> IAMAI</a>'
+        '<a class="wordmark" href="index.html">IAMAI</a>'
         f'<div class="byline">Built by <strong>{AUTHOR}</strong>'
         f'<a class="li" href="{LINKEDIN}" aria-label="{AUTHOR} on LinkedIn">{LINKEDIN_SVG}'
         '<span>LinkedIn</span></a></div>'
@@ -215,10 +218,12 @@ def site_footer() -> str:
 
 
 def code_block(text: str) -> str:
-    """A command block with a Copy button. `text` must already be HTML-safe."""
+    """A command block with a Copy button in a header bar (never overlapping the
+    command, which may be wider than the window). `text` must be HTML-safe."""
     return (
-        '<div class="codeblock"><button class="copy" type="button" '
-        'aria-label="Copy to clipboard">Copy</button>'
+        '<div class="codeblock">'
+        '<div class="codeblock-bar"><button class="copy" type="button" '
+        'aria-label="Copy to clipboard">Copy</button></div>'
         f'<pre class="code">{text}</pre></div>'
     )
 

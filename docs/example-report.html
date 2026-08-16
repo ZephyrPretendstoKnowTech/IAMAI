@@ -297,7 +297,31 @@
 </style>
 </head>
 <body>
-<div style="background:#0b1a30;color:#c4d1e2;padding:0.6rem 1.5rem;font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;text-align:center;">A sample IAMAI report, rendered from sanitized data. &nbsp;<a href="index.html" style="color:#6cb0ff;text-decoration:none;font-weight:600;">Overview</a> &middot; <a href="use-cases.html" style="color:#6cb0ff;text-decoration:none;font-weight:600;">Use cases</a> &middot; <a href="guide.html" style="color:#6cb0ff;text-decoration:none;font-weight:600;">Guide</a></div>
+<style>
+.sample-topbar { position: sticky; top: 0; z-index: 20; background: #0a1526;
+  border-bottom: 1px solid rgba(148,176,214,0.18); }
+.sample-topbar .inner { max-width: 56rem; margin: 0 auto; padding: 0.6rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  flex-wrap: wrap; font: 14px system-ui, -apple-system, "Segoe UI", sans-serif; }
+.sample-topbar .wm { color: #eef3fb; font-weight: 800; text-decoration: none; font-size: 1.05rem; }
+.sample-topbar nav a { color: #c4d1e2; text-decoration: none; margin-left: 1.1rem; font-weight: 550; }
+.sample-topbar nav a:hover { color: #6cb0ff; }
+.sample-note { background: #12273f; color: #c4d1e2; text-align: center;
+  padding: 0.5rem 1rem; font: 13px system-ui, -apple-system, "Segoe UI", sans-serif; }
+.sample-note a { color: #6cb0ff; }
+@media print { .sample-topbar, .sample-note { display: none; } }
+</style>
+<div class="sample-topbar"><div class="inner">
+  <a class="wm" href="index.html">IAMAI</a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="use-cases.html">Use cases</a>
+    <a href="guide.html">Guide</a>
+    <a href="https://github.com/ZephyrPretendstoKnowTech/IAMAI">GitHub</a>
+  </nav>
+</div></div>
+<div class="sample-note">A sample report, rendered from sanitized data, so every
+name is a stand in. This is exactly what your own report looks like. <a href="index.html">Back to the site</a>.</div>
 <main>
 
 <div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; identity posture assessment</span></div>
@@ -385,14 +409,14 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
     <span class="control-head">
       <span class="control-intent">People with administrator roles must prove who they are with a strong, phishing resistant sign in method.</span>
-      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+      <span class="control-oneline">Unsanctioned exclusions: the group Group 3.</span>
     </span>
   </summary>
   <div class="control-body">
     <p class="rationale">Administrator accounts can change anything in the company&#39;s systems, so they are the first target for attackers. Requiring the strongest sign in proof protects the accounts with the most power.</p>
     
     <p><strong>What is not covered:</strong></p>
-    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    <ul><li>Unsanctioned exclusions: the group Group 3.</li></ul>
     
     
     
@@ -413,14 +437,14 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
     <span class="control-head">
       <span class="control-intent">Everyone must confirm their identity with a second step when signing in.</span>
-      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+      <span class="control-oneline">Unsanctioned exclusions: the group Group 3.</span>
     </span>
   </summary>
   <div class="control-body">
     <p class="rationale">A password alone is not enough. If a password is stolen, the second step stops the attacker from getting in.</p>
     
     <p><strong>What is not covered:</strong></p>
-    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    <ul><li>Unsanctioned exclusions: the group Group 3.</li></ul>
     
     
     
@@ -441,14 +465,14 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
     <span class="control-head">
       <span class="control-intent">Transferring a sign in from one device to another is blocked.</span>
-      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+      <span class="control-oneline">Unsanctioned exclusions: the group Group 3.</span>
     </span>
   </summary>
   <div class="control-body">
     <p class="rationale">Attackers abuse sign in transfer to move a stolen session onto their own device. Blocking it closes that path.</p>
     
     <p><strong>What is not covered:</strong></p>
-    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    <ul><li>Unsanctioned exclusions: the group Group 3.</li></ul>
     
     
     
@@ -469,14 +493,14 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
     <span class="control-head">
       <span class="control-intent">The device code sign in flow is blocked.</span>
-      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+      <span class="control-oneline">Unsanctioned exclusions: the group Group 3.</span>
     </span>
   </summary>
   <div class="control-body">
     <p class="rationale">This sign in style is designed for TVs and shared devices, and attackers abuse it to trick people into approving a sign in they did not start.</p>
     
     <p><strong>What is not covered:</strong></p>
-    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    <ul><li>Unsanctioned exclusions: the group Group 3.</li></ul>
     
     
     
@@ -518,14 +542,14 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
     <span class="control-head">
       <span class="control-intent">Sign in sessions on Windows are locked to the device they were created on.</span>
-      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+      <span class="control-oneline">Unsanctioned exclusions: the group Group 3.</span>
     </span>
   </summary>
   <div class="control-body">
     <p class="rationale">If someone steals a session token, it will not work from any other device, so a stolen token is useless.</p>
     
     <p><strong>What is not covered:</strong></p>
-    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    <ul><li>Unsanctioned exclusions: the group Group 3.</li></ul>
     
     
     
@@ -546,14 +570,14 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
     <span class="control-head">
       <span class="control-intent">People who are not administrators sign in again at least every 14 days.</span>
-      <span class="control-oneline">Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</span>
+      <span class="control-oneline">Unsanctioned exclusions: the group Group 3.</span>
     </span>
   </summary>
   <div class="control-body">
     <p class="rationale">A session that never expires is a session an attacker can keep using. Fourteen days bounds how long a stolen session stays useful without asking people to sign in so often that they stop reading the prompt.</p>
     
     <p><strong>What is not covered:</strong></p>
-    <ul><li>Unsanctioned exclusions: group:Group 3 (5137fe56-b084-441a-a61b-0dcff4e618d8).</li></ul>
+    <ul><li>Unsanctioned exclusions: the group Group 3.</li></ul>
     
     
     
@@ -934,7 +958,7 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     <span class="grade amber"><span class="dot"></span>PARTIAL</span>
     <span class="control-head">
       <span class="control-intent">People cannot grant an application any permission it asks for.</span>
-      <span class="control-oneline">People can approve applications for themselves. If this tenant is on the setting Microsoft manages for you, which is the default for tenants created recently, then the most sensitive permissions such as mail, files and calendars are held back and everything else is still theirs to approve. That is better than the old setting and it is not the same as deciding who may approve what.</span>
+      <span class="control-oneline">People can approve applications for themselves. If this tenant is on the setting Microsoft manages for you, which is the defaul...</span>
     </span>
   </summary>
   <div class="control-body">

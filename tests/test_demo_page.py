@@ -86,16 +86,19 @@ def test_example_report_matches_the_generator():
     assert EXAMPLE.read_text(encoding="utf-8") == expected, "example report is stale; regenerate it"
 
 
-def test_example_report_is_clean_and_self_contained():
-    """It is published, so it must expose no real identity and load nothing
-    external. The fixture behind it is sanitized: every name is a stand in."""
+def test_example_report_is_clean_and_loads_nothing_external():
+    """It is published, so it must expose no real identity and load no external
+    asset. It is a docs page, so its injected header may link out; the real
+    generated report never does (test_m2_report guards that separately)."""
     html = EXAMPLE.read_text(encoding="utf-8")
     low = html.lower()
     for banned in ("onmicrosoft.com",):  # generic tenant-domain check; test_publication_safety.py is the full guard
         assert banned not in low, banned
-    for external in ("<script", "<link ", "@import", "http://", "https://"):
+    # No external asset and no script; navigational links are allowed.
+    for external in ("<script", "<link ", "@import", "http://", "url("):
         assert external not in html, external
-    # It is a real assessment, so it should carry graded controls and the shared theme.
+    # It carries graded controls, the shared theme, and the site nav to get back.
     assert 'class="grade' in html and 'class="brandbar"' in html
+    assert 'class="sample-topbar"' in html and 'href="index.html"' in html
     # The demo page points at it.
     assert "example-report.html" in DOCS.read_text(encoding="utf-8")

@@ -200,6 +200,21 @@ _EMPTY_CONTEXT = {
 }
 
 
+import re as _re
+
+_PRINCIPAL_TOKEN = _re.compile(r"\b(group|user):([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})")
+
+
+def _humanize_principals(text: str, names: dict[str, str]) -> str:
+    """Replace 'group:<guid>' / 'user:<guid>' tokens with plain phrases."""
+    def repl(match: "_re.Match") -> str:
+        kind, guid = match.group(1).lower(), match.group(2)
+        label = names.get(guid.lower(), guid)
+        return f"the group {label}" if kind == "group" else f"the account {label}"
+
+    return _PRINCIPAL_TOKEN.sub(repl, text)
+
+
 def _resolved_controls(
     controls: list[dict],
     role_names: dict[str, str],
@@ -215,17 +230,19 @@ def _resolved_controls(
 
     names = names or {}
     unresolved: set[str] = set()
+
+    def clean(text: str) -> str:
+        # Turn the internal "group:<guid>" / "user:<guid>" tokens into plain
+        # words before the generic GUID resolver runs, so a reader sees
+        # "the group Finance" rather than "group:Finance (a1b2...)".
+        text = _humanize_principals(text, names)
+        return _with_names(resolve_role_tokens(text, role_names), names, unresolved)
+
     resolved = []
     for control in controls:
         control = dict(control)
-        control["coverageGaps"] = [
-            _with_names(resolve_role_tokens(g, role_names), names, unresolved)
-            for g in control.get("coverageGaps") or []
-        ]
-        control["notes"] = [
-            _with_names(resolve_role_tokens(n, role_names), names, unresolved)
-            for n in control.get("notes") or []
-        ]
+        control["coverageGaps"] = [clean(g) for g in control.get("coverageGaps") or []]
+        control["notes"] = [clean(n) for n in control.get("notes") or []]
         resolved.append(control)
     return resolved
 

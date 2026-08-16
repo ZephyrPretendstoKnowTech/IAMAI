@@ -19,13 +19,46 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
+from build_demo import REPO_URL  # noqa: E402
 from iamai.grade import assess_snapshot  # noqa: E402
 from iamai.report import render_assessment  # noqa: E402
 from iamai.store import load_snapshot_data  # noqa: E402
 
 FIXTURE = ROOT / "tests" / "fixtures" / "golden_sanitized"
 PACK = ROOT / "src" / "iamai" / "packs" / "basics-v1.json"
+
+# A sticky dark header, matching the site, injected only into the published
+# sample so it is navigable and consistent with the docs. Scoped .sample-*
+# classes and explicit colours, so nothing here reaches the light report below.
+# This is a docs page, so its nav may link out; a real generated report never
+# does (render_assessment adds no links, and a test guards that).
+SAMPLE_HEADER = f"""<style>
+.sample-topbar {{ position: sticky; top: 0; z-index: 20; background: #0a1526;
+  border-bottom: 1px solid rgba(148,176,214,0.18); }}
+.sample-topbar .inner {{ max-width: 56rem; margin: 0 auto; padding: 0.6rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  flex-wrap: wrap; font: 14px system-ui, -apple-system, "Segoe UI", sans-serif; }}
+.sample-topbar .wm {{ color: #eef3fb; font-weight: 800; text-decoration: none; font-size: 1.05rem; }}
+.sample-topbar nav a {{ color: #c4d1e2; text-decoration: none; margin-left: 1.1rem; font-weight: 550; }}
+.sample-topbar nav a:hover {{ color: #6cb0ff; }}
+.sample-note {{ background: #12273f; color: #c4d1e2; text-align: center;
+  padding: 0.5rem 1rem; font: 13px system-ui, -apple-system, "Segoe UI", sans-serif; }}
+.sample-note a {{ color: #6cb0ff; }}
+@media print {{ .sample-topbar, .sample-note {{ display: none; }} }}
+</style>
+<div class="sample-topbar"><div class="inner">
+  <a class="wm" href="index.html">IAMAI</a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="use-cases.html">Use cases</a>
+    <a href="guide.html">Guide</a>
+    <a href="{REPO_URL}">GitHub</a>
+  </nav>
+</div></div>
+<div class="sample-note">A sample report, rendered from sanitized data, so every
+name is a stand in. This is exactly what your own report looks like. <a href="index.html">Back to the site</a>.</div>"""
 
 
 def render() -> str:
@@ -41,21 +74,9 @@ def render() -> str:
     if manifest:
         manifest = {**manifest, "collectedAt": ""}
     html = render_assessment(assessment, manifest)
-    # This published sample is part of the docs site, so give it a way back.
-    # Injected here only, never into a real report (which stays self-contained
-    # with no outbound links). Internal doc links only; no external URL, because
-    # a report must carry none.
-    link = 'style="color:#6cb0ff;text-decoration:none;font-weight:600;"'
-    banner = (
-        '<div style="background:#0b1a30;color:#c4d1e2;padding:0.6rem 1.5rem;'
-        'font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;text-align:center;">'
-        'A sample IAMAI report, rendered from sanitized data. &nbsp;'
-        f'<a href="index.html" {link}>Overview</a> &middot; '
-        f'<a href="use-cases.html" {link}>Use cases</a> &middot; '
-        f'<a href="guide.html" {link}>Guide</a>'
-        '</div>'
-    )
-    return html.replace("<body>", "<body>\n" + banner, 1)
+    # This published sample is part of the docs site, so give it the site's
+    # header for navigation. Injected here only, never into a real report.
+    return html.replace("<body>", "<body>\n" + SAMPLE_HEADER, 1)
 
 
 def main() -> None:

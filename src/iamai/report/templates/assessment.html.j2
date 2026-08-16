@@ -50,7 +50,7 @@ when the data is ambiguous, the grade goes down, never up.</p>
     <span class="grade {{ grade_status[control.grade] }}"><span class="dot"></span>{{ control.grade }}</span>
     <span class="control-head">
       <span class="control-intent">{{ control.intent or "This control matches the standard's configuration." }}</span>
-      <span class="control-oneline">{% if control.coverageGaps %}{{ control.coverageGaps[0] }}{% else %}{{ grade_meanings[control.grade] }}{% endif %}</span>
+      <span class="control-oneline">{% if control.coverageGaps %}{{ control.coverageGaps[0] | truncate(130, True, "...") }}{% else %}{{ grade_meanings[control.grade] }}{% endif %}</span>
     </span>
   </summary>
   <div class="control-body">

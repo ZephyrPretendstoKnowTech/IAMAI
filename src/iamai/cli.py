@@ -35,9 +35,16 @@ app = typer.Typer(
     help="Reads a Microsoft Entra tenant's identity security posture.",
 )
 
-CERT_DIR = Path("certs")
-CERT_PEM = CERT_DIR / "iamai.pem"
-CERT_PUBLIC_PEM = CERT_DIR / "iamai-cert.pem"
+def CERT_PEM() -> Path:
+    from iamai.paths import cert_dir
+    return cert_dir() / "iamai.pem"
+
+
+def CERT_PUBLIC_PEM() -> Path:
+    from iamai.paths import cert_dir
+    return cert_dir() / "iamai-cert.pem"
+
+
 CONSENT_URL_TEMPLATE = "https://login.microsoftonline.com/{tenantId}/adminconsent?client_id={appId}"
 
 # The bootstrapper public client used for one-time setup device code flow.
@@ -398,17 +405,19 @@ def setup() -> None:
             typer.prompt(f"Tenant ID for '{target_alias.strip()}'"), "tenant ID"
         )
 
-    if CERT_PEM.exists():
-        typer.echo(f"Certificate already exists at {CERT_PEM}, keeping it.")
+    cert_pem, cert_public_pem = CERT_PEM(), CERT_PUBLIC_PEM()
+    cert_pem.parent.mkdir(parents=True, exist_ok=True)
+    if cert_pem.exists():
+        typer.echo(f"Certificate already exists at {cert_pem}, keeping it.")
         # Harden it even though we did not just create it: a key generated
         # before this hardening existed would otherwise stay world-readable,
         # since this branch never rewrites it (SECRETS-2-001).
-        _harden_key_file(CERT_PEM)
+        _harden_key_file(cert_pem)
     else:
-        generate_certificate(CERT_PEM, CERT_PUBLIC_PEM)
+        generate_certificate(cert_pem, cert_public_pem)
         typer.echo(f"Generated a new self-signed certificate (valid {CERT_LIFETIME_DAYS} days).")
 
-    cert_obj = x509.load_pem_x509_certificate(CERT_PUBLIC_PEM.read_bytes())
+    cert_obj = x509.load_pem_x509_certificate(cert_public_pem.read_bytes())
     cert_der_b64 = base64.b64encode(cert_obj.public_bytes(serialization.Encoding.DER)).decode("ascii")
 
     setup_client_id = SETUP_CLIENT_ID
@@ -462,7 +471,7 @@ def setup() -> None:
     config = Config(
         appId=app_id,
         homeTenantId=golden_tenant_id,
-        certPath=str(CERT_PEM),
+        certPath=str(cert_pem),
         goldenTenantId=golden_tenant_id,
         tenants=tenants,
     )

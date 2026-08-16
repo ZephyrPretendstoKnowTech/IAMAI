@@ -12,7 +12,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
-DEFAULT_CONFIG_PATH = Path("config.yaml")
+from iamai.paths import config_path as _default_config_path
 
 
 class Config(BaseModel):
@@ -78,7 +78,7 @@ def _emit_simple_yaml(data: dict) -> str:
 
 
 def load_config(path: Path | None = None) -> Config:
-    config_path = path or DEFAULT_CONFIG_PATH
+    config_path = path or _default_config_path()
     if not config_path.exists():
         raise FileNotFoundError(
             f"Config file not found at {config_path}. Run 'iamai setup' first."
@@ -87,7 +87,7 @@ def load_config(path: Path | None = None) -> Config:
 
 
 def save_config(config: Config, path: Path | None = None) -> Path:
-    config_path = path or DEFAULT_CONFIG_PATH
+    config_path = path or _default_config_path()
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(_emit_simple_yaml(config.model_dump()), encoding="utf-8")
     return config_path

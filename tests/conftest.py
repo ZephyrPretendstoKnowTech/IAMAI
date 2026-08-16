@@ -20,6 +20,14 @@ from iamai.graphclient import GraphClient
 FIXTURES = Path(__file__).parent / "fixtures"
 GRAPH = "https://graph.microsoft.com"
 
+
+@pytest.fixture(autouse=True)
+def _isolate_app_home(tmp_path, monkeypatch):
+    """Point IAMAI_HOME at a per-test temp directory so the suite never touches
+    the real per-user location, and CLI tests that work under tmp_path still
+    resolve data/config/certs there. Runs before other fixtures (autouse)."""
+    monkeypatch.setenv("IAMAI_HOME", str(tmp_path))
+
 TENANT_ID = "11111111-1111-1111-1111-111111111111"
 APP_ID = "f0000000-0000-0000-0000-00000000000f"
 USER_1 = "20000000-0000-0000-0000-000000000001"

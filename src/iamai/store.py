@@ -152,7 +152,9 @@ class SnapshotWriter:
 
 class SnapshotStore:
     def __init__(self, data_dir: Path | None = None):
-        self.data_dir = data_dir or Path("data")
+        from iamai.paths import data_dir as default_data_dir
+
+        self.data_dir = data_dir or default_data_dir()
 
     def alias_dir(self, alias: str) -> Path:
         _validate_alias(alias)

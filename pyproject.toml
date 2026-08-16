@@ -19,6 +19,9 @@ dependencies = [
     # The IANA time zone database. zoneinfo has no system source on Windows, so
     # without this every report timezone silently fell back to UTC there.
     "tzdata==2026.3",
+    # Resolves the per-user app directory the same way on every OS, so the tool
+    # keeps its files in one standard place instead of the working directory.
+    "platformdirs==4.11.3",
 ]
 
 [project.optional-dependencies]

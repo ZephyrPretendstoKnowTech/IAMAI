@@ -6,10 +6,16 @@ All notable changes to IAMAI are recorded here. The format follows
 
 ## [Unreleased]
 
-Changes staged for the next release.
+Nothing yet.
+
+## [1.1.0] - 2026-08-17
 
 ### Added
 
+- **One-command install.** Paste one line (`install.sh` on macOS and Linux,
+  `install.ps1` on Windows) and it checks Python, creates a virtual
+  environment, installs the tool, and puts `iamai` on the PATH. The script is
+  hardened against partial downloads.
 - A full HTML **user guide** (`docs/guide.html`) covering every command and
   feature in plain English, with a complete command reference.
 - A **use-cases page** (`docs/use-cases.html`) showing who the tool is for and
@@ -29,6 +35,13 @@ Changes staged for the next release.
 
 ### Changed
 
+- **Data, config and certificates now live in a per-user application
+  directory** (platform standard locations) instead of the working directory,
+  so the tool behaves the same no matter where it is run from. Set
+  `IAMAI_HOME` to override the location; an existing working-directory layout
+  can be pointed at with `IAMAI_HOME=.`.
+- The report renders **each control as an expandable card** with a one-line
+  summary, so a full assessment scans in one screen.
 - The report **timezone** is now a validated dropdown of IANA zones instead of
   free text.
 - `setup` offers an **Azure CLI fast path** for the one-time helper-app
@@ -44,6 +57,8 @@ Changes staged for the next release.
 
 ### Fixed
 
+- **The standard pack ships inside the package**, so `iamai baseline import`
+  works from an installed copy, not only from a source checkout.
 - **`sanitize` no longer crashes** on snapshots with more than 508 distinct IPv4
   addresses, which a real 30-day sign-in feed passes easily. Pseudonyms now
   overflow into a non-routable range while staying distinct.

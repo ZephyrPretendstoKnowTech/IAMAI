@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "iamai"
-version = "1.0.0"
+version = "1.1.0"
 description = "Reads a Microsoft Entra tenant's identity security posture and compares it against a reference baseline."
 requires-python = ">=3.12"
 dependencies = [

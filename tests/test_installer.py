@@ -144,7 +144,20 @@ def test_ps1_parses_under_windows_powershell_51():
     assert result.returncode == 0, result.stdout + result.stderr
 
 
-@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not on this machine")
+def _usable_bash() -> bool:
+    """Windows can carry the WSL stub at System32\\bash.exe, which exits 1
+    with no output when no distribution is installed; probe before trusting."""
+    if shutil.which("bash") is None:
+        return False
+    try:
+        probe = subprocess.run(["bash", "-c", "echo ok"],
+                               capture_output=True, text=True, timeout=30)
+    except OSError:
+        return False
+    return probe.returncode == 0 and "ok" in probe.stdout
+
+
+@pytest.mark.skipif(not _usable_bash(), reason="no working bash on this machine")
 def test_sh_passes_a_bash_syntax_check():
     result = subprocess.run(
         ["bash", "-n", str(SH)], capture_output=True, text=True, timeout=60,

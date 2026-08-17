@@ -69,6 +69,26 @@ Dependencies are installed with `--require-hashes` against a locked, hashed
 recorded hash rather than whatever an index serves on the day. GitHub Actions,
 if used, should be pinned by commit SHA.
 
+Release wheels are built reproducibly (`SOURCE_DATE_EPOCH` pinned to the
+release commit's timestamp) and each release records its wheel's SHA256 in
+the release notes, so a downloaded wheel can be verified against a recorded
+value and an independent build of the same tag produces the same bytes.
+
+**Pinning policy.** Hard pins are a deliberate trade: an install is
+byte-predictable, and in exchange every fix in a dependency needs a release
+of this tool before anyone benefits. What keeps that trade honest:
+
+1. A scheduled CI job (`advisories.yml`, weekly) runs `pip-audit` over every
+   pinned requirement and fails loudly when a pin has a known advisory.
+2. An advisory in a security-relevant dependency (`cryptography`, `msal`,
+   `httpx` and its stack, `flask`, `jinja2`) is treated as a release
+   trigger: bump the pin, regenerate the hashed lock, and cut a patch
+   release rather than waiting for the next feature release.
+3. An advisory elsewhere is judged on reachability, and the judgement is
+   recorded in the changelog either way.
+4. Pins are also reviewed as a set at every release, not only when an
+   advisory forces it.
+
 ## Scope
 
 In scope: the IAMAI code in this repository and the artifacts it produces. Out of

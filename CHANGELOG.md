@@ -6,6 +6,10 @@ All notable changes to IAMAI are recorded here. The format follows
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [1.3.0] - 2026-08-17
+
 ### Added
 
 - **`iamai --version` (and `-V`)**, the natural way to confirm an install
@@ -17,7 +21,37 @@ All notable changes to IAMAI are recorded here. The format follows
   when something is wrong. `--offline` skips the network checks.
 - A **release workflow** builds a reproducible wheel for every release
   (pinned to the release commit's timestamp) and records its SHA256 in the
-  release notes.
+  release notes, and a **weekly advisory scan** (`pip-audit` over every
+  pinned dependency) fails loudly when a pin has a known vulnerability, per
+  the new pinning policy in SECURITY.md.
+- **The assessment JSON is a documented contract.** It now carries the
+  questionnaire answers (structured and addressable), a plain-language
+  `section` per control so no camelCase identifier reaches a reader, which
+  standard and version graded it, and where the data came from (snapshot,
+  collection time, sanitized or raw). ARTIFACTS.md documents the version
+  policy: additive fields never break, control ids are stable, and anything
+  that would break a consumer is a breaking change.
+- **The plan reconciles three inputs and shows its working.** Every step
+  carries `drivenBy` provenance (the standard's default, a questionnaire
+  answer, or something you told the assistant), so generic and
+  tenant-specific parts are distinguishable. Two new files under
+  `data/<alias>/`, written from conversation by the Claude skill, reach plan
+  generation and only plan generation: `deviations.json` (accepted
+  deviations, a durable record with decider, reason, compensating control
+  and review date, surfaced instead of re-litigated, returned to the plan
+  when the review lapses) and `conversation.json` (operational constraints
+  that re-sequence steps behind explicit not-before preconditions). Where
+  inputs disagree the plan asks in a `conflicts` section rather than
+  silently preferring one. **No input can change a grade**, and a test
+  proves it.
+- **`iamai uninstall`** prints removal steps matched to how the copy was
+  installed: the program, the one data folder, and the Entra app
+  registrations an administrator deletes to revoke access everywhere.
+- The guide gained **"Before you install"** and **"What this puts on your
+  machine"** sections, a troubleshooting entry for the failure a first-time
+  user actually hits ("iamai is not recognized"), default-expanded
+  permissions and data-location sections, and an expand-all control so the
+  page can be searched and printed.
 
 ### Changed
 
@@ -39,6 +73,11 @@ All notable changes to IAMAI are recorded here. The format follows
   read. `--tenant-id` pins the tenant for scripted use, the one-time sign-in
   app is remembered so certificate renewal never re-asks for it, and setup
   ends with a summary of exactly what was configured and what to run next.
+- **Every command fails in sentences, not tracebacks.** An unknown tenant
+  name, a missing config, or a missing snapshot each print one line naming
+  the problem and the exact next command, and exit non-zero. `collect` opens
+  by saying what it will do and how long the slow part takes, and every
+  command ends by naming what it produced and what to run next.
 
 ### Fixed
 

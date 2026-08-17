@@ -250,3 +250,50 @@ def test_the_assessment_carries_answers_sections_and_provenance(tmp_path, monkey
     schema = json.loads((Path(__file__).parents[1] / "schemas" / "assessment.schema.json")
                         .read_text(encoding="utf-8"))
     validate(assessment, schema, defs=schema.get("$defs"))
+
+
+# --- Stage 6: the command flow fails helpfully and says what comes next --------
+
+
+def test_an_unknown_alias_is_a_sentence_not_a_traceback(tmp_path):
+    _write_config(tmp_path)
+    result = runner.invoke(cli.app, ["collect", "nosuch"])
+    assert result.exit_code == 1
+    assert result.exception is None or isinstance(result.exception, SystemExit)
+    assert "No tenant is configured as 'nosuch'" in result.output
+    assert "lab" in result.output
+
+
+def test_a_missing_snapshot_names_the_collect_command(tmp_path):
+    _write_config(tmp_path)
+    result = runner.invoke(cli.app, ["assess", "lab"])
+    assert result.exit_code == 1
+    assert isinstance(result.exception, (type(None), SystemExit))
+    assert "iamai collect lab" in result.output
+
+
+def test_missing_config_is_a_sentence_not_a_traceback(tmp_path):
+    result = runner.invoke(cli.app, ["collect", "lab"])
+    assert result.exit_code == 1
+    assert "iamai setup" in result.output
+
+
+def test_collect_says_what_it_will_do_and_what_comes_next(tmp_path, monkeypatch, mock_graph):
+    from typer.testing import CliRunner
+
+    monkeypatch.chdir(tmp_path)
+    _write_config(tmp_path)
+    monkeypatch.setattr(cli, "make_client", lambda config, tenant_id: make_test_client())
+    result = CliRunner().invoke(cli.app, ["collect", "lab"])
+    assert result.exit_code == 0, result.output
+    assert "read-only" in result.output
+    assert "slow part" in result.output
+    assert "Next: iamai assess lab" in result.output
+
+
+def test_uninstall_covers_program_data_and_entra(tmp_path):
+    result = runner.invoke(cli.app, ["uninstall"])
+    assert result.exit_code == 0
+    for expected in ("The program", "The data", "app", "registrations", "purge"):
+        assert expected in result.output
+    assert "IAMAI" in result.output

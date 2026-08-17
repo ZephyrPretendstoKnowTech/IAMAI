@@ -107,6 +107,11 @@ COMMANDS = [
       ("--older-than N", "Delete snapshots older than N days."),
       ("--all", "Delete everything for this alias: snapshots, assessments, plans, answers, and the pseudonym map."),
       ("--yes, -y", "Delete without asking for confirmation.")]),
+    ("uninstall", "iamai uninstall",
+     "Shows exactly how to remove IAMAI from this machine: the program (matched to how "
+     "this copy was installed), the one data folder holding everything ever collected, "
+     "and the two app registrations an administrator deletes in Entra to revoke access "
+     "everywhere. It changes nothing itself; it tells you what to run and delete.", []),
     ("baseline import", "iamai baseline import <pack_path>",
      "Advanced. Validates an authored standard pack (schema and static checks) and freezes it "
      "as the active standard in place of the shipped one. Most users never need this.", []),

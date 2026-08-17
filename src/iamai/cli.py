@@ -168,6 +168,39 @@ def make_client(config: Config, tenant_id: str) -> GraphClient:
     )
 
 
+def _config_or_exit() -> Config:
+    """Load config or stop with the next command, never a traceback."""
+    try:
+        return load_config()
+    except FileNotFoundError:
+        typer.echo("IAMAI is not set up on this machine yet. Run 'iamai setup' first.", err=True)
+        raise typer.Exit(code=1)
+    except Exception as exc:
+        typer.echo(f"The config file could not be read ({exc}). Run 'iamai setup' to rewrite it.", err=True)
+        raise typer.Exit(code=1)
+
+
+def _tenant_or_exit(config: Config, alias: str) -> str:
+    """Resolve an alias or stop with the configured names, never a traceback."""
+    try:
+        return config.tenant_id(alias)
+    except KeyError:
+        known = ", ".join(sorted(config.tenants)) or "(none yet; run 'iamai setup')"
+        typer.echo(f"No tenant is configured as '{alias}'. Configured tenants: {known}.", err=True)
+        raise typer.Exit(code=1)
+
+
+def _latest_snapshot_or_exit(store, alias: str):
+    try:
+        return store.latest_snapshot(alias)
+    except FileNotFoundError:
+        typer.echo(
+            f"No snapshot exists for '{alias}' yet. Run 'iamai collect {alias}' first.",
+            err=True,
+        )
+        raise typer.Exit(code=1)
+
+
 def _restrict_to_current_user_windows(path: Path) -> None:
     """Best-effort ACL restriction on Windows. On a repo that does not live
     under a user profile (e.g. C:\\iamai), inherited drive-root ACLs grant
@@ -706,8 +739,8 @@ def setup(
 @app.command()
 def consent(alias: str) -> None:
     """Print the admin consent URL for a tenant."""
-    config = load_config()
-    tenant_id = config.tenant_id(alias)
+    config = _config_or_exit()
+    tenant_id = _tenant_or_exit(config, alias)
     url = CONSENT_URL_TEMPLATE.format(tenantId=tenant_id, appId=config.appId)
     typer.echo(f"Ask an administrator of tenant '{alias}' to open this link and accept:")
     typer.echo(f"  {url}")
@@ -761,8 +794,8 @@ def _verify_checks(client: GraphClient) -> list[tuple[str, str, str]]:
 @app.command()
 def verify(alias: str) -> None:
     """Test every permission with a real read and print a pass/fail table."""
-    config = load_config()
-    client = make_client(config, config.tenant_id(alias))
+    config = _config_or_exit()
+    client = make_client(config, _tenant_or_exit(config, alias))
     results = _verify_checks(client)
 
     typer.echo(f"Permission check for tenant '{alias}'")
@@ -925,6 +958,45 @@ def doctor(
 
 
 @app.command()
+def uninstall() -> None:
+    """Show exactly how to remove IAMAI and everything it put on this machine."""
+    from iamai.paths import app_home
+
+    prefix = sys.prefix.replace("\\", "/").lower()
+    typer.echo("Removing IAMAI is two separate things: the program, and the collected data.")
+    typer.echo("")
+    typer.echo("1. The program.")
+    if "/pipx/" in prefix or prefix.endswith("/pipx"):
+        typer.echo("   This copy was installed with pipx. Remove it with:")
+        typer.echo("     pipx uninstall iamai")
+        typer.echo("   That deletes the isolated environment and the iamai command. pipx and")
+        typer.echo("   Python stay, since other tools may use them; remove pipx itself with")
+        typer.echo("     python -m pip uninstall pipx")
+    elif "/.iamai/" in prefix:
+        typer.echo("   This copy lives in the installer's own folder. Remove it by deleting:")
+        typer.echo(f"     {sys.prefix}")
+        typer.echo("   and the 'iamai' link in ~/.local/bin.")
+    else:
+        typer.echo("   This copy runs from a Python environment at:")
+        typer.echo(f"     {sys.prefix}")
+        typer.echo("   Remove it the way it was created (delete the environment, or")
+        typer.echo("   'pip uninstall iamai' inside it).")
+    typer.echo("")
+    typer.echo("2. The data. Everything IAMAI ever collected lives in one folder:")
+    typer.echo(f"     {app_home()}")
+    typer.echo("   It holds real identity data from every tenant you collected, plus the")
+    typer.echo("   config and the sign-in certificate. Delete the folder to remove it all,")
+    typer.echo("   or run 'iamai purge <alias> --all' per tenant first if you want the")
+    typer.echo("   deletion itemised.")
+    typer.echo("")
+    typer.echo("3. In Microsoft Entra, the 'IAMAI Collector' and 'IAMAI Setup' app")
+    typer.echo("   registrations remain until an administrator deletes them (Entra ID >")
+    typer.echo("   App registrations). Deleting them revokes the tool's access everywhere.")
+    typer.echo("")
+    typer.echo("Nothing else was installed: no services, no scheduled tasks, no telemetry.")
+
+
+@app.command()
 def collect(
     alias: str,
     days: int = typer.Option(30, "--days", help="How many days of sign-in logs to pull."),
@@ -933,10 +1005,13 @@ def collect(
     from iamai.collectors import run_all
     from iamai.store import SnapshotStore
 
-    config = load_config()
-    client = make_client(config, config.tenant_id(alias))
+    config = _config_or_exit()
+    client = make_client(config, _tenant_or_exit(config, alias))
     store = SnapshotStore()
     writer = store.new_snapshot(alias)
+    typer.echo(f"Reading tenant '{alias}' over Microsoft Graph, read-only, {days} days of sign-in logs.")
+    typer.echo("The sign-in log is the slow part; a busy tenant can take a few minutes.")
+    typer.echo("")
 
     # Live feedback: each collector is a network round trip and the whole pull
     # runs sequentially, so without this the command looks stuck for a minute.
@@ -967,8 +1042,14 @@ def collect(
     typer.echo("")
     if manifest.complete:
         typer.echo("Collection complete.")
+        typer.echo(f"Next: iamai assess {alias}")
+    elif any(r.complete and not r.skipped for r in manifest.datasets):
+        typer.echo("Collection finished with errors. The snapshot is marked partial; anything "
+                   "graded from the missing data will honestly say UNKNOWN rather than guess.")
+        typer.echo(f"'iamai doctor' explains most failures. You can still run: iamai assess {alias}")
     else:
-        typer.echo("Collection finished with errors. The snapshot is marked partial and the assessment will say so honestly.")
+        typer.echo("Nothing could be collected. Run 'iamai doctor' to find out why, then try again.", err=True)
+        raise typer.Exit(code=1)
 
 
 @app.command()
@@ -977,17 +1058,18 @@ def sanitize(alias: str) -> None:
     from iamai.sanitize import sanitize_snapshot
     from iamai.store import SnapshotStore
 
-    config = load_config()
+    config = _config_or_exit()
     # Every other alias-taking command checks the alias against the
     # configured tenants before touching the filesystem; this was the one
     # exception (AUTHZ-002). The check itself is what matters here, not the
     # tenant id it returns.
-    config.tenant_id(alias)
+    _tenant_or_exit(config, alias)
     store = SnapshotStore()
-    snapshot_dir = store.latest_snapshot(alias)
+    snapshot_dir = _latest_snapshot_or_exit(store, alias)
     map_path = store.alias_dir(alias) / "pseudo_map.json"
     out_dir = sanitize_snapshot(snapshot_dir, map_path)
     typer.echo(f"Sanitized copy written to {out_dir}")
+    typer.echo("That copy is the only one safe to move off this machine or share.")
     typer.echo(f"Mapping file (never commit, never share): {map_path}")
 
 
@@ -1019,8 +1101,8 @@ def purge(
 
     from iamai.store import SnapshotStore
 
-    config = load_config()
-    config.tenant_id(alias)
+    config = _config_or_exit()
+    _tenant_or_exit(config, alias)
     store = SnapshotStore()
     alias_dir = store.alias_dir(alias)
 
@@ -1260,13 +1342,14 @@ def assess(
     from iamai.questions import assess_with_answers
     from iamai.store import SnapshotStore
 
-    config = load_config()
+    config = _config_or_exit()
     artifact, standard = _load_standard(pack)
     baseline_path = Path(pack) if pack else _latest_baseline_path()
     store = SnapshotStore()
 
+    _latest_snapshot_or_exit(store, alias)
     assessment, out_path, report_path, answer_count = assess_with_answers(
-        alias, config.tenant_id(alias), artifact, store, standard=standard
+        alias, _tenant_or_exit(config, alias), artifact, store, standard=standard
     )
 
     if answer_count:
@@ -1278,6 +1361,10 @@ def assess(
     typer.echo(f"Report written to {report_path} (open in a browser; print to PDF to keep a copy)")
     if assessment["gradeCounts"].get(UNKNOWN, 0):
         typer.echo("Some controls are UNKNOWN because data was incomplete. Re-run collect and assess again.")
+    if answer_count:
+        typer.echo(f"Next: iamai plan {alias}")
+    else:
+        typer.echo(f"Next: iamai wizard {alias} (a few questions only you can answer, then the grades update)")
 
 
 # ---------------------------------------------------------------------------
@@ -1352,8 +1439,8 @@ def questions(alias: str) -> None:
     )
     from iamai.store import SnapshotStore, load_snapshot_data
 
-    config = load_config()
-    tenant_id = config.tenant_id(alias)
+    config = _config_or_exit()
+    tenant_id = _tenant_or_exit(config, alias)
     artifact, standard = _load_standard(None)
     store = SnapshotStore()
     try:
@@ -1447,8 +1534,8 @@ def plan(
     from iamai.report import render_plan
     from iamai.store import SnapshotStore, load_snapshot_data
 
-    config = load_config()
-    tenant_id = config.tenant_id(alias)
+    config = _config_or_exit()
+    tenant_id = _tenant_or_exit(config, alias)
     baseline_path = Path(pack) if pack else _latest_baseline_path()
     artifact = _json.loads(baseline_path.read_text(encoding="utf-8"))
     store = SnapshotStore()
@@ -1520,6 +1607,8 @@ def plan(
     typer.echo("")
     typer.echo(f"Plan written to {json_path}")
     typer.echo(f"Printable plan written to {html_path} (open in a browser; print to PDF to keep a copy)")
+    typer.echo("Work the steps in order. After each phase, re-run "
+               f"'iamai collect {alias}' and 'iamai assess {alias}' to check the checkpoint.")
 
 
 @app.command()
@@ -1533,8 +1622,8 @@ def wizard(
     from iamai.questions import latest_assessment
     from iamai.store import SnapshotStore
 
-    config = load_config()
-    tenant_id = config.tenant_id(alias)
+    config = _config_or_exit()
+    tenant_id = _tenant_or_exit(config, alias)
     artifact, standard = _load_standard(None)
     store = SnapshotStore()
     try:

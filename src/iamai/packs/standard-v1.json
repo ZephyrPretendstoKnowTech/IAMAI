@@ -799,28 +799,44 @@
       "surface": "authMethods"
     },
     {
+      "appliesWhen": [
+        {
+          "equals": "enabled",
+          "path": "state"
+        }
+      ],
       "canonical": {
-        "includeTargets": [
-          {
-            "isRegistrationRequired": false,
-            "target": "all_users"
-          }
-        ],
         "method": "QRCodePin",
-        "state": "disabled",
         "surface": "authMethods"
       },
-      "citations": [],
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "QR code authentication method in Microsoft Entra ID",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "QR code sign in is turned on for everyone. It only proves possession of a printed code plus a PIN, so leaving it available tenant wide gives every account a weaker way in than the one the rest of these controls require.",
       "id": "method-QRCodePin",
-      "intent": "The QRCodePin sign in method is turned off.",
+      "intent": "If QR code sign in is turned on, it is turned on for particular people rather than everyone.",
       "knownOptionalDeviations": [],
       "licenseRequirement": "none",
+      "method": "QRCodePin",
       "needsIntentText": false,
+      "notApplicableText": "QR code sign in is turned off, so there is no scope to get wrong.",
       "profile": "baseline",
-      "rationale": "This method is easier to trick or intercept, so the standard keeps it off.",
+      "rationale": "This method exists for frontline workers who share a device and cannot carry a phone, and for them it is a reasonable trade. It is single factor, so it is not a substitute for the sign in methods the rest of this pack asks for. Turning it off is not the ask; keeping it to the people who need it is, because a weaker way in that is available to everybody is the way in that gets used.",
       "requiredState": "enabled",
-      "riskClass": "low",
-      "sourceName": "QRCodePin",
+      "requires": [
+        {
+          "excludes": [
+            "all_users"
+          ],
+          "path": "includeTargetIds"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "QR code sign in is scoped",
       "surface": "authMethods"
     },
     {
@@ -865,31 +881,6 @@
             "target": "all_users"
           }
         ],
-        "method": "SoftwareOath",
-        "state": "enabled",
-        "surface": "authMethods"
-      },
-      "citations": [],
-      "id": "method-SoftwareOath",
-      "intent": "The SoftwareOath sign in method is available, set up the way the standard expects.",
-      "knownOptionalDeviations": [],
-      "licenseRequirement": "none",
-      "needsIntentText": false,
-      "profile": "baseline",
-      "rationale": "The standard allows this method with specific settings so sign in stays both usable and safe.",
-      "requiredState": "enabled",
-      "riskClass": "low",
-      "sourceName": "SoftwareOath",
-      "surface": "authMethods"
-    },
-    {
-      "canonical": {
-        "includeTargets": [
-          {
-            "isRegistrationRequired": false,
-            "target": "all_users"
-          }
-        ],
         "method": "TemporaryAccessPass",
         "settings": {
           "defaultLength": 8,
@@ -917,26 +908,6 @@
       "requiredState": "enabled",
       "riskClass": "low",
       "sourceName": "TemporaryAccessPass",
-      "surface": "authMethods"
-    },
-    {
-      "canonical": {
-        "includeTargets": [],
-        "method": "VerifiableCredentials",
-        "state": "disabled",
-        "surface": "authMethods"
-      },
-      "citations": [],
-      "id": "method-VerifiableCredentials",
-      "intent": "The VerifiableCredentials sign in method is turned off.",
-      "knownOptionalDeviations": [],
-      "licenseRequirement": "none",
-      "needsIntentText": false,
-      "profile": "baseline",
-      "rationale": "This method is easier to trick or intercept, so the standard keeps it off.",
-      "requiredState": "enabled",
-      "riskClass": "low",
-      "sourceName": "VerifiableCredentials",
       "surface": "authMethods"
     },
     {
@@ -971,31 +942,6 @@
       "requiredState": "enabled",
       "riskClass": "low",
       "sourceName": "Voice",
-      "surface": "authMethods"
-    },
-    {
-      "canonical": {
-        "includeTargets": [
-          {
-            "isRegistrationRequired": false,
-            "target": "all_users"
-          }
-        ],
-        "method": "X509Certificate",
-        "state": "disabled",
-        "surface": "authMethods"
-      },
-      "citations": [],
-      "id": "method-X509Certificate",
-      "intent": "The X509Certificate sign in method is turned off.",
-      "knownOptionalDeviations": [],
-      "licenseRequirement": "none",
-      "needsIntentText": false,
-      "profile": "baseline",
-      "rationale": "This method is easier to trick or intercept, so the standard keeps it off.",
-      "requiredState": "enabled",
-      "riskClass": "low",
-      "sourceName": "X509Certificate",
       "surface": "authMethods"
     },
     {

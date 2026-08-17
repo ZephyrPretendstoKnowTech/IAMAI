@@ -29,6 +29,12 @@ All notable changes to IAMAI are recorded here. The format follows
 - The Email one-time code control's explanation now states that the separate
   switch for guests' email codes is unaffected, so turning the method off
   does not lock guests out.
+- **The standard pack no longer grades four method controls no source
+  supports.** Certificate-based authentication, software OATH tokens and
+  verified credentials are no longer required to be off (a tenant using
+  certificate sign-in was getting a false finding for a method Microsoft
+  lists as phishing-resistant), and QR code sign-in is now judged on its
+  scoping rather than banned outright, matching the basics pack.
 
 ## [1.1.0] - 2026-08-17
 

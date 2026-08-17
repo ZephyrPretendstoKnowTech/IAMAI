@@ -44,8 +44,16 @@ version `1`; the plan record is version `2`; the two are numbered
 independently. (The controls inside an assessment were authored under a pack
 whose own `schemaVersion` is 2, a third, separate number for the standard pack
 format.) A consumer should read the record's `schemaVersion` and refuse a
-version it does not understand rather than misread it. New fields may be added
-within a version; existing fields keep their meaning.
+version it does not understand rather than misread it.
+
+**Version policy.** New fields may be added within a version, and a consumer
+must tolerate fields it does not know. What bumps `schemaVersion` is a
+breaking change: removing a field, renaming one, or changing what an existing
+field means. Control ids are part of the contract: they are stable across
+versions of the standard, deviation records and the Claude skill reference
+them, and renaming or removing one is a breaking change to be treated exactly
+like a schema bump. Anything that breaks the skill is a breaking change and is
+handled as one.
 
 ## assessment.json
 
@@ -58,6 +66,7 @@ Top-level fields:
 | `tenantId` | string (GUID) | The real Entra tenant id. Present in the raw file; absent from a sanitized copy. |
 | `generatedAt` | string (ISO 8601) | When the assessment was written. |
 | `baseline` | object | `{pack, tool, version}`: which standard and tool version graded this. |
+| `standard` | object | `{source, name, version, controls, file}`: the standard that graded this, as the report states it. `source` is `shipped` or `imported`. |
 | `gradeCounts` | object | Count per grade that occurred, e.g. `{"FULL": 13, "FUNCTIONAL": 4, "PARTIAL": 13}`. A grade with zero controls may be absent. |
 | `controls` | array | One graded control each. See below. |
 | `notApplicable` | array | Controls not graded because a condition did not hold (e.g. a check that only applies when a feature is on). `{controlId, intent, note, citations}`. Recorded, never scored. |
@@ -67,13 +76,16 @@ Top-level fields:
 | `context` | object | Tenant context for the report: `federatedDomains`, `globalAdministrators`, `legacyAuth`, `licenses`, `registration`, `securityDefaultsEnabled`. |
 | `names` | object | Display-only lookup: `{guid: displayName}`. Every other field resolves identifiers through this, so nothing else disagrees. Never use it for comparison. |
 | `unknowns` | array of string | Plain-language statements of what the data could not see (e.g. a 30-day sign-in window). |
+| `answers` | array | The questionnaire answers, structured: `{questionId, bindsTo, subject, value, labels, note, answeredAt}`. What the person said, addressable, not just its regraded consequences. Empty until the questionnaire runs. |
+| `dataProvenance` | object | `{snapshot, collectedAt, sanitized}`: which snapshot was graded, when it was collected, and whether it was a sanitized copy rather than the raw pull. |
 | `scopeNote` | string | A standing statement of what the grading does and does not claim. |
 
 A **control** object:
 
 | Field | Type | Meaning |
 |---|---|---|
-| `controlId` | string | Stable id, e.g. `cap-001`. |
+| `controlId` | string | Stable id, e.g. `cap-001`. Stable across versions; renaming or removing one is a breaking change. |
+| `section` | string | Plain-language section name (e.g. "Access policies"), the human form of `surface`. Use this in anything a person reads. |
 | `surface` | string | What kind of thing it grades: `conditionalAccess`, `authMethods`, `authMethodsPolicy`, `authenticationStrength`, `registrationCampaign`, `namedLocation`, `authorizationPolicy`, `adminConsentRequestPolicy`, `privilegedAccess`, `securityDefaults`, `crossTenantAccess`, `conditionalAccessCollection`. |
 | `grade` | string | One of `FULL`, `FUNCTIONAL`, `PARTIAL`, `MISSING`, `UNKNOWN`. See below. |
 | `intent` | string | What the control is for, in plain language. Authored for display. |

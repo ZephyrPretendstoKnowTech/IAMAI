@@ -186,3 +186,67 @@ def test_the_report_states_which_standard_graded_it():
     html = render_assessment(assessment)
     assert "Graded against the standard that ships with this tool" in html
     assert "version v1" in html
+
+
+# --- Stage 4: the JSON contract carries answers, sections, and provenance ------
+
+
+def test_every_shipped_surface_has_a_plain_language_section():
+    """A camelCase surface name reaching a reader is the exact defect the
+    operator flagged in the report summary; the map must cover every surface
+    either shipped pack uses, and every one the engine can emit."""
+    from iamai.grade import SECTION_LABELS
+
+    packs_dir = Path(__file__).parents[1] / "src" / "iamai" / "packs"
+    for pack_file in packs_dir.glob("*.json"):
+        pack = json.loads(pack_file.read_text(encoding="utf-8"))
+        for control in pack["controls"]:
+            surface = control["surface"]
+            assert surface in SECTION_LABELS, f"{pack_file.name}: {surface} has no section label"
+            label = SECTION_LABELS[surface]
+            assert label[0].isupper() and "_" not in label
+            # A human name, not an identifier: no camelCase.
+            assert not any(c.isupper() for c in label[1:].replace(" ", "x")[1:]) or " " in label
+
+
+def test_control_ids_are_unique_and_stable_shaped():
+    packs_dir = Path(__file__).parents[1] / "src" / "iamai" / "packs"
+    for pack_file in packs_dir.glob("*.json"):
+        pack = json.loads(pack_file.read_text(encoding="utf-8"))
+        ids = [c["id"] for c in pack["controls"]]
+        assert len(ids) == len(set(ids)), f"duplicate control ids in {pack_file.name}"
+        for control_id in ids:
+            assert control_id == control_id.strip() and " " not in control_id
+
+
+def test_the_assessment_carries_answers_sections_and_provenance(tmp_path, monkeypatch, mock_graph):
+    from typer.testing import CliRunner
+
+    monkeypatch.chdir(tmp_path)
+    _write_config(tmp_path)
+    monkeypatch.setattr(cli, "make_client", lambda config, tenant_id: make_test_client())
+    local_runner = CliRunner()
+    result = local_runner.invoke(cli.app, ["collect", "lab"])
+    assert result.exit_code == 0, result.output
+    result = local_runner.invoke(cli.app, ["assess", "lab"])
+    assert result.exit_code == 0, result.output
+
+    assessments = list((tmp_path / "data" / "lab" / "assessments").glob("*-assessment.json"))
+    assessment = json.loads(assessments[0].read_text(encoding="utf-8"))
+    # The contract additions (work order part 5.1), all additive to version 1.
+    assert assessment["standard"]["source"] == "shipped"
+    assert isinstance(assessment["answers"], list)  # empty until the wizard runs
+    prov = assessment["dataProvenance"]
+    assert prov["sanitized"] is False
+    assert prov["snapshot"] and prov["collectedAt"]
+    for control in assessment["controls"]:
+        assert control["section"], control["controlId"]
+        assert "Uppercase" not in control["section"]
+
+    # And the record still validates against the published schema, using the
+    # same minimal validator the artifact-schema suite uses.
+    from test_artifact_schema import validate
+
+    schema = json.loads((Path(__file__).parents[1] / "schemas" / "assessment.schema.json")
+                        .read_text(encoding="utf-8"))
+    validate(assessment, schema, defs=schema.get("$defs"))

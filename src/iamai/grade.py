@@ -55,6 +55,25 @@ SURPLUS = "SURPLUS"
 
 GA_ROLE_TEMPLATE_ID = "62e90394-69f5-4237-9190-012177145e10"
 
+# Plain-language section per grading surface. Stamped into every control in
+# the assessment so nothing downstream (the report summary, the Claude skill,
+# a reader of the raw JSON) ever has to translate a camelCase surface name;
+# raw Graph identifiers must not reach anything a user or client reads.
+SECTION_LABELS = {
+    "conditionalAccess": "Access policies",
+    "conditionalAccessCollection": "Access policies",
+    "authenticationStrength": "Sign in strength definitions",
+    "authMethods": "Sign in methods",
+    "authMethodsPolicy": "Sign in methods",
+    "registrationCampaign": "Registration campaign",
+    "namedLocation": "Network locations",
+    "authorizationPolicy": "Tenant settings",
+    "adminConsentRequestPolicy": "Application consent",
+    "privilegedAccess": "Administrator access",
+    "securityDefaults": "Security defaults",
+    "crossTenantAccess": "Working with other organisations",
+}
+
 # Datasets each surface depends on; an incomplete pull makes its controls
 # UNKNOWN, never guessed.
 _SURFACE_DATASETS = {
@@ -1140,6 +1159,7 @@ def _result(
     return {
         "controlId": control["id"],
         "surface": control["surface"],
+        "section": SECTION_LABELS.get(control["surface"], "Other checks"),
         "grade": grade,
         "matchedPolicies": matched_policies,
         "coverageGaps": gaps,

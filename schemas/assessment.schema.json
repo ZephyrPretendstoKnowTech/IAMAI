@@ -77,6 +77,44 @@
       }
     },
     "context": {"type": "object"},
+    "standard": {
+      "type": "object",
+      "description": "Which standard graded this. Every report repeats it.",
+      "properties": {
+        "source": {"type": "string", "enum": ["shipped", "imported"]},
+        "name": {"type": "string"},
+        "version": {"type": "string"},
+        "schemaVersion": {"type": ["integer", "null"]},
+        "controls": {"type": "integer", "minimum": 0},
+        "file": {"type": "string"}
+      }
+    },
+    "answers": {
+      "type": "array",
+      "description": "The questionnaire answers, structured and addressable. Plan generation and any reader of this artifact get what the person said, not only its regraded consequences.",
+      "items": {
+        "type": "object",
+        "required": ["questionId", "value"],
+        "properties": {
+          "questionId": {"type": "string"},
+          "bindsTo": {"type": "string"},
+          "subject": {"type": "string"},
+          "value": {"type": ["string", "array"]},
+          "labels": {"type": "array", "items": {"type": "string"}},
+          "note": {"type": "string"},
+          "answeredAt": {"type": "string"}
+        }
+      }
+    },
+    "dataProvenance": {
+      "type": "object",
+      "description": "Where the graded data came from.",
+      "properties": {
+        "snapshot": {"type": "string"},
+        "collectedAt": {"type": "string"},
+        "sanitized": {"type": "boolean"}
+      }
+    },
     "names": {
       "type": "object",
       "description": "Display-only {guid: displayName}. Never use for comparison.",
@@ -105,8 +143,9 @@
       "type": "object",
       "required": ["controlId", "surface", "grade", "intent"],
       "properties": {
-        "controlId": {"type": "string"},
+        "controlId": {"type": "string", "description": "Stable across versions; deviation records and the Claude skill reference it. Renaming or removing one is a breaking change."},
         "surface": {"type": "string"},
+        "section": {"type": "string", "description": "Plain-language section name; the human form of surface."},
         "grade": {"$ref": "#/$defs/grade"},
         "intent": {"type": "string"},
         "rationale": {"type": "string"},

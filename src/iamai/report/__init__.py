@@ -21,13 +21,10 @@ UNKNOWN = "UNKNOWN"
 GRADE_ORDER = (FULL, FUNCTIONAL, PARTIAL, MISSING, UNKNOWN)
 
 # Plain-language category labels per grading surface, in report order.
-SURFACE_LABELS = {
-    "conditionalAccess": "Access policies",
-    "authenticationStrength": "Sign in strength definitions",
-    "authMethods": "Sign in methods",
-    "registrationCampaign": "Registration campaign",
-    "namedLocation": "Network locations",
-}
+# One canonical map, defined next to the engine that stamps it per control,
+# so the report summary and the JSON artifact can never drift apart and a
+# camelCase surface name can never reach a reader.
+from iamai.grade import SECTION_LABELS as SURFACE_LABELS  # noqa: E402
 
 GRADE_MEANINGS = {
     FULL: "Matches the standard.",
@@ -74,21 +71,29 @@ def _category_status(grades: list[str]) -> str:
 
 
 def _grouped(controls: list[dict]) -> list[dict]:
-    order = list(SURFACE_LABELS)
-    surfaces: list[str] = []
+    """Group by plain-language section. Two surfaces can share a section
+    (Conditional Access policies and their collection-level checks are one
+    subject to a reader), so grouping happens on the label a person sees,
+    never on the internal surface name."""
+    label_order = list(dict.fromkeys(SURFACE_LABELS.values())) + ["Other checks"]
+
+    def label_of(control: dict) -> str:
+        return control.get("section") or SURFACE_LABELS.get(control["surface"], "Other checks")
+
+    labels: list[str] = []
     for control in controls:
-        if control["surface"] not in surfaces:
-            surfaces.append(control["surface"])
-    surfaces.sort(key=lambda s: order.index(s) if s in order else len(order))
+        if label_of(control) not in labels:
+            labels.append(label_of(control))
+    labels.sort(key=lambda l: label_order.index(l) if l in label_order else len(label_order))
     groups = []
-    for surface in surfaces:
-        members = [c for c in controls if c["surface"] == surface]
+    for label in labels:
+        members = [c for c in controls if label_of(c) == label]
         grades = [c["grade"] for c in members]
         met = sum(1 for g in grades if g in (FULL, FUNCTIONAL))
         status = _category_status(grades)
         groups.append({
-            "surface": surface,
-            "label": SURFACE_LABELS.get(surface, surface),
+            "surface": members[0]["surface"],
+            "label": label,
             "controls": members,
             "met": met,
             "total": len(members),

@@ -428,7 +428,7 @@ Tailoring to this tenant happens in the plan, never in the grade.</p>
   <div class="tile red">
     <h3>Access policies</h3>
     <span class="status"><span class="icon">✕</span>Protection missing</span>
-    <div class="count">1 of 9 controls meet the standard</div>
+    <div class="count">2 of 10 controls meet the standard</div>
   </div>
 
   <div class="tile green">
@@ -450,33 +450,27 @@ Tailoring to this tenant happens in the plan, never in the grade.</p>
   </div>
 
   <div class="tile amber">
-    <h3>privilegedAccess</h3>
-    <span class="status"><span class="icon">!</span>Needs attention</span>
-    <div class="count">0 of 1 control meet the standard</div>
-  </div>
-
-  <div class="tile amber">
-    <h3>authorizationPolicy</h3>
+    <h3>Tenant settings</h3>
     <span class="status"><span class="icon">!</span>Needs attention</span>
     <div class="count">1 of 7 controls meet the standard</div>
   </div>
 
   <div class="tile amber">
-    <h3>adminConsentRequestPolicy</h3>
+    <h3>Application consent</h3>
     <span class="status"><span class="icon">!</span>Needs attention</span>
     <div class="count">0 of 1 control meet the standard</div>
   </div>
 
   <div class="tile amber">
-    <h3>crossTenantAccess</h3>
+    <h3>Administrator access</h3>
     <span class="status"><span class="icon">!</span>Needs attention</span>
     <div class="count">0 of 1 control meet the standard</div>
   </div>
 
-  <div class="tile green">
-    <h3>conditionalAccessCollection</h3>
-    <span class="status"><span class="icon">✓</span>Meets the standard</span>
-    <div class="count">1 of 1 control meet the standard</div>
+  <div class="tile amber">
+    <h3>Working with other organisations</h3>
+    <span class="status"><span class="icon">!</span>Needs attention</span>
+    <div class="count">0 of 1 control meet the standard</div>
   </div>
 
 </div>
@@ -741,6 +735,24 @@ FULL 13, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 2.</p>
   </div>
 </details>
 
+<details class="control green">
+  <summary>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+    <span class="control-head">
+      <span class="control-intent">If some device needs the device code sign in flow, the exception covers those specific accounts, not a whole application.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Meeting room screens and similar shared hardware sometimes need the device code sign in flow, which the standard otherwise blocks. The safe exception excludes just the accounts those devices sign in with, or a group holding them. Excluding an application instead, or pointing the block at less than every application, reopens the flow for every user in the tenant, because the flow is abused by tricking a person into approving a sign in they did not start, and the attacker picks the application.</p>
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control devicecode-001</p>
+  </div>
+</details>
+
 
 <h2>Sign in strength definitions</h2>
 
@@ -961,32 +973,7 @@ FULL 13, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 2.</p>
 </details>
 
 
-<h2>privilegedAccess</h2>
-
-<details class="control amber">
-  <summary>
-    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
-    <span class="control-head">
-      <span class="control-intent">Nobody holds Global Administrator permanently except the emergency accounts.</span>
-      <span class="control-oneline">An account other than the emergency accounts holds Global Administrator permanently.</span>
-    </span>
-  </summary>
-  <div class="control-body">
-    <p class="rationale">Global Administrator can do anything in the tenant, so an account holding it around the clock is the most valuable target there is, and it is dangerous every hour of every day rather than only while someone is using it. The emergency accounts are the deliberate exception: they exist precisely to always work. Everyone else should hold the role only while doing the work that needs it.</p>
-    
-    <p><strong>What is not covered:</strong></p>
-    <ul><li>An account other than the emergency accounts holds Global Administrator permanently.</li></ul>
-    
-    
-    
-    
-    <p>Accounts this applies to: 0</p>
-    <p class="id">Control privileged-001</p>
-  </div>
-</details>
-
-
-<h2>authorizationPolicy</h2>
+<h2>Tenant settings</h2>
 
 <details class="control green">
   <summary>
@@ -1139,7 +1126,7 @@ FULL 13, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 2.</p>
 </details>
 
 
-<h2>adminConsentRequestPolicy</h2>
+<h2>Application consent</h2>
 
 <details class="control gray">
   <summary>
@@ -1163,7 +1150,32 @@ FULL 13, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 2.</p>
 </details>
 
 
-<h2>crossTenantAccess</h2>
+<h2>Administrator access</h2>
+
+<details class="control amber">
+  <summary>
+    <span class="grade amber"><span class="dot"></span>PARTIAL</span>
+    <span class="control-head">
+      <span class="control-intent">Nobody holds Global Administrator permanently except the emergency accounts.</span>
+      <span class="control-oneline">An account other than the emergency accounts holds Global Administrator permanently.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Global Administrator can do anything in the tenant, so an account holding it around the clock is the most valuable target there is, and it is dangerous every hour of every day rather than only while someone is using it. The emergency accounts are the deliberate exception: they exist precisely to always work. Everyone else should hold the role only while doing the work that needs it.</p>
+    
+    <p><strong>What is not covered:</strong></p>
+    <ul><li>An account other than the emergency accounts holds Global Administrator permanently.</li></ul>
+    
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control privileged-001</p>
+  </div>
+</details>
+
+
+<h2>Working with other organisations</h2>
 
 <details class="control gray">
   <summary>
@@ -1183,27 +1195,6 @@ FULL 13, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 2.</p>
     
     <p>Accounts this applies to: 0</p>
     <p class="id">Control xtenant-001</p>
-  </div>
-</details>
-
-
-<h2>conditionalAccessCollection</h2>
-
-<details class="control green">
-  <summary>
-    <span class="grade green"><span class="dot"></span>FULL</span>
-    <span class="control-head">
-      <span class="control-intent">If some device needs the device code sign in flow, the exception covers those specific accounts, not a whole application.</span>
-      <span class="control-oneline">Matches the standard.</span>
-    </span>
-  </summary>
-  <div class="control-body">
-    <p class="rationale">Meeting room screens and similar shared hardware sometimes need the device code sign in flow, which the standard otherwise blocks. The safe exception excludes just the accounts those devices sign in with, or a group holding them. Excluding an application instead, or pointing the block at less than every application, reopens the flow for every user in the tenant, because the flow is abused by tricking a person into approving a sign in they did not start, and the attacker picks the application.</p>
-    
-    
-    
-    <p>Accounts this applies to: 0</p>
-    <p class="id">Control devicecode-001</p>
   </div>
 </details>
 

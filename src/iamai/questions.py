@@ -777,6 +777,30 @@ def assess_with_answers(
     )
     if standard:
         assessment["standard"] = standard
+    # The questionnaire answers travel inside the artifact, structured and
+    # addressable, because plan generation and anything reading the JSON
+    # (work order 2026-08-17, part 5) need what the person said, not just the
+    # regraded consequences of it.
+    assessment["answers"] = [
+        {
+            "questionId": answer.questionId,
+            "bindsTo": answer.bindsTo,
+            "subject": answer.subject,
+            "value": answer.value,
+            "labels": answer.labels,
+            "note": answer.note,
+            "answeredAt": answer.answeredAt,
+        }
+        for answer in answers.answers.values()
+    ]
+    # Where the graded data came from: which snapshot, when it was collected,
+    # and whether it was a sanitized copy (fixtures and shared data) rather
+    # than the raw pull.
+    assessment["dataProvenance"] = {
+        "snapshot": snapshot_dir.name,
+        "collectedAt": (manifest or {}).get("collectedAt", ""),
+        "sanitized": not (snapshot_dir / "raw").exists(),
+    }
     out_dir = store.alias_dir(alias) / "assessments"
     out_dir.mkdir(parents=True, exist_ok=True)
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())

@@ -73,11 +73,18 @@ def test_rejects_wrong_schema_version(golden):
     assert any("schemaVersion" in e for e in errors)
 
 
-def test_rejects_missing_citations(golden):
+def test_allows_empty_citations_but_rejects_a_placeholder(golden):
+    """An empty list is honest: a control no published framework backs carries
+    no citation rather than an invented one. A placeholder is the opposite, a
+    coverage claim with nothing behind it, and it must never reach an
+    importable baseline (SPEC-PUBLIC section 11)."""
     pack = make_pack(golden)
     pack["controls"][0]["citations"] = []
-    errors = validate_pack(pack)
-    assert any("citation" in e for e in errors)
+    assert not any("citation" in e.lower() for e in validate_pack(pack))
+    pack["controls"][0]["citations"] = [{"source": "PLACEHOLDER", "item": "x"}]
+    assert any("placeholder" in e.lower() for e in validate_pack(pack))
+    pack["controls"][0]["citations"] = "not a list"
+    assert any("citations must be a list" in e for e in validate_pack(pack))
 
 
 def test_rejects_citation_missing_source_or_item(golden):
@@ -177,7 +184,7 @@ def test_import_valid_pack_freezes_active_baseline(workspace, golden):
 
 def test_import_invalid_pack_is_rejected_and_freezes_nothing(workspace, golden):
     pack = make_pack(golden)
-    pack["controls"][0]["citations"] = []
+    pack["controls"][0]["citations"] = [{"source": "PLACEHOLDER", "item": "x"}]
     path = _write_pack(workspace, pack)
     result = runner.invoke(cli.app, ["baseline", "import", str(path)])
     assert result.exit_code == 1
@@ -271,6 +278,9 @@ def test_report_renders_the_crosswalk_section():
     )
     html = render_assessment(assessment, manifest)
     assert "Compliance crosswalk" in html
-    # The committed pack uses PLACEHOLDER-sourced citations for now.
-    assert "PLACEHOLDER" in html
+    # The committed pack carries the researched citation mapping; a
+    # placeholder reaching a rendered report would be a coverage claim with
+    # nothing behind it (SPEC-PUBLIC section 11).
+    assert "PLACEHOLDER" not in html
+    assert "CISA SCuBA" in html
     assert "meets" in html

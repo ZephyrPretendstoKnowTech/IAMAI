@@ -403,6 +403,101 @@ def _privileged_access_summary(
     }
 
 
+def _cross_tenant_summary(data: dict, bindings: dict[str, list[str]]) -> dict | None:
+    """Whether this tenant accepts a partner tenant's multifactor claim.
+
+    The default configuration applies to every organisation; a partner
+    configuration's null fields inherit it, and a non-null partner
+    inboundTrust overrides it for that partner (ASSUMPTIONS.md note 37).
+    Trusting the claim is a risk decision, not a misconfiguration, so the
+    control asks that the decision be recorded rather than demanding the
+    setting be off (SPEC-PUBLIC section 7 item 9).
+    """
+    collected = data.get("cross_tenant_access")
+    if not isinstance(collected, dict):
+        return None
+    default = collected.get("default")
+    partners = collected.get("partners")
+
+    trusting_partners = [
+        str(p.get("tenantId", ""))
+        for p in (partners or [])
+        if isinstance(p.get("inboundTrust"), dict)
+        and p["inboundTrust"].get("isMfaAccepted") is True
+    ]
+    default_trusts = bool(
+        isinstance(default, dict)
+        and (default.get("inboundTrust") or {}).get("isMfaAccepted") is True
+    )
+    if default is None and not trusting_partners:
+        # The default half could not be read and no partner proves trust, so
+        # whether the tenant trusts anyone cannot be answered either way.
+        return None
+
+    decision = bindings.get("decision:crossTenantMfaTrust") or []
+    return {
+        "mfaTrustAccepted": default_trusts or bool(trusting_partners),
+        "trustScope": "everyone" if default_trusts else "partners",
+        "trustingPartnerTenantIds": sorted(trusting_partners),
+        "partnerCount": len(partners or []),
+        "decisionRecorded": bool(decision),
+        "decisionDeliberate": "deliberate" in decision,
+    }
+
+
+def _device_code_carveout_summary(caps: list[dict], dataset_status: dict) -> dict | None:
+    """How the policies that block the device code flow scope their carve outs.
+
+    Meeting room hardware sometimes needs the device code flow, and the right
+    shape for that is excluding the specific resource accounts or a device
+    group from the blocking policy. The wrong shape is scoping the block by
+    application: excluding an application, or including less than every
+    application, reopens the flow for every user against everything the block
+    no longer reaches (SPEC-PUBLIC section 7 item 10).
+
+    Read from the raw policies rather than canonical forms because the
+    judgement is about the policy's own scoping axes, not about matching a
+    standard's shape.
+    """
+    record = dataset_status.get("conditional_access_policies")
+    if record is not None and (record.get("skipped") or not record.get("complete", True)):
+        return None
+
+    blocking: list[dict] = []
+    for cap in caps:
+        if str(cap.get("state", "")) == "disabled":
+            continue
+        grant = (cap.get("grantControls") or {}).get("builtInControls") or []
+        if "block" not in [str(g) for g in grant]:
+            continue
+        methods = str(((cap.get("conditions") or {}).get("authenticationFlows") or {})
+                      .get("transferMethods") or "")
+        if "deviceCodeFlow" not in {m.strip() for m in methods.split(",")}:
+            continue
+        blocking.append(cap)
+
+    user_carveouts: set[str] = set()
+    app_carveout_policies: list[str] = []
+    for cap in blocking:
+        cond = cap.get("conditions") or {}
+        users = cond.get("users") or {}
+        for entry in list(users.get("excludeUsers") or []) + list(users.get("excludeGroups") or []):
+            user_carveouts.add(str(entry))
+        apps = cond.get("applications") or {}
+        include = [str(a) for a in apps.get("includeApplications") or []]
+        exclude = [str(a) for a in apps.get("excludeApplications") or []]
+        if exclude or (include and include != ["All"]):
+            app_carveout_policies.append(str(cap.get("displayName") or cap.get("id") or ""))
+
+    return {
+        "blocksDeviceCode": bool(blocking),
+        "hasCarveOut": bool(user_carveouts) or bool(app_carveout_policies),
+        "userOrGroupCarveOutCount": len(user_carveouts),
+        "applicationCarveOutCount": len(app_carveout_policies),
+        "applicationCarveOutPolicies": sorted(app_carveout_policies),
+    }
+
+
 def _read_path(node, path: str):
     """Read a dotted path out of collected data, or None if it is not there."""
     for part in path.split("."):
@@ -1315,6 +1410,10 @@ def assess_snapshot(
                 observed = methods_policy
             elif control["surface"] == "privilegedAccess":
                 observed = _privileged_access_summary(data, bindings, licensing)
+            elif control["surface"] == "crossTenantAccess":
+                observed = _cross_tenant_summary(data, bindings)
+            elif control["surface"] == "conditionalAccessCollection":
+                observed = _device_code_carveout_summary(caps, dataset_status)
             elif control["surface"] == "authorizationPolicy":
                 observed = data.get("authorization_policy")
                 if isinstance(observed, list):

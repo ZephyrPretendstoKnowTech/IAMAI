@@ -283,6 +283,11 @@ def _compliance_crosswalk(controls: list[dict], excused: list[dict] | None = Non
             item = str(citation.get("item", "")).strip()
             if not source or not item:
                 continue
+            if "placeholder" in source.lower():
+                # A placeholder is a coverage claim with nothing behind it.
+                # validate_pack rejects them at import; this guards artifacts
+                # written before that rule existed (SPEC-PUBLIC section 11).
+                continue
             grades_by_item.setdefault((source, item), set()).add(grade)
 
     by_source: dict[str, list[dict]] = {}

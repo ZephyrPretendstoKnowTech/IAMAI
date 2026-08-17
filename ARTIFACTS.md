@@ -74,7 +74,7 @@ A **control** object:
 | Field | Type | Meaning |
 |---|---|---|
 | `controlId` | string | Stable id, e.g. `cap-001`. |
-| `surface` | string | What kind of thing it grades: `conditionalAccess`, `authMethods`, `authenticationStrength`, `registrationCampaign`, `namedLocation`, `authorizationPolicy`, `adminConsentRequestPolicy`, `privilegedAccess`. |
+| `surface` | string | What kind of thing it grades: `conditionalAccess`, `authMethods`, `authMethodsPolicy`, `authenticationStrength`, `registrationCampaign`, `namedLocation`, `authorizationPolicy`, `adminConsentRequestPolicy`, `privilegedAccess`, `securityDefaults`, `crossTenantAccess`, `conditionalAccessCollection`. |
 | `grade` | string | One of `FULL`, `FUNCTIONAL`, `PARTIAL`, `MISSING`, `UNKNOWN`. See below. |
 | `intent` | string | What the control is for, in plain language. Authored for display. |
 | `rationale` | string | Why it matters. Authored for display. |

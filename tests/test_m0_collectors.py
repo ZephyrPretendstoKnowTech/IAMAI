@@ -208,7 +208,7 @@ def test_run_all_writes_snapshot_and_manifest(graph_client, mock_graph, tmp_path
     writer = SnapshotStore(tmp_path / "data").new_snapshot("golden")
     manifest = run_all(graph_client, writer, "golden", days=30)
     assert manifest.complete is True
-    assert len(manifest.datasets) == 16
+    assert len(manifest.datasets) == 17
     dataset_names = {record.dataset for record in manifest.datasets}
     assert "conditional_access_policies" in dataset_names
     assert (writer.raw_dir / "conditional_access_policies.json").exists()

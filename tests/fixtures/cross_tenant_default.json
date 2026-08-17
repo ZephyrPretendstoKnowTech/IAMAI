@@ -1,0 +1,52 @@
+{
+  "isServiceDefault": true,
+  "inboundTrust": {
+    "isMfaAccepted": false,
+    "isCompliantDeviceAccepted": false,
+    "isHybridAzureADJoinedDeviceAccepted": false
+  },
+  "automaticUserConsentSettings": {
+    "inboundAllowed": false,
+    "outboundAllowed": false
+  },
+  "b2bCollaborationInbound": {
+    "usersAndGroups": {
+      "accessType": "allowed",
+      "targets": [
+        {
+          "target": "AllUsers",
+          "targetType": "user"
+        }
+      ]
+    },
+    "applications": {
+      "accessType": "allowed",
+      "targets": [
+        {
+          "target": "AllApplications",
+          "targetType": "application"
+        }
+      ]
+    }
+  },
+  "b2bDirectConnectInbound": {
+    "usersAndGroups": {
+      "accessType": "blocked",
+      "targets": [
+        {
+          "target": "AllUsers",
+          "targetType": "user"
+        }
+      ]
+    },
+    "applications": {
+      "accessType": "blocked",
+      "targets": [
+        {
+          "target": "AllApplications",
+          "targetType": "application"
+        }
+      ]
+    }
+  }
+}

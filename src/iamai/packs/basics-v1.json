@@ -662,7 +662,7 @@
       "licenseRequirement": "none",
       "needsIntentText": false,
       "profile": "baseline",
-      "rationale": "This method is easier to trick or intercept, so the standard keeps it off.",
+      "rationale": "This method is easier to trick or intercept, so the standard keeps it off. This setting covers your own staff. Whether an invited guest may sign in with an emailed code is a separate switch on the same policy, so turning this method off does not lock guests out.",
       "requiredState": "enabled",
       "riskClass": "low",
       "sourceName": "Email",
@@ -2209,6 +2209,90 @@
       "riskClass": "low",
       "sourceName": "Recovery keys for owned devices",
       "surface": "authorizationPolicy"
+    },
+    {
+      "appliesWhen": [
+        {
+          "equals": true,
+          "path": "mfaTrustAccepted"
+        }
+      ],
+      "canonical": {
+        "surface": "crossTenantAccess"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "Cross-tenant access with Microsoft Entra External ID",
+          "source": "Microsoft Entra documentation"
+        },
+        {
+          "item": "Manage cross-tenant access settings for B2B collaboration",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "This tenant accepts another organisation's word that a person already passed a second sign in step in their own tenant, and nobody has confirmed this was decided on purpose. The questionnaire asks about it; answering records the decision.",
+      "id": "xtenant-001",
+      "intent": "If another organisation's multifactor claims are trusted, somebody decided that on purpose.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "This tenant does not trust multifactor claims from any outside organisation, so there is no trust decision to confirm.",
+      "profile": "baseline",
+      "rationale": "When a partner's multifactor claim is trusted, your sign in policies still apply to their users, but a person who already passed a second step in their home tenant is not asked again here. That makes the partner's security part of yours: if their second step is weak or their tenant is compromised, the claim arrives looking satisfied. It is a reasonable arrangement with organisations you know, which is why this asks that the decision be recorded rather than demanding the setting be off.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "equals": true,
+          "path": "decisionDeliberate"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Trusting a partner organisation's second sign in step",
+      "surface": "crossTenantAccess"
+    },
+    {
+      "appliesWhen": [
+        {
+          "equals": true,
+          "path": "blocksDeviceCode"
+        },
+        {
+          "equals": true,
+          "path": "hasCarveOut"
+        }
+      ],
+      "canonical": {
+        "surface": "conditionalAccessCollection"
+      },
+      "checkType": "conditional",
+      "citations": [
+        {
+          "item": "Block authentication flows with Conditional Access policy",
+          "source": "Microsoft Entra documentation"
+        }
+      ],
+      "failureText": "The policy that blocks the device code sign in flow is scoped by application, so the flow stays open for every person in the tenant against everything the block no longer reaches. An exception for meeting room hardware belongs on the specific resource accounts or a device group, not on an application.",
+      "id": "devicecode-001",
+      "intent": "If some device needs the device code sign in flow, the exception covers those specific accounts, not a whole application.",
+      "knownOptionalDeviations": [],
+      "licenseRequirement": "none",
+      "mitigation": "",
+      "needsIntentText": false,
+      "notApplicableText": "This tenant either does not block the device code sign in flow with a policy, or blocks it with no exceptions, so there is no carve out to judge.",
+      "profile": "baseline",
+      "rationale": "Meeting room screens and similar shared hardware sometimes need the device code sign in flow, which the standard otherwise blocks. The safe exception excludes just the accounts those devices sign in with, or a group holding them. Excluding an application instead, or pointing the block at less than every application, reopens the flow for every user in the tenant, because the flow is abused by tricking a person into approving a sign in they did not start, and the attacker picks the application.",
+      "requiredState": "enabled",
+      "requires": [
+        {
+          "atMost": 0,
+          "path": "applicationCarveOutCount"
+        }
+      ],
+      "riskClass": "medium",
+      "sourceName": "Device code carve out is scoped to accounts, not applications",
+      "surface": "conditionalAccessCollection"
     }
   ],
   "parameters": [

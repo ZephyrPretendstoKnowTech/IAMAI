@@ -66,6 +66,12 @@ def register_graph_routes(router: respx.MockRouter) -> None:
     router.get(f"{GRAPH}/v1.0/policies/authorizationPolicy").respond(
         json=fx("authorization_policy.json")
     )
+    router.get(f"{GRAPH}/v1.0/policies/crossTenantAccessPolicy/default").respond(
+        json=fx("cross_tenant_default.json")
+    )
+    router.get(f"{GRAPH}/v1.0/policies/crossTenantAccessPolicy/partners").respond(
+        json=fx("cross_tenant_partners.json")
+    )
     router.get(f"{GRAPH}/v1.0/policies/adminConsentRequestPolicy").respond(
         json=fx("admin_consent_request_policy.json")
     )

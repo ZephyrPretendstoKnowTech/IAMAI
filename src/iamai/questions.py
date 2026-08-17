@@ -403,6 +403,69 @@ def _legacy_auth_question(assessment: dict) -> Question | None:
     )
 
 
+def _cross_tenant_trust_question(data: dict) -> Question | None:
+    """Asked only when the tenant accepts a partner's multifactor claim.
+
+    Trusting the claim means this tenant's own policies accept another
+    organisation's word that the person passed a second sign in step. That is
+    a legitimate arrangement between organisations that know each other and a
+    risk decision either way, so it gets a question rather than a default
+    (SPEC-PUBLIC section 7 item 9). The answer records the decision; the
+    xtenant-001 control grades on whether it was recorded as deliberate.
+    """
+    from iamai.grade import _cross_tenant_summary
+
+    summary = _cross_tenant_summary(data, {})
+    if not summary or not summary.get("mfaTrustAccepted"):
+        return None
+    if summary.get("trustScope") == "everyone":
+        rows = [{
+            "item": "Every organisation",
+            "detail": "The default cross tenant setting accepts multifactor claims from any partner tenant",
+        }]
+        scope_phrase = "any outside organisation"
+    else:
+        rows = [
+            {"item": tenant_id, "detail": "This partner tenant's multifactor claims are trusted"}
+            for tenant_id in summary.get("trustingPartnerTenantIds") or []
+        ]
+        count = len(rows)
+        scope_phrase = f"{count} named partner organisation" + ("s" if count != 1 else "")
+    return Question(
+        id="cross-tenant-mfa-trust",
+        trigger=(
+            "When a partner's multifactor claim is trusted, your sign in policies "
+            "accept their word that the person passed a second step, so their "
+            "security becomes part of yours."
+        ),
+        evidence=Evidence(
+            query=(
+                "The cross tenant access settings in the latest snapshot, read from "
+                "the default configuration and every partner configuration."
+            ),
+            rows=rows,
+        ),
+        text=(
+            f"This tenant accepts multifactor claims from {scope_phrase}. That is a "
+            "reasonable arrangement with organisations you know and trust, and a "
+            "risk with ones you do not. Was this decided on purpose?"
+        ),
+        answerType="singleChoice",
+        bindsTo="decision:crossTenantMfaTrust",
+        required=True,
+        options=[
+            QuestionOption(
+                value="deliberate",
+                label="Yes, we trust these organisations and decided this on purpose",
+            ),
+            QuestionOption(
+                value="review",
+                label="No, or nobody remembers deciding it, so it should be reviewed",
+            ),
+        ],
+    )
+
+
 def _license_question(assessment: dict) -> Question:
     licenses = (assessment.get("context") or {}).get("licenses") or {}
     if licenses.get("entraP2"):
@@ -485,6 +548,9 @@ def generate_questions(assessment: dict, data: dict, snapshot_dir: Path | None) 
     legacy = _legacy_auth_question(assessment)
     if legacy:
         questions.append(legacy)
+    trust = _cross_tenant_trust_question(data)
+    if trust:
+        questions.append(trust)
     questions.append(_license_question(assessment))
     questions.append(_timezone_question())
     questions.append(_special_handling_question())
@@ -637,6 +703,13 @@ def slot_bindings(answers: AnswersFile) -> dict[str, list[str]]:
             for item in answer.value:
                 if _GUID_RE.match(str(item)):
                     bindings.setdefault(answer.bindsTo, set()).add(str(item).lower())
+            continue
+        if answer.bindsTo.startswith("decision:") and isinstance(answer.value, str) and answer.value:
+            # A recorded risk decision, not an object id. It reaches the
+            # engine so a conditional control can grade on whether the
+            # decision was taken on purpose (SPEC-PUBLIC section 7 item 9);
+            # SlotResolver ignores it because no policy carries the value.
+            bindings.setdefault(answer.bindsTo, set()).add(answer.value)
     return {slot: sorted(guids) for slot, guids in bindings.items()}
 
 

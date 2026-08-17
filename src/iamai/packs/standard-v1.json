@@ -169,8 +169,12 @@
       },
       "citations": [
         {
-          "item": "cap-001",
-          "source": "PLACEHOLDER"
+          "item": "MS.AAD.3.6v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Require phishing-resistant MFA for Microsoft Entra administrator roles",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "cap-001",
@@ -360,8 +364,16 @@
       },
       "citations": [
         {
-          "item": "cap-002",
-          "source": "PLACEHOLDER"
+          "item": "MS.AAD.3.1v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "MS.AAD.3.2v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Require phishing-resistant MFA for all users",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "cap-002",
@@ -405,8 +417,8 @@
       },
       "citations": [
         {
-          "item": "cap-003",
-          "source": "PLACEHOLDER"
+          "item": "Block authentication flows with Conditional Access policy",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "cap-003",
@@ -450,8 +462,12 @@
       },
       "citations": [
         {
-          "item": "cap-004",
-          "source": "PLACEHOLDER"
+          "item": "MS.AAD.3.9v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Block authentication flows with Conditional Access policy",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "cap-004",
@@ -491,8 +507,12 @@
       },
       "citations": [
         {
-          "item": "cap-005",
-          "source": "PLACEHOLDER"
+          "item": "MS.AAD.1.1v1",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Block legacy authentication with Conditional Access",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "cap-005",
@@ -553,8 +573,8 @@
       },
       "citations": [
         {
-          "item": "cap-006",
-          "source": "PLACEHOLDER"
+          "item": "How token protection enhances Conditional Access policies",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "cap-006",
@@ -598,8 +618,8 @@
       },
       "citations": [
         {
-          "item": "strength-001",
-          "source": "PLACEHOLDER"
+          "item": "Conditional Access authentication strength",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "strength-001",
@@ -626,8 +646,8 @@
       },
       "citations": [
         {
-          "item": "strength-002",
-          "source": "PLACEHOLDER"
+          "item": "Conditional Access authentication strength",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "strength-002",
@@ -653,8 +673,8 @@
       },
       "citations": [
         {
-          "item": "strength-003",
-          "source": "PLACEHOLDER"
+          "item": "Conditional Access authentication strength",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "strength-003",
@@ -683,8 +703,12 @@
       },
       "citations": [
         {
-          "item": "method-Email",
-          "source": "PLACEHOLDER"
+          "item": "MS.AAD.3.5v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Authentication methods policy",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "method-Email",
@@ -717,8 +741,8 @@
       },
       "citations": [
         {
-          "item": "method-Fido2",
-          "source": "PLACEHOLDER"
+          "item": "Enable passkeys (FIDO2) for your organization",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "method-Fido2",
@@ -754,8 +778,12 @@
       },
       "citations": [
         {
-          "item": "method-MicrosoftAuthenticator",
-          "source": "PLACEHOLDER"
+          "item": "MS.AAD.3.3v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Authentication methods policy",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "method-MicrosoftAuthenticator",
@@ -782,12 +810,7 @@
         "state": "disabled",
         "surface": "authMethods"
       },
-      "citations": [
-        {
-          "item": "method-QRCodePin",
-          "source": "PLACEHOLDER"
-        }
-      ],
+      "citations": [],
       "id": "method-QRCodePin",
       "intent": "The QRCodePin sign in method is turned off.",
       "knownOptionalDeviations": [],
@@ -814,8 +837,12 @@
       },
       "citations": [
         {
-          "item": "method-Sms",
-          "source": "PLACEHOLDER"
+          "item": "MS.AAD.3.5v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Authentication methods policy",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "method-Sms",
@@ -842,12 +869,7 @@
         "state": "enabled",
         "surface": "authMethods"
       },
-      "citations": [
-        {
-          "item": "method-SoftwareOath",
-          "source": "PLACEHOLDER"
-        }
-      ],
+      "citations": [],
       "id": "method-SoftwareOath",
       "intent": "The SoftwareOath sign in method is available, set up the way the standard expects.",
       "knownOptionalDeviations": [],
@@ -881,8 +903,8 @@
       },
       "citations": [
         {
-          "item": "method-TemporaryAccessPass",
-          "source": "PLACEHOLDER"
+          "item": "Configure a Temporary Access Pass",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "method-TemporaryAccessPass",
@@ -904,12 +926,7 @@
         "state": "disabled",
         "surface": "authMethods"
       },
-      "citations": [
-        {
-          "item": "method-VerifiableCredentials",
-          "source": "PLACEHOLDER"
-        }
-      ],
+      "citations": [],
       "id": "method-VerifiableCredentials",
       "intent": "The VerifiableCredentials sign in method is turned off.",
       "knownOptionalDeviations": [],
@@ -936,8 +953,12 @@
       },
       "citations": [
         {
-          "item": "method-Voice",
-          "source": "PLACEHOLDER"
+          "item": "MS.AAD.3.5v2",
+          "source": "CISA SCuBA M365 Entra ID v1.8.0"
+        },
+        {
+          "item": "Authentication methods policy",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "method-Voice",
@@ -964,12 +985,7 @@
         "state": "disabled",
         "surface": "authMethods"
       },
-      "citations": [
-        {
-          "item": "method-X509Certificate",
-          "source": "PLACEHOLDER"
-        }
-      ],
+      "citations": [],
       "id": "method-X509Certificate",
       "intent": "The X509Certificate sign in method is turned off.",
       "knownOptionalDeviations": [],
@@ -1002,8 +1018,8 @@
       },
       "citations": [
         {
-          "item": "campaign-001",
-          "source": "PLACEHOLDER"
+          "item": "Run a registration campaign to set up a passkey or Microsoft Authenticator",
+          "source": "Microsoft Entra documentation"
         }
       ],
       "id": "campaign-001",

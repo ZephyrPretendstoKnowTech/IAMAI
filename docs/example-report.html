@@ -412,7 +412,7 @@
 </p>
 
 
-<div class="banner"><strong>Some data is incomplete.</strong> 1 control was graded UNKNOWN because the data behind them could not be read completely. Those grades are honest gaps, not guesses.</div>
+<div class="banner"><strong>Some data is incomplete.</strong> 2 controls were graded UNKNOWN because the data behind them could not be read completely. Those grades are honest gaps, not guesses.</div>
 
 
 <h2>Summary</h2>
@@ -464,10 +464,22 @@ when the data is ambiguous, the grade goes down, never up.</p>
     <div class="count">0 of 1 control meet the standard</div>
   </div>
 
+  <div class="tile amber">
+    <h3>crossTenantAccess</h3>
+    <span class="status"><span class="icon">!</span>Needs attention</span>
+    <div class="count">0 of 1 control meet the standard</div>
+  </div>
+
+  <div class="tile green">
+    <h3>conditionalAccessCollection</h3>
+    <span class="status"><span class="icon">✓</span>Meets the standard</span>
+    <div class="count">1 of 1 control meet the standard</div>
+  </div>
+
 </div>
 
-<p class="totals">Across all 28 controls:
-FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
+<p class="totals">Across all 30 controls:
+FULL 13, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 2.</p>
 
 <dl class="legend">
 
@@ -804,7 +816,7 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
     </span>
   </summary>
   <div class="control-body">
-    <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off.</p>
+    <p class="rationale">This method is easier to trick or intercept, so the standard keeps it off. This setting covers your own staff. Whether an invited guest may sign in with an emailed code is a separate switch on the same policy, so turning this method off does not lock guests out.</p>
     
     
     
@@ -1148,6 +1160,51 @@ FULL 12, FUNCTIONAL 0, PARTIAL 14, MISSING 1, UNKNOWN 1.</p>
 </details>
 
 
+<h2>crossTenantAccess</h2>
+
+<details class="control gray">
+  <summary>
+    <span class="grade gray"><span class="dot"></span>UNKNOWN</span>
+    <span class="control-head">
+      <span class="control-intent">If another organisation&#39;s multifactor claims are trusted, somebody decided that on purpose.</span>
+      <span class="control-oneline">The collected data was not good enough to judge. Never guessed.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">When a partner&#39;s multifactor claim is trusted, your sign in policies still apply to their users, but a person who already passed a second step in their home tenant is not asked again here. That makes the partner&#39;s security part of yours: if their second step is weak or their tenant is compromised, the claim arrives looking satisfied. It is a reasonable arrangement with organisations you know, which is why this asks that the decision be recorded rather than demanding the setting be off.</p>
+    
+    
+    <ul><li>The configuration this check depends on is not in the snapshot.</li></ul>
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control xtenant-001</p>
+  </div>
+</details>
+
+
+<h2>conditionalAccessCollection</h2>
+
+<details class="control green">
+  <summary>
+    <span class="grade green"><span class="dot"></span>FULL</span>
+    <span class="control-head">
+      <span class="control-intent">If some device needs the device code sign in flow, the exception covers those specific accounts, not a whole application.</span>
+      <span class="control-oneline">Matches the standard.</span>
+    </span>
+  </summary>
+  <div class="control-body">
+    <p class="rationale">Meeting room screens and similar shared hardware sometimes need the device code sign in flow, which the standard otherwise blocks. The safe exception excludes just the accounts those devices sign in with, or a group holding them. Excluding an application instead, or pointing the block at less than every application, reopens the flow for every user in the tenant, because the flow is abused by tricking a person into approving a sign in they did not start, and the attacker picks the application.</p>
+    
+    
+    
+    <p>Accounts this applies to: 0</p>
+    <p class="id">Control devicecode-001</p>
+  </div>
+</details>
+
+
 
 
 <h2>Compliance crosswalk</h2>
@@ -1208,7 +1265,7 @@ credited with something the tenant has not actually done.</p>
 
 <h3>Microsoft Entra documentation</h3>
 
-<p class="totals">24 items: 7 meets, 9 partially meets, 7 not assessed, 1 misses.</p>
+<p class="totals">26 items: 7 meets, 9 partially meets, 9 not assessed, 1 misses.</p>
 <table>
   <tr><th>Item</th><th>Status</th></tr>
   
@@ -1231,13 +1288,15 @@ credited with something the tenant has not actually done.</p>
 </table>
 
 <details>
-  <summary>Show the remaining 16 of 24 items</summary>
+  <summary>Show the remaining 18 of 26 items</summary>
   <table>
     <tr><th>Item</th><th>Status</th></tr>
     
     <tr><td>Configure risk-based step-up consent</td><td>not assessed</td></tr>
     
     <tr><td>Configure the admin consent workflow</td><td>not assessed</td></tr>
+    
+    <tr><td>Cross-tenant access with Microsoft Entra External ID</td><td>not assessed</td></tr>
     
     <tr><td>Default user permissions in Microsoft Entra ID</td><td>partially meets</td></tr>
     
@@ -1248,6 +1307,8 @@ credited with something the tenant has not actually done.</p>
     <tr><td>How to migrate to the Authentication methods policy</td><td>not assessed</td></tr>
     
     <tr><td>How token protection enhances Conditional Access policies</td><td>partially meets</td></tr>
+    
+    <tr><td>Manage cross-tenant access settings for B2B collaboration</td><td>not assessed</td></tr>
     
     <tr><td>Plan a Privileged Identity Management deployment</td><td>partially meets</td></tr>
     

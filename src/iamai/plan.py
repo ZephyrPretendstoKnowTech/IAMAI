@@ -1121,6 +1121,127 @@ def _setting_step(control: dict, result: dict) -> StepCard:
     )
 
 
+def _cross_tenant_step(result: dict, answers) -> StepCard:
+    """The partner MFA trust decision, either unanswered or answered 'review'."""
+    answered_review = "cross-tenant-mfa-trust" in getattr(answers, "answers", {})
+    if answered_review:
+        actions = [
+            _PORTAL,
+            "Go to Identity, then External Identities, then Cross-tenant access settings.",
+            "Open Default settings and select the Trust settings tab, and note whether "
+            "Trust multifactor authentication from Microsoft Entra tenants is ticked.",
+            "Open each organisation under Organizational settings and check the same "
+            "Trust settings tab, because a partner entry can turn trust on even when "
+            "the default is off.",
+            "For each organisation you no longer work with or do not recognise, untick "
+            "the trust boxes, or remove the organisation entry.",
+            "For each organisation the trust should stay for, run the questionnaire "
+            "again with 'iamai wizard' and answer that the trust is deliberate, so the "
+            "decision is recorded.",
+        ]
+    else:
+        actions = [
+            "Run 'iamai wizard' and answer the question about trusting other "
+            "organisations' second sign in step.",
+            "If the trust is deliberate, answer that it was decided on purpose and the "
+            "record is complete.",
+            "If nobody remembers deciding it, follow this step's remaining actions to "
+            "review the settings before answering.",
+            _PORTAL,
+            "Go to Identity, then External Identities, then Cross-tenant access "
+            "settings, and review the Trust settings tab under Default settings and "
+            "under each organisation.",
+        ]
+    return StepCard(
+        id="pending",
+        phase=2,
+        title="Decide whether to trust partner organisations' second sign in step",
+        riskClass=str(result.get("riskClass", "medium")),
+        affected=Affected(count=0, samples=[]),
+        preconditions=[
+            Precondition(
+                statement="The break glass step (day 1) is complete.",
+                query="This plan's day 1 verification has passed on a fresh collect.",
+                result="unverified",
+            ),
+        ],
+        actions=actions,
+        verification=Verification(
+            query=(
+                "cross_tenant_access dataset from a fresh 'iamai collect', then "
+                "'iamai assess': control xtenant-001"
+            ),
+            expected=(
+                "Control xtenant-001 grades FULL once the decision is recorded, or "
+                "stops applying once no organisation's multifactor claim is trusted."
+            ),
+        ),
+        rollback=[
+            "Open the same Trust settings tab.",
+            "Set the trust boxes back to what they were before this step.",
+            "Select Save.",
+        ],
+        watchFor=[
+            "Turning trust off means people from that organisation are asked for a "
+            "second step here even though they already passed one at home. That is "
+            "safer but noisier, so tell the partner's contact before changing it.",
+        ],
+        controlId=result["controlId"],
+    )
+
+
+def _device_code_carveout_step(result: dict) -> StepCard:
+    """An application scoped device code carve out, rescoped to accounts."""
+    return StepCard(
+        id="pending",
+        phase=2,
+        title="Rescope the device code exception to the device accounts",
+        riskClass=str(result.get("riskClass", "medium")),
+        affected=Affected(count=0, samples=[]),
+        preconditions=[
+            Precondition(
+                statement="The break glass step (day 1) is complete.",
+                query="This plan's day 1 verification has passed on a fresh collect.",
+                result="unverified",
+            ),
+        ],
+        actions=[
+            "Make a list of the specific accounts your meeting room screens or shared "
+            "devices sign in with. If they are not in one group yet, create a group "
+            "and put those accounts in it.",
+            _PORTAL,
+            "Go to Protection, then Conditional Access, and open the policy that "
+            "blocks the device code flow.",
+            "Under Target resources, set the policy to cover all resources, removing "
+            "any application it currently leaves out.",
+            "Under Users, add the device account group to Exclude.",
+            "Select Save.",
+        ],
+        verification=Verification(
+            query=(
+                "conditional_access_policies dataset from a fresh 'iamai collect', "
+                "then 'iamai assess': control devicecode-001"
+            ),
+            expected=(
+                "Control devicecode-001 grades FULL, or stops applying because the "
+                "block has no exceptions left."
+            ),
+        ),
+        rollback=[
+            "Open the same policy.",
+            "Set Target resources and the excluded users back to what they were "
+            "before this step.",
+            "Select Save.",
+        ],
+        watchFor=[
+            "The meeting room devices must be tested the same day: sign one in with "
+            "the device code flow after the change to confirm the exception still "
+            "covers it.",
+        ],
+        controlId=result["controlId"],
+    )
+
+
 def _tap_step(unregistered: list[str]) -> StepCard:
     return StepCard(
         id="pending",
@@ -1745,6 +1866,10 @@ def generate_plan(
             steps.append(_campaign_step(control, result, unregistered))
         elif surface == "privilegedAccess":
             steps.append(_standing_access_step(result))
+        elif surface == "crossTenantAccess":
+            steps.append(_cross_tenant_step(result, answers))
+        elif surface == "conditionalAccessCollection":
+            steps.append(_device_code_carveout_step(result))
         elif surface in ("authorizationPolicy", "adminConsentRequestPolicy"):
             if result["controlId"] in _SETTING_STEPS:
                 steps.append(_setting_step(control, result))

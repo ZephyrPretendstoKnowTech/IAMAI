@@ -776,13 +776,23 @@ def validate_pack(artifact: dict) -> list[str]:
             )
 
         citations = control.get("citations")
-        if not isinstance(citations, list) or not citations:
-            errors.append(f"Control {cid}: at least one citation is required.")
+        if not isinstance(citations, list):
+            # An empty list is honest: a control no published framework backs
+            # carries no citation rather than an invented one. What is never
+            # importable is a placeholder, because a citation is a claim the
+            # control covers that published item and the crosswalk repeats the
+            # claim to the reader (SPEC-PUBLIC section 11).
+            errors.append(f"Control {cid}: citations must be a list (empty is allowed).")
         else:
             for citation in citations:
                 if not isinstance(citation, dict) or not citation.get("source") or not citation.get("item"):
                     errors.append(
                         f"Control {cid}: each citation needs a non empty source and item."
+                    )
+                elif "placeholder" in str(citation.get("source", "")).lower():
+                    errors.append(
+                        f"Control {cid}: a placeholder citation is a coverage claim with "
+                        "nothing behind it; map it to the real source or remove it."
                     )
 
         blob = json.dumps(control.get("canonical", {}))

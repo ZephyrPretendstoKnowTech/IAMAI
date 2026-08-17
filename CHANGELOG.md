@@ -6,7 +6,29 @@ All notable changes to IAMAI are recorded here. The format follows
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- **Cross-tenant trust is now read and questioned.** A new collector reads the
+  cross-tenant access policy (default plus partner overrides) with the
+  permissions the app already holds, so no re-consent is needed. When the
+  tenant accepts another organisation's multifactor claims, the questionnaire
+  asks whether that was decided on purpose, and the assessment records the
+  decision (control `xtenant-001`).
+- **The device code exception is judged on its shape** (control
+  `devicecode-001`). A policy blocking the device code flow may excuse
+  specific accounts or a device group; excusing an application instead
+  reopens the flow for every user, and the report now says so.
+
+### Changed
+
+- **The standard pack's placeholder citations are gone.** Sixteen controls
+  carry the researched CISA SCuBA and Microsoft citations from the basics
+  pack; the four controls no published source supports carry none. Importing
+  a pack with placeholder citations is now rejected, and the compliance
+  crosswalk skips placeholders in older assessments.
+- The Email one-time code control's explanation now states that the separate
+  switch for guests' email codes is unaffected, so turning the method off
+  does not lock guests out.
 
 ## [1.1.0] - 2026-08-17
 

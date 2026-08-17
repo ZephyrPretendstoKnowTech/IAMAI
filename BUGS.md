@@ -12,7 +12,8 @@ misleading output, **low** is latent or needs an unusual input.
 ## Critical: the plan can make a tenant less secure
 
 Items 1, 2 and 3 were FIXED 2026-08-14 (commit follows this file's update).
-The rest of this document is open.
+Every finding in this document is now fixed or addressed; the per-section
+status lines record the dates. Nothing here is open.
 
 1. **No plan ever generates an enforcement step.** plan.py:1428 gates
    `_cap_enable_step` on `requiredState == "enabled"`, but canon.py:534 only
@@ -203,7 +204,7 @@ Items 19 to 22 were FIXED 2026-08-14.
     job from "build this from scratch".
 
 
-Items 23 to 26, 28 and 29 were FIXED 2026-08-14. Item 27 is open.
+Items 23 to 29 were all FIXED 2026-08-14.
 
 23. **A break glass account confirmed on the exclusion question is invisible
     to the plan.** plan.py:330. `_break_glass_answer` reads only the
@@ -248,14 +249,14 @@ Items 23 to 26, 28 and 29 were FIXED 2026-08-14. Item 27 is open.
 
 ## Medium: snapshot stability
 
-Item 31 was FIXED 2026-08-14. Items 30 and 32 are open.
+Items 30, 31 and 32 were all FIXED 2026-08-14.
 
 30. FIXED 2026-08-14 (at the repository level). **write_text translates newlines on Windows.** store.py:75, sanitize.py:331,
     config.py:92. Every snapshot, manifest and fixture is CRLF on Windows and
     LF elsewhere, with no .gitattributes, so identical content hashes
     differently depending on where it was produced.
 
-31. **gzip embeds the current time in its header.** signins.py:67,
+31. FIXED 2026-08-14. **gzip embeds the current time in its header.** signins.py:67,
     sanitize.py:336. Two collects of an unchanged tenant can never produce
     identical bytes. Fix is `mtime=0`.
 

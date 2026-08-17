@@ -63,6 +63,12 @@ COMMANDS = [
     ("verify", "iamai verify <alias>",
      "Tests every permission with a real read and prints a pass/fail table. Run it after "
      "setup or consent to confirm the app can actually see what it needs before a full collect.", []),
+    ("doctor", "iamai doctor [--offline]",
+     "Checks the whole install in one go and says what to run next for anything wrong: the "
+     "installed version, Python, the config file, the sign-in certificate and its expiry date, "
+     "which standard is active, whether Microsoft is reachable, and per tenant whether every "
+     "read permission has been consented. Run it right after installing, or whenever something "
+     "seems off. --offline skips the network checks.", []),
     ("collect", "iamai collect <alias> [--days N]",
      "Reads the tenant over Microsoft Graph and writes a dated, read-only snapshot under "
      "data/<alias>/. Shows live progress as each dataset is pulled. Safe to run again; each "

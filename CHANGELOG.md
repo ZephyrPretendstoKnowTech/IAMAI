@@ -6,7 +6,38 @@ All notable changes to IAMAI are recorded here. The format follows
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- **`iamai --version` (and `-V`)**, the natural way to confirm an install
+  worked. The installer now runs it as its own final verification.
+- **`iamai doctor`**: one command that checks the install, Python, the config
+  file, the sign-in certificate and its expiry, which standard is active,
+  whether Microsoft is reachable, and per tenant whether every read
+  permission has been consented, each row with the exact next command to run
+  when something is wrong. `--offline` skips the network checks.
+- A **release workflow** builds a reproducible wheel for every release
+  (pinned to the release commit's timestamp) and records its SHA256 in the
+  release notes.
+
+### Fixed
+
+- **The Windows installer no longer claims success after a failure.** It
+  checks every external command's exit code, stops at the first failure with
+  what failed and what to try, and prints its success message only after the
+  installed `iamai` command has been run and answered. Found on a clean
+  Windows first run where pipx failed twice and the installer said "IAMAI is
+  installed" anyway.
+- **Installing no longer requires git.** Both installers install from a
+  plain archive or wheel download: the pinned release wheel when one exists,
+  else the release source archive, else the master archive. Stock Windows
+  has no git, so the old `git+https` install failed for exactly the audience
+  the tool is for.
+- The Windows installer now forces UTF-8 on captured output (pipx's emoji
+  crashed the cp1252 capture path), pins winget to its own source with
+  interactivity disabled so a piped install can never hang on a store
+  agreement prompt, filters pipx's own setuptools housekeeping warning, and
+  opens with a preflight that reports the machine's state and exactly what
+  the installer is about to do.
 
 ## [1.2.0] - 2026-08-17
 

@@ -9,9 +9,11 @@ from __future__ import annotations
 
 import base64
 import datetime
+import json
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 import httpx
@@ -34,6 +36,26 @@ app = typer.Typer(
     pretty_exceptions_show_locals=False,
     help="Reads a Microsoft Entra tenant's identity security posture.",
 )
+
+
+def _version_callback(value: bool) -> None:
+    if value:
+        typer.echo(f"iamai {TOOL_VERSION}")
+        raise typer.Exit()
+
+
+@app.callback()
+def _root(
+    version: bool = typer.Option(
+        False,
+        "--version",
+        "-V",
+        callback=_version_callback,
+        is_eager=True,
+        help="Print the installed version and exit.",
+    ),
+) -> None:
+    """Reads a Microsoft Entra tenant's identity security posture."""
 
 def CERT_PEM() -> Path:
     from iamai.paths import cert_dir
@@ -579,6 +601,149 @@ def verify(alias: str) -> None:
         typer.echo("At least one permission failed. Check that every permission in the table was added and admin consent was granted.")
         raise typer.Exit(code=1)
     typer.echo("All permissions verified.")
+
+
+def _install_method() -> str:
+    prefix = sys.prefix.replace("\\", "/").lower()
+    if "/pipx/" in prefix or prefix.endswith("/pipx"):
+        return "pipx (isolated app install)"
+    if "/.iamai/" in prefix:
+        return "the one-line installer's environment"
+    if prefix.endswith("/.venv") or "/venv" in prefix:
+        return "a virtual environment (likely a source checkout)"
+    return "the system Python"
+
+
+def _doctor_rows(offline: bool) -> list[tuple[str, str, str]]:
+    """Every check the doctor runs, as (check, status, plain detail).
+
+    Each row answers something a person would otherwise diagnose by hand:
+    what is installed and from where, whether the config and credential are
+    usable, which standard grades, whether Microsoft is reachable, and per
+    tenant whether the read permissions are actually consented.
+    """
+    rows: list[tuple[str, str, str]] = []
+
+    rows.append(("Version", "OK", f"iamai {TOOL_VERSION}, installed via {_install_method()}"))
+    py = "%d.%d.%d" % sys.version_info[:3]
+    rows.append(("Python", "OK", f"{py} at {sys.executable}"))
+
+    from iamai.paths import config_path
+
+    config = None
+    try:
+        config = load_config()
+        aliases = ", ".join(sorted(config.tenants)) or "(none)"
+        rows.append(("Config", "OK", f"{config_path()}; tenants: {aliases}"))
+    except FileNotFoundError:
+        rows.append(("Config", "FAIL", f"Not found at {config_path()}. Run 'iamai setup' first."))
+    except Exception as exc:
+        rows.append(("Config", "FAIL", f"Unreadable: {exc}. Run 'iamai setup' to rewrite it."))
+
+    if config is not None:
+        cert_file = Path(config.certPath)
+        try:
+            cert = x509.load_pem_x509_certificate(cert_file.read_bytes())
+            not_after = cert.not_valid_after_utc
+            now = datetime.datetime.now(datetime.timezone.utc)
+            days_left = (not_after - now).days
+            if now >= not_after:
+                rows.append(("Certificate", "FAIL",
+                             f"Expired on {not_after.date()}. Run 'iamai setup' to renew it."))
+            elif days_left <= CERT_RENEW_WARNING_DAYS:
+                rows.append(("Certificate", "WARN",
+                             f"Expires in {days_left} day(s), on {not_after.date()}. "
+                             "Run 'iamai setup' before then."))
+            else:
+                rows.append(("Certificate", "OK", f"Valid until {not_after.date()} ({days_left} days)"))
+        except OSError:
+            rows.append(("Certificate", "FAIL",
+                         f"Not found at {cert_file}. Run 'iamai setup' to create one."))
+        except ValueError:
+            rows.append(("Certificate", "FAIL",
+                         f"The file at {cert_file} is not a readable certificate. Run 'iamai setup'."))
+
+    try:
+        standard_path = _latest_baseline_path()
+        artifact = json.loads(standard_path.read_text(encoding="utf-8"))
+        count = len(artifact.get("controls", []))
+        if standard_path == DEFAULT_PACK:
+            detail = f"The standard that ships with the tool ({count} controls)"
+        else:
+            detail = f"{standard_path.name} ({count} controls)"
+        rows.append(("Standard", "OK", detail))
+    except Exception as exc:
+        rows.append(("Standard", "FAIL", f"No usable standard: {exc}"))
+
+    if offline:
+        rows.append(("Graph connectivity", "SKIP", "Offline mode; network checks not run."))
+        return rows
+
+    # The only two hosts this tool is ever allowed to reach. Any HTTP answer,
+    # including 401, proves reachability; only a transport failure does not.
+    for label, url in (
+        ("graph.microsoft.com", "https://graph.microsoft.com/v1.0/$metadata"),
+        ("login.microsoftonline.com",
+         "https://login.microsoftonline.com/common/.well-known/openid-configuration"),
+    ):
+        try:
+            httpx.get(url, timeout=10)
+            rows.append((label, "OK", "Reachable"))
+        except Exception as exc:
+            rows.append((label, "FAIL",
+                         f"Not reachable ({type(exc).__name__}). Check the network or proxy."))
+
+    if config is not None:
+        for alias in sorted(config.tenants):
+            try:
+                client = make_client(config, config.tenant_id(alias))
+                results = _verify_checks(client)
+            except typer.Exit:
+                rows.append((f"Consent ({alias})", "FAIL",
+                             "The certificate has expired; run 'iamai setup' to renew it."))
+                continue
+            except Exception as exc:
+                rows.append((f"Consent ({alias})", "FAIL",
+                             f"Could not sign in: {type(exc).__name__}. "
+                             f"Run 'iamai verify {alias}' for the full story."))
+                continue
+            failed = [p for p, status, _ in results if status == "FAIL"]
+            if failed:
+                rows.append((f"Consent ({alias})", "FAIL",
+                             f"Missing or unconsented: {', '.join(failed)}. "
+                             f"Run 'iamai consent {alias}' and have an administrator accept."))
+            else:
+                warned = sum(1 for _, status, _ in results if status == "WARN")
+                detail = f"All {len(results)} read permissions answer"
+                if warned:
+                    detail += f" ({warned} with a license note; 'iamai verify {alias}' has it)"
+                rows.append((f"Consent ({alias})", "OK", detail))
+    return rows
+
+
+@app.command()
+def doctor(
+    offline: bool = typer.Option(
+        False, "--offline", help="Skip the network and per-tenant permission checks."
+    ),
+) -> None:
+    """Check the install, config, credential, standard and consent in one go."""
+    typer.echo("IAMAI doctor")
+    typer.echo("")
+    rows = _doctor_rows(offline)
+    width = max(len(check) for check, _, _ in rows) + 2
+    typer.echo(f"  {'Check':<{width}} {'Result':<7} Detail")
+    typer.echo(f"  {'-' * width} {'-' * 7} {'-' * 50}")
+    failed = False
+    for check, status, detail in rows:
+        typer.echo(f"  {check:<{width}} {status:<7} {detail}")
+        if status == "FAIL":
+            failed = True
+    typer.echo("")
+    if failed:
+        typer.echo("At least one check failed. Each failing row above says what to run next.")
+        raise typer.Exit(code=1)
+    typer.echo("Everything checks out.")
 
 
 @app.command()

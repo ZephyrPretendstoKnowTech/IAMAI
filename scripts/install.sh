@@ -15,6 +15,11 @@
 # both the safe and the reliable way to do this without special flags.
 set -euo pipefail
 
+# The whole script is a function called on the last line, so a download cut
+# off mid-transfer defines half a function and executes nothing, rather than
+# running whatever statements happened to arrive intact.
+main() {
+
 REPO_URL="https://github.com/ZephyrPretendstoKnowTech/IAMAI.git"
 INSTALL_DIR="${IAMAI_INSTALL_DIR:-$HOME/.iamai}"
 VENV="$INSTALL_DIR/venv"
@@ -77,3 +82,7 @@ echo
 say "Starting setup. It will walk you through connecting a tenant."
 echo
 "$VENV/bin/iamai" setup
+
+}
+
+main "$@"

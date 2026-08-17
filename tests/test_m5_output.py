@@ -17,6 +17,8 @@ import pytest
 from typer.testing import CliRunner
 
 import iamai.cli as cli
+
+from conftest import freeze_test_baseline
 from iamai.grade import assess_snapshot
 from iamai.plan import generate_plan
 from iamai.report import render_assessment, render_plan
@@ -292,7 +294,7 @@ def test_cli_plan_carries_the_start_date(workspace, mock_graph):  # noqa: F811
     from iamai.store import SnapshotStore
     from test_m3_questions import _scripted_input
 
-    assert runner.invoke(cli.app, ["baseline", "build", "--yes"]).exit_code == 0
+    freeze_test_baseline()
     assert runner.invoke(cli.app, ["assess", "golden"]).exit_code == 0
     store = SnapshotStore()
     assessment = latest_assessment(store, "golden")

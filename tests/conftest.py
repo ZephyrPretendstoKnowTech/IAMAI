@@ -156,3 +156,46 @@ def graph_mock():
     """Empty strict router for tests that register their own routes."""
     with respx.mock(assert_all_called=False, assert_all_mocked=True) as router:
         yield router
+
+
+def freeze_test_baseline(alias: str = "golden"):
+    """What the retired 'baseline build' command used to do, at library level.
+
+    The reference-tenant capture is gone from the product (the standard ships
+    with the tool, fixed and versioned), but the self-consistency invariant it
+    enabled still guards canonicalization: a tenant graded against the
+    artifact built from its own snapshot must be all FULL. Tests freeze that
+    artifact here instead of through a CLI command users no longer have."""
+    import json as _json
+
+    import iamai.cli as cli
+    from iamai.canon import build_artifact
+    from iamai.collectors import run_all
+    from iamai.config import load_config
+    from iamai.store import SnapshotStore, load_snapshot_data
+
+    config = load_config()
+    client = cli.make_client(config, config.tenants[alias])
+    store = SnapshotStore()
+    writer = store.new_snapshot(alias)
+    run_all(client, writer, alias)
+    data, _ = load_snapshot_data(writer.snapshot_dir)
+    exclusions = []
+    for cap in data.get("conditional_access_policies") or []:
+        users = (cap.get("conditions") or {}).get("users") or {}
+        for guid in list(users.get("excludeGroups") or []) + list(users.get("excludeUsers") or []):
+            if guid not in exclusions:
+                exclusions.append(guid)
+    artifact = build_artifact(
+        data,
+        tenant_id=config.tenants[alias],
+        snapshot=writer.snapshot_dir.name,
+        tool_version=cli.TOOL_VERSION,
+        slot_bindings={"breakGlassAccounts": exclusions},
+    )
+    path = cli._next_baseline_path()
+    path.write_text(
+        _json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    return path

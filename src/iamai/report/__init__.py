@@ -328,6 +328,7 @@ def render_assessment(
     )
     return template.render(
         alias=assessment.get("alias", ""),
+        standard=assessment.get("standard"),
         generated_at=assessment.get("generatedAt", ""),
         collected_at=(manifest or {}).get("collectedAt", ""),
         grade_order=GRADE_ORDER,

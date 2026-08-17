@@ -23,10 +23,21 @@ SP_OBJ_ID = "cccccccc-0000-0000-0000-000000000001"
 FAKE_PERM_GUID = "dddddddd-0000-0000-0000-000000000001"
 
 
-def _mock_msal_device_code(monkeypatch) -> MagicMock:
-    """Patch MSAL PublicClientApplication so device code flow returns a fake
-    token. Returns the mock so a test can inspect the scopes setup requested."""
+SETUP_CLAIMS = {"tid": TENANT_ID, "preferred_username": "admin@contoso.com"}
+
+
+def _mock_msal_device_code(monkeypatch, browser: bool = True) -> MagicMock:
+    """Patch MSAL PublicClientApplication so sign-in returns a fake token.
+
+    browser=True answers the interactive (system browser) call; browser=False
+    makes it raise so setup exercises the automatic device code fallback.
+    Returns the mock so a test can inspect the scopes setup requested."""
     mock_pub_app = MagicMock()
+    token = {"access_token": "fake-setup-token", "id_token_claims": dict(SETUP_CLAIMS)}
+    if browser:
+        mock_pub_app.acquire_token_interactive.return_value = dict(token)
+    else:
+        mock_pub_app.acquire_token_interactive.side_effect = RuntimeError("no browser")
     mock_pub_app.initiate_device_flow.return_value = {
         "user_code": "TESTCODE123",
         "verification_uri": "https://microsoft.com/devicelogin",
@@ -34,7 +45,7 @@ def _mock_msal_device_code(monkeypatch) -> MagicMock:
         "interval": 1,
         "expires_in": 300,
     }
-    mock_pub_app.acquire_token_by_device_flow.return_value = {"access_token": "fake-setup-token"}
+    mock_pub_app.acquire_token_by_device_flow.return_value = dict(token)
 
     import msal as msal_mod
     monkeypatch.setattr(msal_mod, "PublicClientApplication", lambda *a, **kw: mock_pub_app)
@@ -211,31 +222,34 @@ def test_setup_creates_app_and_writes_config(tmp_path, monkeypatch):
 
     with respx.mock(assert_all_called=False, assert_all_mocked=True) as router:
         _register_setup_routes(router)
-        result = runner.invoke(
-            cli.app,
-            ["setup"],
-            input=f"{TENANT_ID}\ngolden\ntarget\n{TARGET_TENANT_ID}\n",
-        )
+        # Confirm the echoed tenant, accept the suggested alias.
+        result = runner.invoke(cli.app, ["setup"], input="\n\n")
 
     assert result.exit_code == 0, result.output
-    assert "TESTCODE123" in result.output
-    # The golden tenant's own consent URL is now printed for the signed-in
-    # admin to accept, because setup no longer grants consent programmatically.
+    # The tenant came from the sign-in token and was echoed for confirmation;
+    # nobody pasted a Directory ID.
+    assert "admin@contoso.com" in result.output
+    assert TENANT_ID in result.output
+    # The scopes were shown before the browser opened, with the read-only frame.
+    assert "Application.ReadWrite.OwnedBy" in result.output
+    assert "read permission" in result.output
     assert f"{TENANT_ID}/adminconsent?client_id={APP_ID}" in result.output
 
-    # The setup token requests only the owned-app scope, never the scope that
+    # The sign-in requested only the owned-app scope, never the scope that
     # could grant app roles. This is the load-bearing security assertion for
     # the reduced-privilege setup flow.
-    requested_scopes = mock_pub_app.initiate_device_flow.call_args.kwargs["scopes"]
+    requested_scopes = mock_pub_app.acquire_token_interactive.call_args.kwargs["scopes"]
     assert requested_scopes == [f"{cli.GRAPH_BASE}/Application.ReadWrite.OwnedBy"]
     assert not any("AppRoleAssignment" in s for s in requested_scopes)
     assert not any("ReadWrite.All" in s for s in requested_scopes)
 
     config = load_config(tmp_path / "config.yaml")
     assert config.appId == APP_ID
-    assert config.goldenTenantId == TENANT_ID
     assert config.homeTenantId == TENANT_ID
-    assert config.tenants == {"golden": TENANT_ID, "target": TARGET_TENANT_ID}
+    assert config.setupClientId == "setup-bootstrap-id"
+    assert config.tenants == {"contoso": TENANT_ID}
+    # The golden tenant is a retired concept; nothing writes it any more.
+    assert "goldenTenantId" not in (tmp_path / "config.yaml").read_text(encoding="utf-8")
     assert (tmp_path / "certs" / "iamai.pem").exists()
     assert (tmp_path / "certs" / "iamai-cert.pem").exists()
     key_pem = (tmp_path / "certs" / "iamai.pem").read_text()
@@ -243,23 +257,61 @@ def test_setup_creates_app_and_writes_config(tmp_path, monkeypatch):
     assert "PRIVATE KEY" not in (tmp_path / "certs" / "iamai-cert.pem").read_text()
 
 
-def test_setup_prompts_for_bootstrap_client_id_when_not_configured(tmp_path, monkeypatch):
+def test_setup_falls_back_to_device_code_without_a_browser(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(cli, "SETUP_CLIENT_ID", "setup-bootstrap-id")
+    mock_pub_app = _mock_msal_device_code(monkeypatch, browser=False)
+
+    with respx.mock(assert_all_called=False, assert_all_mocked=True) as router:
+        _register_setup_routes(router)
+        result = runner.invoke(cli.app, ["setup"], input="\n\n")
+
+    assert result.exit_code == 0, result.output
+    assert "TESTCODE123" in result.output
+    requested_scopes = mock_pub_app.initiate_device_flow.call_args.kwargs["scopes"]
+    assert requested_scopes == [f"{cli.GRAPH_BASE}/Application.ReadWrite.OwnedBy"]
+
+
+def test_setup_refuses_a_mismatched_tenant(tmp_path, monkeypatch):
+    """--tenant-id pins the tenant for scripted use; signing in somewhere else
+    must stop before anything is created, or a technician with two customer
+    accounts registers the app in the wrong client."""
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(cli, "SETUP_CLIENT_ID", "setup-bootstrap-id")
+    _mock_msal_device_code(monkeypatch)
+
+    with respx.mock(assert_all_called=False, assert_all_mocked=True) as router:
+        _register_setup_routes(router)
+        result = runner.invoke(
+            cli.app, ["setup", "--tenant-id", TARGET_TENANT_ID], input="\n\n"
+        )
+
+    assert result.exit_code == 1
+    assert "Nothing was changed" in result.output
+    assert not (tmp_path / "config.yaml").exists()
+
+
+def test_setup_prompts_for_helper_client_id_when_not_configured(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(cli, "SETUP_CLIENT_ID", "")
     _mock_msal_device_code(monkeypatch)
 
     with respx.mock(assert_all_called=False, assert_all_mocked=True) as router:
         _register_setup_routes(router)
+        # A non-GUID first, to prove the prompt explains and re-asks rather
+        # than crashing; then the real id, the tenant confirm, the alias.
         result = runner.invoke(
-            cli.app,
-            ["setup"],
-            input=f"{TENANT_ID}\ngolden\n\nsetup-bootstrap-id\n",
+            cli.app, ["setup"], input=f"not-a-guid\n{APP_ID}\n\n\n"
         )
 
     assert result.exit_code == 0, result.output
-    assert "IAMAI Setup bootstrapper" in result.output
-    assert "TESTCODE123" in result.output
-    assert "grant the read-only permissions" in result.output
+    assert "one-time sign-in app" in result.output
+    assert "not a GUID" in result.output
+    assert "read-only permissions" in result.output
+
+    # The helper id is remembered so certificate renewal never re-asks for it.
+    config = load_config(tmp_path / "config.yaml")
+    assert config.setupClientId == APP_ID
 
 
 def test_setup_keeps_existing_certificate(tmp_path, monkeypatch):
@@ -270,16 +322,18 @@ def test_setup_keeps_existing_certificate(tmp_path, monkeypatch):
     # First run: generate cert
     with respx.mock(assert_all_called=False, assert_all_mocked=True) as router:
         _register_setup_routes(router)
-        runner.invoke(cli.app, ["setup"], input=f"{TENANT_ID}\ngolden\n\n")
+        runner.invoke(cli.app, ["setup"], input="\n\n")
 
     original_cert = (tmp_path / "certs" / "iamai.pem").read_bytes()
 
-    # Second run: cert already exists, should be kept
+    # Second run: the tenant is already configured (no alias prompt) and the
+    # cert already exists, so it is kept.
     with respx.mock(assert_all_called=False, assert_all_mocked=True) as router:
         _register_setup_routes(router)
-        result = runner.invoke(cli.app, ["setup"], input=f"{TENANT_ID}\ngolden\n\n")
+        result = runner.invoke(cli.app, ["setup"], input="\n")
 
     assert result.exit_code == 0, result.output
+    assert "already configured as 'contoso'" in result.output
     assert "already exists" in result.output
     assert (tmp_path / "certs" / "iamai.pem").read_bytes() == original_cert
 

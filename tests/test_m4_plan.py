@@ -17,6 +17,8 @@ import pytest
 from typer.testing import CliRunner
 
 import iamai.cli as cli
+
+from conftest import freeze_test_baseline
 from iamai.grade import assess_snapshot
 from iamai.plan import StepCard, generate_plan
 from iamai.questions import Answer, AnswersFile
@@ -390,7 +392,7 @@ def _combined_output(result) -> str:
 
 
 def test_cli_plan_requires_assessment_and_answers(workspace, mock_graph):  # noqa: F811
-    assert runner.invoke(cli.app, ["baseline", "build", "--yes"]).exit_code == 0
+    freeze_test_baseline()
     result = runner.invoke(cli.app, ["plan", "golden"])
     assert result.exit_code == 1
     assert "iamai assess" in _combined_output(result)
@@ -406,7 +408,7 @@ def test_cli_plan_writes_plan_json_and_html(workspace, mock_graph):  # noqa: F81
     from iamai.store import SnapshotStore
     from test_m3_questions import _scripted_input
 
-    assert runner.invoke(cli.app, ["baseline", "build", "--yes"]).exit_code == 0
+    freeze_test_baseline()
     assert runner.invoke(cli.app, ["assess", "golden"]).exit_code == 0
     store = SnapshotStore()
     assessment = latest_assessment(store, "golden")

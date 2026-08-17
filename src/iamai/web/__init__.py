@@ -65,7 +65,8 @@ def _prefill_from_answer(answer, question) -> dict:
 _LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost", "::1", "[::1]"})
 
 
-def create_app(*, alias: str, tenant_id: str, artifact: dict, store: SnapshotStore) -> Flask:
+def create_app(*, alias: str, tenant_id: str, artifact: dict, store: SnapshotStore,
+               standard: dict | None = None) -> Flask:
     app = Flask(__name__)
     # Templates end in .j2, which Flask does not autoescape by default.
     app.jinja_env.autoescape = True
@@ -181,7 +182,7 @@ def create_app(*, alias: str, tenant_id: str, artifact: dict, store: SnapshotSto
             return redirect(url_for("question", question_id=pending[0].id))
         if state["regraded"] is None:
             assessment, out_path, report_path, _ = assess_with_answers(
-                alias, tenant_id, artifact, store
+                alias, tenant_id, artifact, store, standard=standard
             )
             state["regraded"] = {
                 "assessment": assessment,

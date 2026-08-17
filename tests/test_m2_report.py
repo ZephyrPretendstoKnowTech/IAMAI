@@ -19,7 +19,7 @@ from iamai.grade import assess_snapshot
 from iamai.report import render_assessment
 from iamai.store import load_snapshot_data
 
-from conftest import APP_ID, TENANT_ID, make_test_client
+from conftest import freeze_test_baseline, APP_ID, TENANT_ID, make_test_client
 from test_m1_canon import make_artifact
 
 pytestmark = pytest.mark.m2
@@ -264,7 +264,7 @@ def workspace(tmp_path, monkeypatch):
 
 
 def test_assess_writes_html_report(workspace, mock_graph):
-    assert runner.invoke(cli.app, ["baseline", "build", "--yes"]).exit_code == 0
+    freeze_test_baseline()
     result = runner.invoke(cli.app, ["assess", "golden"])
     assert result.exit_code == 0, result.output
     assert "Report written to" in result.output

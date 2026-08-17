@@ -137,3 +137,52 @@ def test_doctor_reports_the_shipped_standard_when_no_baseline_exists(tmp_path):
     _write_config(tmp_path)
     result = runner.invoke(cli.app, ["doctor", "--offline"])
     assert "ships with the tool" in result.output
+
+
+# --- Stage 3: the read-only promise is mechanical, and grades name their standard
+
+
+def test_the_collector_permission_set_passes_the_read_only_assertion():
+    cli.assert_permissions_read_only(cli.PERMISSION_NAMES)
+
+
+@pytest.mark.parametrize("bad", [
+    "Mail.ReadWrite",
+    "Application.ReadWrite.All",
+    "User.Invite.All",
+    "Directory.AccessAsUser.All",
+    "Mail.Send",
+    "Sites.Manage.All",
+    "Policy.Read.All,Directory.Write.All".split(",")[1],
+])
+def test_the_read_only_assertion_refuses_write_shaped_permissions(bad):
+    with pytest.raises(RuntimeError):
+        cli.assert_permissions_read_only([bad])
+
+
+def test_the_read_only_assertion_is_segment_aware():
+    """RoleManagement contains the word Manage; the resource name must not
+    trip the check, only an actual write action segment may."""
+    cli.assert_permissions_read_only(["RoleManagement.Read.Directory"])
+
+
+def test_the_shipped_standard_descriptor_names_itself():
+    artifact, descriptor = cli._load_standard(None)
+    assert descriptor["source"] == "shipped"
+    assert "ships with this tool" in descriptor["name"]
+    assert descriptor["controls"] == len(artifact["controls"])
+    assert descriptor["version"], "the shipped standard must carry a version"
+
+
+def test_the_report_states_which_standard_graded_it():
+    from iamai.report import render_assessment
+
+    assessment = {
+        "alias": "lab", "generatedAt": "2026-08-17T00:00:00Z",
+        "gradeCounts": {}, "controls": [],
+        "standard": {"name": "the standard that ships with this tool",
+                     "version": "v1", "controls": 37, "source": "shipped"},
+    }
+    html = render_assessment(assessment)
+    assert "Graded against the standard that ships with this tool" in html
+    assert "version v1" in html

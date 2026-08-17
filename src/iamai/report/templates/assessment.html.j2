@@ -12,16 +12,19 @@
 <div class="brandbar"><span class="mark">iA</span> IAMAI <span class="sub">&middot; identity posture assessment</span></div>
 <h1>Identity security assessment</h1>
 <p class="meta">Tenant: {{ alias }}. Generated {{ generated_at }}.
-{% if collected_at %}Based on data collected {{ collected_at }}.{% endif %}</p>
+{% if collected_at %}Based on data collected {{ collected_at }}.{% endif %}
+{% if standard %}Graded against {{ standard.name }}{% if standard.version %}, version {{ standard.version }}{% endif %} ({{ standard.controls }} controls).{% endif %}</p>
 
 {% for warning in data_warnings %}
 <div class="banner"><strong>Some data is incomplete.</strong> {{ warning }}</div>
 {% endfor %}
 
 <h2>Summary</h2>
-<p>This report grades the tenant against the standard, a reference configuration
-captured from a known good setup. Each area below is judged conservatively:
-when the data is ambiguous, the grade goes down, never up.</p>
+<p>This report grades the tenant against the standard: a fixed, versioned set of
+checks that ships with the tool and is the same for every tenant, so a grade
+here means the same thing it means anywhere else. Each area below is judged
+conservatively: when the data is ambiguous, the grade goes down, never up.
+Tailoring to this tenant happens in the plan, never in the grade.</p>
 
 <div class="tiles">
 {% for group in groups %}

@@ -264,49 +264,103 @@ def generate_certificate(cert_path: Path, public_path: Path) -> None:
 # Setup helpers: device code flow + Graph write operations
 # ---------------------------------------------------------------------------
 
-def _acquire_setup_token(setup_client_id: str, tenant_id: str) -> str:
-    """Device code flow against the golden tenant. Returns an access token."""
+# OwnedBy, not All: this lets setup create the Collector app and its service
+# principal and manage only that app, never rewrite any other app in the
+# tenant (verified against Microsoft Graph permissions reference,
+# ASSUMPTIONS.md note 35). AppRoleAssignment.ReadWrite.All is deliberately NOT
+# requested: it is the only scope that grants app roles and Microsoft warns it
+# lets an app grant privileges to itself, so instead of granting consent
+# programmatically, setup prints the admin-consent URL for the signed-in
+# Global Administrator to approve read-only access through Microsoft's own
+# screen -- the same flow already used for a second tenant.
+SETUP_SCOPES = [f"{GRAPH_BASE}/Application.ReadWrite.OwnedBy"]
+
+# Action segments that would make a Graph permission more than a read. A
+# permission is Resource.Action.Scope (RoleManagement.Read.Directory), so the
+# check works on whole dotted segments: the resource name may legitimately
+# contain words like Management, but no segment may BE a write action. The
+# read-only permission set is the product's main promise, so it is enforced
+# here mechanically (setup refuses to request an offending set) and by test,
+# not by convention (work order 2026-08-17, part 2.2).
+_WRITE_ACTIONS = {
+    "write", "readwrite", "create", "update", "delete", "manage",
+    "fullcontrol", "accessasuser", "send", "invite",
+}
+
+
+def assert_permissions_read_only(names: list[str]) -> None:
+    """Refuse any permission whose dotted segments are not plainly a read."""
+    offenders = []
+    for name in names:
+        segments = [s.lower() for s in name.split(".")]
+        if "read" not in segments or any(s in _WRITE_ACTIONS for s in segments):
+            offenders.append(name)
+    if offenders:
+        raise RuntimeError(
+            "Refusing to request permissions that are not read-only: "
+            + ", ".join(offenders)
+        )
+
+
+def _acquire_setup_token(setup_client_id: str, tenant_id: str | None) -> tuple[str, str, str]:
+    """Sign the administrator in and return (access token, tenant id, account).
+
+    The default is the system browser (the sign-in page people already know,
+    with their MFA and Conditional Access applying as usual); when no browser
+    can be opened, for example on a headless or remote session, it falls back
+    to the device code flow automatically. The tenant id and signed-in
+    account come from the token's own claims, so nobody has to find and paste
+    a Directory ID.
+    """
     import msal
 
-    pub_app = msal.PublicClientApplication(
-        client_id=setup_client_id,
-        authority=f"{LOGIN_BASE}/{tenant_id}",
-    )
-    flow = pub_app.initiate_device_flow(
-        scopes=[
-            # OwnedBy, not All: this lets setup create the Collector app and
-            # its service principal and manage only that app, never rewrite
-            # any other app in the tenant (verified against Microsoft Graph
-            # permissions reference, ASSUMPTIONS.md note 35). AppRoleAssignment
-            # .ReadWrite.All is deliberately NOT requested: it is the only
-            # scope that grants app roles and Microsoft warns it lets an app
-            # grant privileges to itself, so instead of granting consent
-            # programmatically, setup prints the admin-consent URL for the
-            # signed-in Global Administrator to approve read-only access
-            # through Microsoft's own screen -- the same flow already used for
-            # a second tenant.
-            f"{GRAPH_BASE}/Application.ReadWrite.OwnedBy",
-        ]
-    )
-    if "user_code" not in flow:
-        raise typer.Exit(
-            typer.echo(f"Failed to start authentication: {flow.get('error_description', 'unknown error')}", err=True)
-            or 1
+    authority = f"{LOGIN_BASE}/{tenant_id}" if tenant_id else f"{LOGIN_BASE}/organizations"
+    pub_app = msal.PublicClientApplication(client_id=setup_client_id, authority=authority)
+
+    result: dict | None = None
+    try:
+        typer.echo("Opening your browser for the Microsoft sign-in page...")
+        result = pub_app.acquire_token_interactive(
+            scopes=SETUP_SCOPES, prompt="select_account", timeout=300
         )
-    typer.echo("")
-    typer.echo("Authenticate to create the app registration:")
-    typer.echo(f"  1. Open this URL: {flow['verification_uri']}")
-    typer.echo(f"  2. Enter this code: {flow['user_code']}")
-    typer.echo("  3. Sign in as a Global Administrator of the golden tenant.")
-    typer.echo("  4. Return here when done.")
-    typer.echo("")
-    typer.echo("Waiting for authentication...", nl=False)
-    result = pub_app.acquire_token_by_device_flow(flow)
-    if "access_token" not in result:
-        typer.echo(" failed.", err=True)
-        raise typer.Exit(1)
-    typer.echo(" done.")
-    return result["access_token"]
+    except Exception:
+        result = None
+    if not result or "access_token" not in result:
+        if result and result.get("error_description"):
+            typer.echo(f"Browser sign-in did not complete: {result['error_description']}")
+        typer.echo("Falling back to a device code sign-in (no browser needed on this machine).")
+        flow = pub_app.initiate_device_flow(scopes=SETUP_SCOPES)
+        if "user_code" not in flow:
+            typer.echo(
+                "Could not start the sign-in: "
+                f"{flow.get('error_description', 'unknown error')}. "
+                "Check the network and the sign-in app's client ID, then run setup again.",
+                err=True,
+            )
+            raise typer.Exit(1)
+        typer.echo("")
+        typer.echo(f"  1. On any device, open: {flow['verification_uri']}")
+        typer.echo(f"  2. Enter this code: {flow['user_code']}")
+        typer.echo("  3. Sign in as a Global Administrator of the tenant to assess.")
+        typer.echo("")
+        typer.echo("Waiting for the sign-in...", nl=False)
+        result = pub_app.acquire_token_by_device_flow(flow)
+        if "access_token" not in result:
+            typer.echo(" it did not complete.", err=True)
+            typer.echo(
+                f"Microsoft said: {result.get('error_description', 'no detail')}. "
+                "Run 'iamai setup' to try again.",
+                err=True,
+            )
+            raise typer.Exit(1)
+        typer.echo(" done.")
+
+    claims = result.get("id_token_claims") or {}
+    return (
+        result["access_token"],
+        str(claims.get("tid", "")),
+        str(claims.get("preferred_username", "")),
+    )
 
 
 def _setup_get(token: str, path: str, params: dict | None = None) -> dict:
@@ -344,7 +398,7 @@ def _setup_patch(token: str, path: str, body: dict) -> None:
 def _resolve_permission_guids(token: str) -> list[str]:
     """Return [permission_guid, ...] for PERMISSION_NAMES.
 
-    Fetches the Microsoft Graph service principal from the golden tenant and
+    Fetches the Microsoft Graph service principal from the signed-in tenant and
     resolves each permission name to its stable appRole id, so the app is
     created requesting exactly those read roles. The admin then consents to
     them through Microsoft's own screen; setup no longer grants them itself.
@@ -412,52 +466,86 @@ def _get_or_create_sp(token: str, app_id: str) -> str:
 # CLI commands
 # ---------------------------------------------------------------------------
 
-@app.command()
-def setup() -> None:
-    """Create the IAMAI Collector app registration via Graph and write config."""
-    typer.echo("IAMAI setup")
-    typer.echo("")
+_ALIAS_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
 
-    golden_tenant_id = _require_guid(typer.prompt("Golden tenant ID (Directory ID)"), "tenant ID")
-    golden_alias = typer.prompt("Alias for the golden tenant", default="golden")
-    target_alias = typer.prompt("Alias for the target tenant (leave blank to add later)", default="")
-    target_tenant_id = ""
-    if target_alias.strip():
-        target_tenant_id = _require_guid(
-            typer.prompt(f"Tenant ID for '{target_alias.strip()}'"), "tenant ID"
+
+def _prompt_alias(default: str) -> str:
+    """A short name for the tenant, validated and re-prompted, never crashed.
+
+    The alias names folders on disk and appears in every report in place of
+    the tenant's real name, so it must be a plain word."""
+    while True:
+        alias = typer.prompt(
+            "A short name for this tenant, used in reports and folder names "
+            "(letters, digits, - and _)",
+            default=default or "tenant",
+        ).strip()
+        if _ALIAS_RE.match(alias):
+            return alias
+        typer.echo(
+            f"  '{alias}' will not work as a folder name. Use letters, digits, "
+            "hyphens and underscores, starting with a letter or digit."
         )
 
-    cert_pem, cert_public_pem = CERT_PEM(), CERT_PUBLIC_PEM()
-    cert_pem.parent.mkdir(parents=True, exist_ok=True)
-    if cert_pem.exists():
-        typer.echo(f"Certificate already exists at {cert_pem}, keeping it.")
-        # Harden it even though we did not just create it: a key generated
-        # before this hardening existed would otherwise stay world-readable,
-        # since this branch never rewrites it (SECRETS-2-001).
-        _harden_key_file(cert_pem)
-    else:
-        generate_certificate(cert_pem, cert_public_pem)
-        typer.echo(f"Generated a new self-signed certificate (valid {CERT_LIFETIME_DAYS} days).")
 
-    cert_obj = x509.load_pem_x509_certificate(cert_public_pem.read_bytes())
-    cert_der_b64 = base64.b64encode(cert_obj.public_bytes(serialization.Encoding.DER)).decode("ascii")
+def _default_alias_from_account(account: str) -> str:
+    """admin@contoso.com suggests 'contoso'; anything odd suggests nothing."""
+    domain = account.partition("@")[2]
+    label = domain.partition(".")[0]
+    return label if _ALIAS_RE.match(label or "") else ""
+
+
+@app.command()
+def setup(
+    tenant_id: str = typer.Option(
+        None,
+        "--tenant-id",
+        help="Sign in to this specific tenant (for scripts and multi-tenant work); "
+        "the interactive default reads the tenant from your sign-in instead.",
+    ),
+) -> None:
+    """Connect a tenant: sign in, create the read-only Collector app, write config."""
+    typer.echo("IAMAI setup")
+    typer.echo("")
+    typer.echo("This connects one tenant so IAMAI can read it. Four steps, about five")
+    typer.echo("minutes: a one-time sign-in app, your sign-in, the read-only Collector")
+    typer.echo("app, and the permission approval. Nothing here changes the tenant.")
+    typer.echo("")
+
+    if tenant_id is not None:
+        tenant_id = _require_guid(tenant_id, "tenant ID")
+
+    # --- Step 1 of 4: the one-time sign-in helper app --------------------------
+    existing_config: Config | None = None
+    try:
+        existing_config = load_config()
+    except Exception:
+        existing_config = None
 
     setup_client_id = SETUP_CLIENT_ID
-    if not setup_client_id:
+    if not setup_client_id and existing_config and existing_config.setupClientId:
+        setup_client_id = existing_config.setupClientId
+        typer.echo("Step 1 of 4: using the sign-in app from your existing config.")
+    elif setup_client_id:
+        typer.echo("Step 1 of 4: the sign-in app is already configured.")
+    else:
+        typer.echo("Step 1 of 4: create the one-time sign-in app.")
         typer.echo("")
-        typer.echo("IAMAI Setup bootstrapper app not yet registered. You only do this once.")
+        typer.echo("Setup signs you in through a small app registration of your own, so no")
+        typer.echo("third party ever sits in the sign-in path. You create it once and it is")
+        typer.echo("remembered. Two ways, either is fine:")
         typer.echo("")
-        typer.echo("Fast path. If you have the Azure CLI and are signed in to the golden")
-        typer.echo("tenant as a Global Administrator (az login), one command creates it and")
-        typer.echo("prints the client ID to paste below:")
+        typer.echo("Fast path, if you have the Azure CLI and are signed in as a Global")
+        typer.echo("Administrator (az login): this one command creates it and prints the")
+        typer.echo("client ID to paste below:")
         typer.echo("")
         typer.echo('  az ad app create --display-name "IAMAI Setup" '
                    "--sign-in-audience AzureADMultipleOrgs "
                    "--is-fallback-public-client true --query appId -o tsv")
         typer.echo("")
-        typer.echo("Manual path. About two minutes in the portal:")
+        typer.echo("Manual path, about two minutes in the portal:")
         typer.echo("")
-        typer.echo("  1. Open, signed in as a Global Administrator of the golden tenant:")
+        typer.echo("  1. Open, signed in as a Global Administrator:")
         typer.echo("     https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/CreateApplicationBlade")
         typer.echo("     (or Entra ID > App registrations > New registration).")
         typer.echo('  2. Name: "IAMAI Setup"  |  Supported accounts: Any organizational directory '
@@ -465,64 +553,154 @@ def setup() -> None:
         typer.echo("  3. Authentication tab > Advanced settings > Allow public client flows: Yes > Save.")
         typer.echo("  4. Copy the Application (client) ID from the Overview page.")
         typer.echo("")
-        setup_client_id = typer.prompt("IAMAI Setup client ID")
-        if not setup_client_id.strip():
-            typer.echo("No client ID entered. Run setup again when ready.", err=True)
-            raise typer.Exit(1)
+        while True:
+            setup_client_id = typer.prompt(
+                "Paste the sign-in app's client ID (a GUID like 12345678-abcd-...)"
+            ).strip()
+            if _GUID_RE.match(setup_client_id):
+                break
+            typer.echo("  That is not a GUID. Copy the Application (client) ID from the app's Overview page.")
 
-    token = _acquire_setup_token(setup_client_id.strip(), golden_tenant_id)
+    # --- Step 2 of 4: sign in --------------------------------------------------
+    typer.echo("")
+    typer.echo("Step 2 of 4: sign in to the tenant you are assessing.")
+    typer.echo("")
+    typer.echo("Your browser will open the Microsoft sign-in page. Sign in as a Global")
+    typer.echo("Administrator of the tenant you want assessed; your usual MFA and access")
+    typer.echo("policies apply. This sign-in requests exactly one permission:")
+    typer.echo("")
+    for scope in SETUP_SCOPES:
+        typer.echo(f"  {scope.rsplit('/', 1)[-1]}")
+    typer.echo("")
+    typer.echo("It lets setup create the IAMAI Collector app and manage only that app.")
+    typer.echo("It cannot read or change anything else, and it is used only during setup.")
+    typer.echo("The Collector app itself gets read-only permissions, shown in step 3.")
+    typer.echo("")
 
-    typer.echo("Resolving permission GUIDs from Microsoft Graph...")
-    perm_guids = _resolve_permission_guids(token)
-    resource_access = [{"id": guid, "type": "Role"} for guid in perm_guids]
+    token, signed_in_tenant, account = _acquire_setup_token(setup_client_id, tenant_id)
+    signed_in_tenant = _require_guid(signed_in_tenant, "tenant ID from the sign-in")
 
-    typer.echo("Creating app registration...")
-    app_id, _app_obj_id = _get_or_create_app(token, cert_der_b64, resource_access)
-    # Graph assigns this, so it is trusted, but config.yaml is emitted by a
-    # hand-rolled writer that does not escape values; validating it is a
-    # GUID keeps anything but a GUID out of that file (INJECT-2-001).
-    app_id = _require_guid(app_id, "application ID from Graph")
+    if tenant_id is not None and signed_in_tenant.lower() != tenant_id.lower():
+        typer.echo(
+            f"You asked for tenant {tenant_id} but signed in to {signed_in_tenant}. "
+            "Nothing was changed. Run setup again and sign in with an account from "
+            "the right tenant.",
+            err=True,
+        )
+        raise typer.Exit(1)
 
-    typer.echo("Creating service principal in golden tenant...")
-    _get_or_create_sp(token, app_id)
+    typer.echo("")
+    typer.echo(f"Signed in as {account}")
+    typer.echo(f"Tenant ID: {signed_in_tenant}")
+    if not typer.confirm("Is this the tenant you want assessed?", default=True):
+        typer.echo("Nothing was changed. Run setup again and pick the right account "
+                   "in the sign-in window.")
+        raise typer.Exit(1)
 
-    tenants: dict[str, str] = {golden_alias: golden_tenant_id}
-    if target_alias.strip() and target_tenant_id.strip():
-        tenants[target_alias.strip()] = target_tenant_id.strip()
+    known_alias = ""
+    if existing_config:
+        for alias_name, known_tid in existing_config.tenants.items():
+            if known_tid.lower() == signed_in_tenant.lower():
+                known_alias = alias_name
+    if known_alias:
+        alias = known_alias
+        typer.echo(f"This tenant is already configured as '{alias}'; refreshing it.")
+    else:
+        alias = _prompt_alias(_default_alias_from_account(account))
 
+    # --- Step 3 of 4: the read-only Collector app ------------------------------
+    typer.echo("")
+    typer.echo("Step 3 of 4: the read-only Collector app and its certificate.")
+    typer.echo("")
+    typer.echo("The Collector is what reads the tenant on your schedule. It asks for")
+    typer.echo("these permissions, every one a read permission:")
+    typer.echo("")
+    for name, why in PERMISSION_TABLE:
+        typer.echo(f"  {name:<36} {why}")
+    typer.echo("")
+    # The read-only promise, enforced in code rather than by convention: if
+    # this table ever gained a write permission, setup would refuse to run.
+    assert_permissions_read_only(PERMISSION_NAMES)
+
+    home_tenant = existing_config.homeTenantId if existing_config else signed_in_tenant
+    # The Collector app is registered once, in the first tenant that ran
+    # setup, and every further tenant only approves it. Creating a second
+    # copy per tenant would mean a credential and an app to look after in
+    # every client tenant instead of one.
+    creating = (
+        existing_config is None
+        or not existing_config.appId
+        or signed_in_tenant.lower() == home_tenant.lower()
+    )
+
+    cert_pem, cert_public_pem = CERT_PEM(), CERT_PUBLIC_PEM()
+    if creating:
+        cert_pem.parent.mkdir(parents=True, exist_ok=True)
+        if cert_pem.exists():
+            typer.echo(f"Certificate already exists at {cert_pem}, keeping it.")
+            # Harden it even though we did not just create it: a key generated
+            # before this hardening existed would otherwise stay world-readable,
+            # since this branch never rewrites it (SECRETS-2-001).
+            _harden_key_file(cert_pem)
+        else:
+            generate_certificate(cert_pem, cert_public_pem)
+            typer.echo(f"Generated a new sign-in certificate (valid {CERT_LIFETIME_DAYS} days).")
+
+        cert_obj = x509.load_pem_x509_certificate(cert_public_pem.read_bytes())
+        cert_der_b64 = base64.b64encode(cert_obj.public_bytes(serialization.Encoding.DER)).decode("ascii")
+
+        typer.echo("Looking up the permission identifiers from Microsoft Graph...")
+        perm_guids = _resolve_permission_guids(token)
+        resource_access = [{"id": guid, "type": "Role"} for guid in perm_guids]
+
+        typer.echo("Creating the app registration...")
+        app_id, _app_obj_id = _get_or_create_app(token, cert_der_b64, resource_access)
+        # Graph assigns this, so it is trusted, but config.yaml is emitted by a
+        # hand-rolled writer that does not escape values; validating it is a
+        # GUID keeps anything but a GUID out of that file (INJECT-2-001).
+        app_id = _require_guid(app_id, "application ID from Graph")
+
+        typer.echo("Creating its service principal...")
+        _get_or_create_sp(token, app_id)
+    else:
+        app_id = existing_config.appId
+        typer.echo("The Collector app already exists (created when the first tenant was")
+        typer.echo("connected), so nothing new is created here. This tenant only needs")
+        typer.echo("to approve it, which is step 4.")
+
+    tenants: dict[str, str] = dict(existing_config.tenants) if existing_config else {}
+    tenants[alias] = signed_in_tenant
     config = Config(
         appId=app_id,
-        homeTenantId=golden_tenant_id,
+        homeTenantId=home_tenant,
         certPath=str(cert_pem),
-        goldenTenantId=golden_tenant_id,
+        setupClientId=setup_client_id,
         tenants=tenants,
     )
     config_path = save_config(config)
-    typer.echo("")
-    typer.echo(f"Config written to {config_path}.")
-    typer.echo("")
 
-    # The app exists but holds no consent yet. The signed-in administrator
-    # approves its read-only permissions through Microsoft's own screen, so
-    # setup never needed a scope that could grant app roles itself.
-    golden_url = CONSENT_URL_TEMPLATE.format(tenantId=golden_tenant_id, appId=app_id)
-    typer.echo("One step left: grant the read-only permissions.")
-    typer.echo(f"  1. Open this link, still signed in as a Global Administrator: {golden_url}")
+    # --- Step 4 of 4: approve, and here is everything that was configured ------
+    consent_url = CONSENT_URL_TEMPLATE.format(tenantId=signed_in_tenant, appId=app_id)
+    typer.echo("")
+    typer.echo("Step 4 of 4: approve the read-only permissions.")
+    typer.echo("")
+    typer.echo("What was configured:")
+    typer.echo(f"  Tenant:      {alias} ({signed_in_tenant})")
+    typer.echo(f"  Config file: {config_path}")
+    try:
+        not_after = x509.load_pem_x509_certificate(cert_public_pem.read_bytes()).not_valid_after_utc
+        typer.echo(f"  Certificate: {cert_pem}, expires {not_after.date()}")
+    except OSError:
+        pass
+    typer.echo("")
+    typer.echo("The app exists but can read nothing until an administrator approves it:")
+    typer.echo(f"  1. Open this link, still signed in as a Global Administrator: {consent_url}")
     typer.echo("  2. Review the list (every permission is a read permission) and Accept.")
-    typer.echo(f"  3. Confirm it worked: iamai verify {golden_alias}")
-
-    if target_alias.strip() and target_tenant_id.strip():
-        url = CONSENT_URL_TEMPLATE.format(tenantId=target_tenant_id.strip(), appId=app_id)
-        typer.echo("")
-        typer.echo(f"To consent the target tenant '{target_alias.strip()}', ask its administrator to open:")
-        typer.echo(f"  {url}")
-    else:
-        typer.echo("")
-        typer.echo("To add a target tenant later, run: iamai consent <alias>")
-
+    typer.echo(f"  3. Confirm it worked: iamai verify {alias}")
     typer.echo("")
-    typer.echo("The app is registered. It cannot read anything until the consent "
-                "link above is accepted.")
+    typer.echo(f"Then read the tenant with: iamai collect {alias}")
+    typer.echo("To connect another tenant later, run 'iamai setup' again, or "
+               "'iamai consent <alias>' for its approval link.")
 
 
 @app.command()
@@ -870,23 +1048,18 @@ def purge(
             raise typer.Exit(code=1)
         shutil.rmtree(alias_dir)
         typer.echo(f"Deleted {alias_dir}.")
-        # A baseline built from this tenant lives under baselines/, outside the
-        # alias dir, so it is not removed here. It can carry the tenant's policy
-        # names and, for unbound IP locations, its network ranges, so point at
-        # it rather than deleting a shared standard on the operator's behalf
-        # (CRYPTO-2-004).
-        try:
-            is_golden = alias == _golden_alias(config)
-        except typer.BadParameter:
-            is_golden = False
-        if is_golden:
-            baselines = sorted(_baselines_dir().glob("baseline-v*.json")) if _baselines_dir().exists() else []
-            if baselines:
-                typer.echo(
-                    f"Note: {len(baselines)} baseline artifact(s) built from this "
-                    f"tenant remain under {_baselines_dir()}/. Delete them by hand if "
-                    "this tenant's data should not persist there."
-                )
+        # Imported standards live under baselines/, outside the alias dir, so
+        # they are not removed here. One frozen by an older version's
+        # reference-tenant capture can carry that tenant's policy names and
+        # network ranges, so point at the folder rather than deleting a shared
+        # standard on the operator's behalf (CRYPTO-2-004).
+        baselines = sorted(_baselines_dir().glob("baseline-v*.json")) if _baselines_dir().exists() else []
+        if baselines:
+            typer.echo(
+                f"Note: {len(baselines)} frozen standard(s) remain under "
+                f"{_baselines_dir()}/. If one was captured from this tenant by an "
+                "older version of this tool, delete it by hand."
+            )
         return
 
     condemned = store.snapshots_to_purge(
@@ -910,7 +1083,7 @@ def purge(
 baseline_app = typer.Typer(
     add_completion=False,
     pretty_exceptions_show_locals=False,
-    help="Build and manage the baseline artifact.",
+    help="Manage the standard used for grading (the shipped one is the default).",
 )
 app.add_typer(baseline_app, name="baseline")
 
@@ -929,15 +1102,6 @@ def _baselines_dir():
     return baselines_dir()
 
 
-def _golden_alias(config: Config) -> str:
-    for alias, tenant_id in config.tenants.items():
-        if tenant_id == config.goldenTenantId:
-            return alias
-    raise typer.BadParameter(
-        "No configured alias points at goldenTenantId. Add the golden tenant to config.yaml."
-    )
-
-
 def _next_baseline_path() -> Path:
     _baselines_dir().mkdir(parents=True, exist_ok=True)
     version = 1
@@ -946,194 +1110,45 @@ def _next_baseline_path() -> Path:
     return _baselines_dir() / f"baseline-v{version}.json"
 
 
+def _load_standard(pack: Path | None) -> tuple[dict, dict]:
+    """Load the active standard and describe it for the report.
+
+    Every assessment and report states which standard graded it, so a grade
+    can never be read without knowing what it was measured against."""
+    path = Path(pack) if pack else _latest_baseline_path()
+    artifact = json.loads(path.read_text(encoding="utf-8"))
+    built = artifact.get("builtFrom") or {}
+    shipped = path == DEFAULT_PACK
+    descriptor = {
+        "source": "shipped" if shipped else "imported",
+        "name": ("the standard that ships with this tool" if shipped
+                 else f"an imported standard ({path.name})"),
+        "version": str(built.get("version") or ""),
+        "schemaVersion": artifact.get("schemaVersion"),
+        "controls": len(artifact.get("controls", [])),
+        "file": path.name,
+    }
+    return artifact, descriptor
+
+
 def _latest_baseline_path() -> Path:
     candidates = sorted(
         _baselines_dir().glob("baseline-v*.json"),
         key=lambda p: int(p.stem.split("-v")[-1]) if p.stem.split("-v")[-1].isdigit() else 0,
     )
     if not candidates:
-        # A baseline is built from a reference tenant somebody already trusts.
-        # Whoever self hosts this has no such tenant, and telling them to build
-        # one is advice they cannot take, so fall back to the standard that
-        # ships with the tool. The pack is the default answer for that reader;
-        # the baseline is the option for somebody who has a tenant to copy.
+        # The standard ships with the tool: fixed, versioned, and the same for
+        # every tenant, which is what makes grades comparable across tenants
+        # and across time. An imported pack under baselines/ overrides it for
+        # whoever authored their own; with none imported, this is the default.
         if DEFAULT_PACK.is_file():
             return DEFAULT_PACK
         raise FileNotFoundError(
-            "No standard to grade against. Either pass --pack with a standard "
-            "pack from packs/, or build one from a reference tenant you trust "
-            "with 'iamai baseline build'."
+            "No standard to grade against: the packaged standard is missing "
+            "from this install and nothing was imported with 'iamai baseline "
+            "import'. Reinstall the tool."
         )
     return candidates[-1]
-
-
-_UNBOUND_IDENTITY_RE = re.compile(r'"(user|group):([0-9a-fA-F-]{36})"')
-# Unbound named-location references are emitted as "location:<guid>", not
-# "namedLocation:" (canon.py's _canonical_locations); the earlier pattern here
-# matched a form the artifact never contains, so the location count was always
-# zero (CRYPTO-2-002).
-_UNBOUND_LOCATION_RE = re.compile(r'"location:([0-9a-fA-F-]{36})"')
-
-
-def _baseline_identity_summary(artifact: dict) -> dict:
-    """What tenant-specific data a frozen baseline would carry.
-
-    A baseline carries the golden tenant's own policy, location and strength
-    names with no pseudonymization pass -- unlike a sanitized snapshot, this
-    is by design, because those names are shown to the operator during
-    curation, right here in this command, before the artifact exists to
-    sanitize. Pseudonymizing them would break the thing that lets an operator
-    decide what they are including. What is worth a warning is different: an
-    include or exclude list the operator never bound to a parameter slot
-    embeds the raw Entra object id verbatim (SlotResolver.token()'s fallback),
-    and unlike a policy name, that id can name a specific person; and an
-    unbound IP-based named location embeds the tenant's raw CIDR ranges
-    (BASELINE-001, CRYPTO-2-002).
-    """
-    import json as _json
-
-    blob = _json.dumps(artifact)
-    identities = {m.group(0) for m in _UNBOUND_IDENTITY_RE.finditer(blob)}
-    locations = {m.group(0) for m in _UNBOUND_LOCATION_RE.finditer(blob)}
-    # An unbound ipNamedLocation canonicalizes to {"cidrs": [...], ...}; count
-    # the controls that carry one, so the operator is told the artifact holds
-    # the tenant's real network ranges.
-    cidr_locations = sum(
-        1 for control in artifact.get("controls", [])
-        if isinstance((control.get("canonical") or {}).get("content"), dict)
-        and "cidrs" in control["canonical"]["content"]
-    )
-    return {
-        "controls": len(artifact.get("controls", [])),
-        "identities": len(identities),
-        "locations": len(locations),
-        "cidrLocations": cidr_locations,
-    }
-
-
-@baseline_app.command("build")
-def baseline_build(
-    days: int = typer.Option(30, "--days", help="How many days of sign-in logs to pull."),
-    yes: bool = typer.Option(False, "--yes", "-y", help="Accept the full inventory and default slot bindings without prompting."),
-) -> None:
-    """Pull the golden tenant, curate the inventory, freeze the baseline artifact."""
-    import json as _json
-
-    from iamai.canon import build_artifact
-    from iamai.collectors import run_all
-    from iamai.store import SnapshotStore, load_snapshot_data
-
-    config = load_config()
-    alias = _golden_alias(config)
-    typer.echo(f"Collecting the golden tenant ('{alias}') to build the baseline.")
-    client = make_client(config, config.goldenTenantId)
-    store = SnapshotStore()
-    writer = store.new_snapshot(alias)
-    manifest = run_all(client, writer, alias, days=days)
-    if not manifest.complete:
-        typer.echo("The collection was incomplete. A baseline must be built from a complete pull.", err=True)
-        raise typer.Exit(code=1)
-    data, _ = load_snapshot_data(writer.snapshot_dir)
-
-    # Golden-side policy exclusion GUIDs bind to parameter slots. Default:
-    # they are the standard's break-glass exclusions.
-    exclusion_guids: list[str] = []
-    for cap in data.get("conditional_access_policies") or []:
-        users = (cap.get("conditions") or {}).get("users") or {}
-        for guid in (users.get("excludeGroups") or []) + (users.get("excludeUsers") or []):
-            if guid not in exclusion_guids:
-                exclusion_guids.append(guid)
-    slot_bindings: dict[str, list[str]] = {"breakGlassAccounts": []}
-    groups_data = data.get("groups") or {}
-    group_list = groups_data.get("groups", []) if isinstance(groups_data, dict) else groups_data
-    group_names = {
-        str(g.get("id", "")).lower(): str(g.get("displayName", ""))
-        for g in group_list
-        if isinstance(g, dict)
-    }
-    for guid in exclusion_guids:
-        label = group_names.get(guid.lower(), guid)
-        if yes:
-            slot_bindings["breakGlassAccounts"].append(guid)
-            continue
-        slot = typer.prompt(
-            f"The golden tenant excludes '{label}' from its policies. Which parameter slot is it? "
-            "(breakGlassAccounts, serviceAccounts, pilotGroups)",
-            default="breakGlassAccounts",
-        )
-        slot_bindings.setdefault(slot.strip(), []).append(guid)
-
-    artifact = build_artifact(
-        data,
-        tenant_id=config.goldenTenantId,
-        snapshot=writer.snapshot_dir.name,
-        tool_version=TOOL_VERSION,
-        slot_bindings=slot_bindings,
-    )
-
-    typer.echo("")
-    typer.echo("Baseline inventory:")
-    for control in artifact["controls"]:
-        typer.echo(f"  {control['id']:<24} {control['surface']:<24} {control['sourceName']}")
-    excluded: set[str] = set()
-    if not yes and not typer.confirm(f"Include all {len(artifact['controls'])} controls?", default=True):
-        for control in list(artifact["controls"]):
-            if not typer.confirm(f"  Include {control['id']} ({control['sourceName']})?", default=True):
-                excluded.add(control["id"])
-        artifact = build_artifact(
-            data,
-            tenant_id=config.goldenTenantId,
-            snapshot=writer.snapshot_dir.name,
-            tool_version=TOOL_VERSION,
-            slot_bindings=slot_bindings,
-            exclude_control_ids=excluded,
-        )
-
-    # This artifact carries the golden tenant's own policy, location and
-    # strength names with no pseudonymization pass, unlike a sanitized
-    # snapshot -- by design, since those names were just shown above to let
-    # the operator decide what to include. It stays off the public repository
-    # (baselines/ is gitignored) but is reused across every other tenant this
-    # is graded against, on the same machine. That reuse across engagements
-    # is a real, if narrower, exposure, so it is a choice the operator makes
-    # on purpose here rather than a silent default (BASELINE-001).
-    summary = _baseline_identity_summary(artifact)
-    typer.echo("")
-    typer.echo(
-        f"This baseline will carry {summary['controls']} policy, location and "
-        "strength name(s) from the golden tenant. It never leaves this machine "
-        "on its own, but it will be reused for every other tenant graded "
-        "against it."
-    )
-    if summary["identities"]:
-        typer.echo(
-            f"It also carries {summary['identities']} user or group id from the "
-            "golden tenant's own policies that was not mapped to a parameter "
-            "slot (breakGlassAccounts, serviceAccounts, pilotGroups) during "
-            "curation. Unlike a policy name, this can identify a specific person "
-            "or group. Re-run and bind it to a slot if that matters here."
-        )
-    if summary["locations"]:
-        typer.echo(
-            f"It also carries {summary['locations']} named location id from the "
-            "golden tenant that was not mapped to a parameter slot."
-        )
-    if summary["cidrLocations"]:
-        typer.echo(
-            f"It also carries {summary['cidrLocations']} IP-based named "
-            "location(s) with the golden tenant's raw network ranges (CIDRs). "
-            "Bind them to a slot during curation to keep the tenant's addresses "
-            "out of a baseline that travels to other engagements."
-        )
-    if not yes and not typer.confirm("Freeze this baseline?", default=True):
-        typer.echo("Not written.")
-        raise typer.Exit(code=1)
-
-    path = _next_baseline_path()
-    path.write_text(_json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=False), encoding="utf-8")
-    typer.echo("")
-    typer.echo(f"Baseline artifact frozen: {path} ({len(artifact['controls'])} controls).")
-    typer.echo("Run 'iamai assess <alias>' to grade a tenant against it.")
 
 
 @baseline_app.command("import")
@@ -1142,7 +1157,7 @@ def baseline_import(
 ) -> None:
     """Validate an authored standard pack and freeze it as the active baseline.
 
-    A pack is tenant free: it needs no golden collect. The import runs the
+    A pack is tenant free: it grades any tenant as it is. The import runs the
     schema and static checks (citations present, known profiles, no tenant
     GUIDs outside universal constants and slots) and refuses to freeze a pack
     that fails any of them."""
@@ -1229,32 +1244,29 @@ def assess(
     pack: Path = typer.Option(
         None,
         "--pack",
-        help="Grade against a standard pack (see packs/) instead of a baseline "
-             "built from a reference tenant.",
+        help="Grade against this standard pack file instead of the active standard.",
         exists=True,
         dir_okay=False,
     ),
 ) -> None:
-    """Grade the latest snapshot against a standard and write assessment.json.
+    """Grade the latest snapshot against the standard and write assessment.json.
 
-    Two kinds of standard exist and they are graded identically. A pack is
-    written once and shipped with the tool, which is what a self hosting user
-    gets. A baseline is derived from a reference tenant, which is what someone
-    with a tenant they already trust can build for themselves.
+    The standard ships with the tool: fixed, versioned, and the same for
+    every tenant, which is what makes grades comparable across tenants and
+    across time. Every assessment records which standard and version graded
+    it. An imported pack, when one exists, overrides the shipped one.
     """
-    import json as _json
-
     from iamai.grade import UNKNOWN
     from iamai.questions import assess_with_answers
     from iamai.store import SnapshotStore
 
     config = load_config()
+    artifact, standard = _load_standard(pack)
     baseline_path = Path(pack) if pack else _latest_baseline_path()
-    artifact = _json.loads(baseline_path.read_text(encoding="utf-8"))
     store = SnapshotStore()
 
     assessment, out_path, report_path, answer_count = assess_with_answers(
-        alias, config.tenant_id(alias), artifact, store
+        alias, config.tenant_id(alias), artifact, store, standard=standard
     )
 
     if answer_count:
@@ -1342,8 +1354,7 @@ def questions(alias: str) -> None:
 
     config = load_config()
     tenant_id = config.tenant_id(alias)
-    baseline_path = _latest_baseline_path()
-    artifact = _json.loads(baseline_path.read_text(encoding="utf-8"))
+    artifact, standard = _load_standard(None)
     store = SnapshotStore()
     try:
         assessment = latest_assessment(store, alias)
@@ -1378,7 +1389,7 @@ def questions(alias: str) -> None:
             break
         save_answer(store.alias_dir(alias), answers, answer)
 
-    regraded, out_path, report_path, _ = assess_with_answers(alias, tenant_id, artifact, store)
+    regraded, out_path, report_path, _ = assess_with_answers(alias, tenant_id, artifact, store, standard=standard)
     changes = grade_changes(assessment, regraded)
     typer.echo("")
     typer.echo("Answers saved. The assessment was regraded with them.")
@@ -1388,7 +1399,7 @@ def questions(alias: str) -> None:
     else:
         typer.echo("  No grades changed. The answers are saved and will be used by the plan.")
     typer.echo("")
-    _echo_assessment(regraded, baseline_path.name)
+    _echo_assessment(regraded, standard.get("file", "the standard"))
     typer.echo("")
     typer.echo(f"Assessment written to {out_path}")
     typer.echo(f"Report written to {report_path} (open in a browser; print to PDF to keep a copy)")
@@ -1515,8 +1526,7 @@ def wizard(
 
     config = load_config()
     tenant_id = config.tenant_id(alias)
-    baseline_path = _latest_baseline_path()
-    artifact = _json.loads(baseline_path.read_text(encoding="utf-8"))
+    artifact, standard = _load_standard(None)
     store = SnapshotStore()
     try:
         latest_assessment(store, alias)
@@ -1526,7 +1536,8 @@ def wizard(
 
     from iamai.web import create_app
 
-    web_app = create_app(alias=alias, tenant_id=tenant_id, artifact=artifact, store=store)
+    web_app = create_app(alias=alias, tenant_id=tenant_id, artifact=artifact, store=store,
+                         standard=standard)
     typer.echo("The questionnaire wizard is starting. It runs only on this machine.")
     typer.echo(f"  1. Open http://127.0.0.1:{port} in your browser.")
     typer.echo("  2. Answer each question and press Save and continue.")

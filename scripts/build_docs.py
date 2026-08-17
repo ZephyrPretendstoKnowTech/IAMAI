@@ -52,11 +52,14 @@ DOCS_CSS = """
 # --- Command reference, as data so the drift and coverage tests can check it ----
 # (name, signature, description, [(flag, meaning), ...])
 COMMANDS = [
-    ("setup", "iamai setup",
-     "Creates the read-only collector app in your tenant, generates the certificate it "
-     "signs in with, and writes config.yaml. Run once per install. It prints a fast Azure "
-     "CLI path and a manual portal path for the one-time helper-app registration, then walks "
-     "you through consent.", []),
+    ("setup", "iamai setup [--tenant-id GUID]",
+     "Connects a tenant in four explained steps: a one-time sign-in app (Azure CLI fast "
+     "path or two minutes in the portal, remembered afterwards), a browser sign-in as a "
+     "Global Administrator (the tenant is read from your sign-in, so there is no ID to "
+     "find and paste; a device code fallback covers machines with no browser), the "
+     "read-only Collector app with its permissions listed before anything is created, and "
+     "the approval link. Run it again any time to add a tenant or renew the certificate. "
+     "--tenant-id pins the tenant for scripted use.", []),
     ("consent", "iamai consent <alias>",
      "Prints the Microsoft admin-consent link for a tenant. Open it as a Global Administrator "
      "to grant the read permissions. Use it to add a second tenant after the first setup.", []),
@@ -104,15 +107,9 @@ COMMANDS = [
       ("--older-than N", "Delete snapshots older than N days."),
       ("--all", "Delete everything for this alias: snapshots, assessments, plans, answers, and the pseudonym map."),
       ("--yes, -y", "Delete without asking for confirmation.")]),
-    ("baseline build", "iamai baseline build [--days N] [--yes]",
-     "Advanced. Builds a standard from a well-run reference tenant instead of using a shipped "
-     "pack: pulls the golden tenant, lets you curate the inventory, and freezes it as the "
-     "active baseline. Most users never need this.",
-     [("--days N", "How many days of sign-in logs to pull from the golden tenant. Default 30."),
-      ("--yes, -y", "Accept the full inventory and default bindings without prompting.")]),
     ("baseline import", "iamai baseline import <pack_path>",
      "Advanced. Validates an authored standard pack (schema and static checks) and freezes it "
-     "as the active baseline. No tenant needed.", []),
+     "as the active standard in place of the shipped one. Most users never need this.", []),
 ]
 
 # --- Every read permission the collector requests, and what it reads -----------
@@ -152,7 +149,7 @@ GLOSSARY = [
     ("Break-glass account", "An emergency administrator account kept outside normal policies so someone can always get in."),
     ("Conditional Access policy", "A rule that decides whether a sign-in is allowed, and under what conditions (such as requiring multi-factor authentication)."),
     ("Named location", "A set of network addresses or countries a policy can treat specially, for example a trusted office network."),
-    ("Baseline / pack", "The standard the tenant is graded against. A pack ships with the tool; a baseline can be built from a reference tenant."),
+    ("The standard", "The fixed, versioned set of checks the tenant is graded against. It ships with the tool and is the same for every tenant, which is what makes grades comparable across tenants and over time. Tailoring to one tenant happens in the plan, never in the grade. Advanced users can import an authored pack with baseline import to override it."),
     ("Structural note", "An advisory observation about how the tenant is built. It never changes a grade."),
     ("Sanitize", "Replacing every real identifier in a snapshot with a stable stand-in, so a copy can be shared safely."),
 ]

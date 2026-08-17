@@ -295,8 +295,10 @@ BODY = f"""<body>
       <p>Conditional Access, sign in methods, roles, guest and consent settings,
       sign in logs. Read only, over Microsoft Graph.</p></div>
     <div class="feature"><div class="n">2</div><h3>Grades it</h3>
-      <p>Against a standard that ships with the tool. Ambiguity grades down,
-      never up, so a grade is never better than the evidence.</p></div>
+      <p>Against the standard: a fixed, versioned set of checks that ships with
+      the tool and is the same for every tenant, so grades stay comparable
+      across tenants and over time. Ambiguity grades down, never up, so a grade
+      is never better than the evidence.</p></div>
     <div class="feature"><div class="n">3</div><h3>Asks what data can't answer</h3>
       <p>A short questionnaire for the handful of things only you know, such as
       which accounts are the emergency accounts you must never lock out.</p></div>

@@ -32,7 +32,7 @@ from iamai.questions import (
 )
 from iamai.store import SnapshotStore, load_snapshot_data
 
-from conftest import APP_ID, TENANT_ID, make_test_client
+from conftest import freeze_test_baseline, APP_ID, TENANT_ID, make_test_client
 from test_m1_canon import make_artifact
 
 pytestmark = pytest.mark.m3
@@ -343,7 +343,7 @@ def _scripted_input(questions) -> str:
 
 
 def test_cli_runner_completes_the_flow_and_regrades(workspace, mock_graph):
-    assert runner.invoke(cli.app, ["baseline", "build", "--yes"]).exit_code == 0
+    freeze_test_baseline()
     assert runner.invoke(cli.app, ["assess", "golden"]).exit_code == 0
 
     store = SnapshotStore()
@@ -372,7 +372,7 @@ def test_cli_runner_completes_the_flow_and_regrades(workspace, mock_graph):
 
 
 def test_cli_runner_requires_an_assessment_first(workspace, mock_graph):
-    assert runner.invoke(cli.app, ["baseline", "build", "--yes"]).exit_code == 0
+    freeze_test_baseline()
     result = runner.invoke(cli.app, ["questions", "target"])
     assert result.exit_code == 1
     try:

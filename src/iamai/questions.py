@@ -751,11 +751,15 @@ def latest_assessment(store: SnapshotStore, alias: str) -> dict:
 
 
 def assess_with_answers(
-    alias: str, tenant_id: str, artifact: dict, store: SnapshotStore
+    alias: str, tenant_id: str, artifact: dict, store: SnapshotStore,
+    standard: dict | None = None,
 ) -> tuple[dict, Path, Path, int]:
     """Assess the latest snapshot with all saved answer bindings applied and
     write the assessment and report. Returns (assessment, assessment_path,
-    report_path, answer_count). With no saved answers this is a plain assess."""
+    report_path, answer_count). With no saved answers this is a plain assess.
+
+    ``standard`` describes which standard graded this (name, version, control
+    count); it is stamped into the assessment so every report can state it."""
     from iamai.grade import assess_snapshot
     from iamai.report import render_assessment
 
@@ -771,6 +775,8 @@ def assess_with_answers(
         snapshot_dir=snapshot_dir,
         answer_bindings=slot_bindings(answers),
     )
+    if standard:
+        assessment["standard"] = standard
     out_dir = store.alias_dir(alias) / "assessments"
     out_dir.mkdir(parents=True, exist_ok=True)
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())

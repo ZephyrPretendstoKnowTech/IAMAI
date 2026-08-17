@@ -16,12 +16,22 @@ from iamai.paths import config_path as _default_config_path
 
 
 class Config(BaseModel):
-    """Tool configuration. V1 holds exactly two tenants: golden and target."""
+    """Tool configuration: the Collector app, its certificate, and the
+    tenants it is consented into, by alias.
+
+    homeTenantId is the tenant the app registration lives in, which is
+    simply the first tenant that ran setup. goldenTenantId is a retired
+    concept (the standard ships with the tool and is fixed); the field is
+    tolerated so configs written by older versions still load, but it is
+    never written or read by current code. setupClientId is the one-time
+    sign-in helper app, kept so renewing the certificate does not re-ask
+    for it."""
 
     appId: str
     homeTenantId: str
     certPath: str
-    goldenTenantId: str
+    goldenTenantId: str = ""
+    setupClientId: str = ""
     tenants: dict[str, str] = Field(default_factory=dict)
 
     def tenant_id(self, alias: str) -> str:
@@ -69,9 +79,15 @@ def _emit_simple_yaml(data: dict) -> str:
     lines: list[str] = []
     for key, value in data.items():
         if isinstance(value, dict):
+            if not value:
+                continue
             lines.append(f"{key}:")
             for nested_key, nested_value in value.items():
                 lines.append(f"  {nested_key}: {nested_value}")
+        elif value == "":
+            # An empty scalar would round-trip as a nested-mapping opener in
+            # this small parser, so optional fields are simply left out.
+            continue
         else:
             lines.append(f"{key}: {value}")
     return "\n".join(lines) + "\n"

@@ -19,6 +19,27 @@ All notable changes to IAMAI are recorded here. The format follows
   (pinned to the release commit's timestamp) and records its SHA256 in the
   release notes.
 
+### Changed
+
+- **There is no golden tenant.** The standard ships with the tool, fixed and
+  versioned, the same for every tenant, which is what makes grades comparable
+  across tenants, across time, and between organisations. Setup no longer
+  asks for a "golden tenant ID"; `baseline build` (the reference-tenant
+  capture) is removed; the overview, guide, and report now all describe the
+  standard identically; and every assessment and report states which standard
+  and version graded it. Tailoring to one tenant happens in the plan, never
+  in the grade.
+- **Setup signs you in instead of asking for a Directory ID.** The browser
+  opens Microsoft's own sign-in page (device code fallback for machines with
+  no browser), the tenant is read from the sign-in and echoed back for
+  confirmation, and a suggested short name is offered. The exact scope of the
+  one-time sign-in is printed before the browser opens, the Collector's
+  read-only permission list is printed before anything is created, and a
+  mechanical assertion (plus tests) refuses any permission that is not a
+  read. `--tenant-id` pins the tenant for scripted use, the one-time sign-in
+  app is remembered so certificate renewal never re-asks for it, and setup
+  ends with a summary of exactly what was configured and what to run next.
+
 ### Fixed
 
 - **The Windows installer no longer claims success after a failure.** It

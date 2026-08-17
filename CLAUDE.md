@@ -4,9 +4,9 @@ Read SPEC-PUBLIC.md fully before writing any code. It is the contract. If the sp
 
 ## Tenant and app registration model
 
-In V1 the app registration ("IAMAI Collector") lives in the golden tenant, which is the operator-controlled durable anchor. If a dedicated company tenant exists later, recreate the app there and re-consent. Do not add an "MSP home tenant" concept to V1; there is no separate MSP tenant in scope.
+There is no golden tenant (operator decision, 2026-08-17, superseding the V1 model). The standard ships with the tool, fixed and versioned; per-tenant tailoring happens in the plan layer, never in the grade, and never in configuration set up in advance. The multitenant app registration ("IAMAI Collector") lives in whichever tenant ran setup first (config homeTenantId); every further tenant only consents to it.
 
-`iamai setup` automates app registration creation via device code flow. The `SETUP_CLIENT_ID` constant in cli.py is the bootstrapper public client ID. It must be registered once by the operator as a public client app (no permissions in its manifest, public client flows enabled). All other setup steps are automated.
+`iamai setup` signs the administrator in through the browser (device code fallback), reads the tenant from the sign-in token, and creates the Collector app. The `SETUP_CLIENT_ID` constant in cli.py, or the user's own one-time helper app (stored as setupClientId in config), is the public client for that sign-in: no permissions in its manifest, public client flows enabled. The Collector's Graph permissions are read-only, asserted mechanically by assert_permissions_read_only and by test; never add a scope that fails that assertion.
 
 ## Build discipline
 

@@ -15,6 +15,8 @@ import pytest
 from typer.testing import CliRunner
 
 import iamai.cli as cli
+
+from conftest import freeze_test_baseline
 from iamai.questions import (
     assess_with_answers,
     generate_questions,
@@ -230,7 +232,7 @@ runner = CliRunner()
 
 
 def test_wizard_command_serves_on_localhost_only(workspace, mock_graph, monkeypatch):  # noqa: F811
-    assert runner.invoke(cli.app, ["baseline", "build", "--yes"]).exit_code == 0
+    freeze_test_baseline()
     assert runner.invoke(cli.app, ["assess", "golden"]).exit_code == 0
 
     captured = {}

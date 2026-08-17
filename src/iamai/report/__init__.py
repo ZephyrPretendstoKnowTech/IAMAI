@@ -184,6 +184,8 @@ def render_plan(plan: dict) -> str:
         total_steps=len(plan.get("steps", [])),
         watch_list=plan.get("watchList", []),
         not_included=plan.get("notIncluded", []),
+        accepted_deviations=plan.get("acceptedDeviations", []),
+        conflicts=plan.get("conflicts", []),
         best_effort_note=plan.get("bestEffortNote", ""),
         unknowns=plan.get("unknowns", []),
         comms=plan.get("comms", {}),

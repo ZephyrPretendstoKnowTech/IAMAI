@@ -56,6 +56,29 @@
         }
       }
     },
+    "acceptedDeviations": {
+      "type": "array",
+      "description": "Gaps accepted on purpose: the durable record of who decided, why, what compensates, and when to look again. The grade underneath stays honest.",
+      "items": {
+        "type": "object",
+        "required": ["controlId", "reason", "status"],
+        "properties": {
+          "controlId": {"type": "string"},
+          "title": {"type": "string"},
+          "reason": {"type": "string"},
+          "decidedBy": {"type": "string"},
+          "decidedAt": {"type": "string"},
+          "compensatingControl": {"type": "string"},
+          "reviewBy": {"type": "string"},
+          "status": {"type": "string", "enum": ["accepted", "review due", "no longer needed"]}
+        }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Where the plan's inputs disagree; each line asks for a decision rather than silently preferring one input."
+    },
     "notIncluded": {
       "type": "array",
       "items": {
@@ -117,7 +140,19 @@
             "samples": {"type": "array", "items": {"type": "string"}}
           }
         },
-        "lists": {"type": "array"}
+        "lists": {"type": "array"},
+        "drivenBy": {
+          "type": "array",
+          "description": "What drove this step: the standard's default, a questionnaire answer, or something the person told the assistant. Never changes a grade.",
+          "items": {
+            "type": "object",
+            "required": ["source", "detail"],
+            "properties": {
+              "source": {"type": "string", "enum": ["standard", "questionnaire", "conversation"]},
+              "detail": {"type": "string"}
+            }
+          }
+        }
       }
     }
   }

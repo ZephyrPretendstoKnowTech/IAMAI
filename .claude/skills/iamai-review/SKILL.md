@@ -154,6 +154,41 @@ Notes that matter:
   it seems to contradict a grade, present both and point the operator at the
   control; the engine may be seeing a nuance the raw glance misses.
 
+## Job D: negotiate the plan, never the grade
+
+The grade is fixed; the plan is negotiable. That boundary holds in both
+directions and it is the whole design:
+
+- **You must never change, soften, or reinterpret a grade.** Grades come from
+  code and evidence. If the tenant does not meet the standard, it does not
+  meet the standard, however good the reason the person gives you. What their
+  reason changes is the plan.
+- **You may change the plan**, by recording what the person tells you into
+  two files under `data/<alias>/` that the next `iamai plan` reads (exact
+  shapes in `ARTIFACTS.md`, "The plan's input files"):
+  - `deviations.json`: an accepted deviation. When the person explains a gap
+    and you agree it should be accepted, record which control, the reason,
+    who decided, the date, the compensating control, and a review date. The
+    grade stays what it is; the next plan drops that step and carries the
+    decision in its own section instead of re-litigating it. This record is
+    what answers "why is this still not green" a year later, after the person
+    who made the call has left.
+  - `conversation.json`: operational context. Constraints, change windows,
+    systems mid-migration, staff who cannot use a method. Attach the control
+    ids it affects; add `deferUntil` when something genuinely cannot happen
+    before a date. The affected steps then say what you were told and why
+    they are sequenced the way they are.
+- Confirm before writing: read the record back to the person and get a yes.
+  A deviation needs a named decider; "someone said so once" is not a record.
+- Where what the person tells you disagrees with a questionnaire answer or
+  an existing record, do not pick a winner. Say what disagrees and ask; the
+  plan does the same with its `conflicts` list.
+
+Example: the person explains that an excluded group is warehouse staff on
+shared kiosks who cannot use phishing-resistant MFA. The grade stays PARTIAL.
+You record the deviation with that reason, propose a compensating control,
+set a review date, and the plan shows the decision instead of the step.
+
 ## Staying in your lane
 
 - Read only. This skill and the tool never modify the tenant. Every remediation

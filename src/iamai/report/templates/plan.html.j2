@@ -149,6 +149,10 @@ paper before printing.</p>
     </ul>
   </details>
 
+  {% if step.drivenBy %}
+  <p class="detail">Why this step is here:
+  {% for reason in step.drivenBy %}{{ reason.detail }}{{ " " if not loop.last }}{% endfor %}</p>
+  {% endif %}
   <p class="detail">Step {{ step.id }}{% if step.controlId %} for control {{ step.controlId }}{% endif %}</p>
 </section>
 {% else %}
@@ -183,6 +187,30 @@ paper before printing.</p>
 {% endif %}
 {% else %}
 <p>Nothing needs special monitoring beyond the step cards.</p>
+{% endif %}
+
+{% if conflicts %}
+<h2>Needs your decision</h2>
+<p>The plan's inputs disagree here. Nothing was silently preferred; each line
+asks for a call.</p>
+<ul>
+{% for conflict in conflicts %}<li>{{ conflict }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+{% if accepted_deviations %}
+<h2>Accepted deviations</h2>
+<p>Gaps that were accepted on purpose. The grade underneath stays honest, so
+the report still shows them; this record is why they are not in the plan, who
+decided, and when to look again.</p>
+<table>
+  <tr><th>Protection</th><th>Why it was accepted</th><th>Compensating control</th><th>Decided</th><th>Review by</th><th>Status</th></tr>
+  {% for dev in accepted_deviations %}
+  <tr><td>{{ dev.title }}</td><td>{{ dev.reason }}</td><td>{{ dev.compensatingControl }}</td>
+  <td>{{ dev.decidedBy }}{% if dev.decidedAt %} on {{ dev.decidedAt }}{% endif %}</td>
+  <td>{{ dev.reviewBy }}</td><td>{{ dev.status }}</td></tr>
+  {% endfor %}
+</table>
 {% endif %}
 
 {% if best_effort_note %}

@@ -30,10 +30,12 @@ becomes its own staged step.
 
 from __future__ import annotations
 
+import json
 import re
 import time
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -162,6 +164,32 @@ class ListDetail(BaseModel):
     items: list[str] = Field(min_length=1)
 
 
+class Provenance(BaseModel):
+    """What drove a step: the standard's default, a questionnaire answer, or
+    something the person told the assistant. A reader can tell which parts of
+    the plan are generic and which are specific to this tenant. Provenance
+    changes what to do and when; it never changes a grade."""
+
+    source: Literal["standard", "questionnaire", "conversation"]
+    detail: str
+
+
+class AcceptedDeviation(BaseModel):
+    """A recorded decision to accept a gap: who decided, why, what
+    compensates, and when to look again. The grade underneath stays honest;
+    this is the record that answers "why is this still not green" long after
+    the person who made the call has moved on."""
+
+    controlId: str
+    title: str = ""
+    reason: str
+    decidedBy: str = ""
+    decidedAt: str = ""
+    compensatingControl: str = ""
+    reviewBy: str = ""
+    status: Literal["accepted", "review due", "no longer needed"] = "accepted"
+
+
 class StepCard(BaseModel):
     id: str
     phase: int
@@ -175,6 +203,7 @@ class StepCard(BaseModel):
     watchFor: list[str] = Field(min_length=1)
     controlId: str = ""
     lists: list[ListDetail] = Field(default_factory=list)
+    drivenBy: list[Provenance] = Field(default_factory=list)
 
 
 class Phase(BaseModel):
@@ -212,6 +241,12 @@ class Plan(BaseModel):
     unknowns: list[str]
     comms: dict[str, str]
     scopeNote: str
+    acceptedDeviations: list[AcceptedDeviation] = Field(default_factory=list)
+    # Where two of the plan's inputs disagree (a recorded deviation for a
+    # control the tenant now meets, a conversational constraint on a day one
+    # safety step), the plan surfaces the disagreement and asks rather than
+    # silently preferring one.
+    conflicts: list[str] = Field(default_factory=list)
 
 
 # --- Snapshot readers ------------------------------------------------------------
@@ -1767,6 +1802,142 @@ def _start_date(supplied: str | None, tz_name: str) -> date:
 # --- Entry point ------------------------------------------------------------------
 
 
+DEVIATIONS_NAME = "deviations.json"
+CONVERSATION_NAME = "conversation.json"
+
+
+def load_deviations(alias_dir: Path) -> list[dict]:
+    """Accepted deviations recorded for this tenant (ARTIFACTS.md).
+
+    Written by whoever negotiates the plan with the operator, typically the
+    Claude skill, never by this tool on its own. Grading never reads it."""
+    path = alias_dir / DEVIATIONS_NAME
+    if not path.exists():
+        return []
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    if not isinstance(record, dict):
+        return []
+    return [d for d in record.get("deviations") or [] if isinstance(d, dict)]
+
+
+def load_conversation(alias_dir: Path) -> list[dict]:
+    """Operational context the person told the assistant (ARTIFACTS.md).
+
+    Same authorship rule as deviations: recorded from conversation, read only
+    by plan generation, invisible to grading."""
+    path = alias_dir / CONVERSATION_NAME
+    if not path.exists():
+        return []
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    if not isinstance(record, dict):
+        return []
+    return [s for s in record.get("statements") or [] if isinstance(s, dict)]
+
+
+def _clip(text: str, limit: int = 240) -> str:
+    text = " ".join(str(text).split())
+    return text if len(text) <= limit else text[: limit - 1] + "…"
+
+
+def _reconcile_plan_inputs(
+    steps: list[StepCard],
+    assessment: dict,
+    controls_by_id: dict,
+    deviations: list[dict],
+    conversation: list[dict],
+    start,
+) -> tuple[list[StepCard], list[AcceptedDeviation], list[str]]:
+    """Fold the recorded deviations and conversational context into the plan.
+
+    Three inputs reach plan generation: the assessment (grades, from code),
+    the questionnaire answers, and what the person told the assistant. This
+    reconciles the last one and the deviation record with the first two.
+    Nothing here touches a grade: an accepted deviation removes the step and
+    records the decision, a constraint re-sequences a step, and every
+    disagreement between inputs becomes a conflict line that asks rather
+    than silently preferring one input."""
+    grades = {c["controlId"]: c["grade"] for c in assessment.get("controls", [])}
+    accepted: list[AcceptedDeviation] = []
+    conflicts: list[str] = []
+    active: set[str] = set()
+
+    for dev in deviations:
+        cid = str(dev.get("controlId", "")).strip()
+        if not cid:
+            continue
+        title = str(controls_by_id.get(cid, {}).get("intent") or cid)
+        record = AcceptedDeviation(
+            controlId=cid,
+            title=title,
+            reason=_clip(dev.get("reason", "")),
+            decidedBy=str(dev.get("decidedBy", "")),
+            decidedAt=str(dev.get("decidedAt", "")),
+            compensatingControl=_clip(dev.get("compensatingControl", "")),
+            reviewBy=str(dev.get("reviewBy", "")),
+        )
+        grade = grades.get(cid)
+        if grade in ("FULL", "FUNCTIONAL") or cid not in grades:
+            record.status = "no longer needed"
+            conflicts.append(
+                f"An accepted deviation is recorded for '{title}', but this "
+                "assessment no longer shows a gap there. Confirm the record can "
+                "be retired."
+            )
+        elif record.reviewBy and record.reviewBy < start.isoformat():
+            record.status = "review due"
+            conflicts.append(
+                f"The accepted deviation for '{title}' was due for review on "
+                f"{record.reviewBy}, so its step is back in the plan until the "
+                "decision is renewed."
+            )
+        else:
+            record.status = "accepted"
+            active.add(cid)
+        accepted.append(record)
+
+    kept: list[StepCard] = []
+    for step in steps:
+        if step.controlId in active:
+            continue
+        kept.append(step)
+
+    for statement in conversation:
+        text = _clip(statement.get("text", ""))
+        if not text:
+            continue
+        when = str(statement.get("recordedAt", ""))[:10]
+        defer_until = str(statement.get("deferUntil", "")).strip()
+        control_ids = {str(c) for c in statement.get("controlIds") or []}
+        for step in kept:
+            if step.controlId not in control_ids:
+                continue
+            said = f"You told the assistant{' on ' + when if when else ''}: {text}"
+            step.drivenBy.append(Provenance(source="conversation", detail=said))
+            if not defer_until:
+                continue
+            if step.phase <= 1:
+                conflicts.append(
+                    f"'{step.title}' is a day one safety step and was not "
+                    f"deferred to {defer_until} despite the recorded constraint. "
+                    "Tell the assistant if that is wrong."
+                )
+            else:
+                step.phase = 5
+                step.preconditions.append(Precondition(
+                    statement=f"Not before {defer_until}: {text}",
+                    query="The operator confirms the constraint has passed.",
+                    result="unverified",
+                ))
+
+    return kept, accepted, conflicts
+
+
 def generate_plan(
     assessment: dict,
     answers: AnswersFile,
@@ -1776,6 +1947,8 @@ def generate_plan(
     tenant_id: str,
     alias: str,
     start_date: str | None = None,
+    deviations: list[dict] | None = None,
+    conversation: list[dict] | None = None,
 ) -> dict:
     """Build the plan record from the assessment, the answers, the baseline
     artifact, and the latest snapshot data. start_date is an ISO date
@@ -1900,6 +2073,35 @@ def generate_plan(
     if unregistered and require_cap_planned:
         steps.append(_straggler_step(unregistered))
 
+    # Provenance: every step carries what drove it. The default is the
+    # standard; steps shaped by a questionnaire answer say which one; the
+    # reconciliation below adds what the person told the assistant.
+    answered = set(answers.answers)
+    question_notes = {
+        "break-glass": "Your answer to the emergency account question.",
+        "trusted-locations": "Your answer about trusted network locations.",
+        "legacy-auth": "Your answer naming the service accounts on old sign-in methods.",
+        "cross-tenant-mfa-trust": "Your answer about trusting partner organisations.",
+        "license-tier": "The licence tier you confirmed.",
+    }
+    step_questions = {
+        "break-glass": lambda s: "break glass" in s.title.lower() or "emergency" in s.title.lower(),
+        "trusted-locations": lambda s: "location" in s.title.lower(),
+        "legacy-auth": lambda s: "old sign" in s.title.lower() or "legacy" in s.title.lower(),
+        "cross-tenant-mfa-trust": lambda s: s.controlId == "xtenant-001",
+    }
+    for step in steps:
+        step.drivenBy.insert(0, Provenance(
+            source="standard", detail="The standard's default recommendation."))
+        for question_id, matches in step_questions.items():
+            if question_id in answered and matches(step):
+                step.drivenBy.append(Provenance(
+                    source="questionnaire", detail=question_notes[question_id]))
+
+    steps, accepted_deviations, conflicts = _reconcile_plan_inputs(
+        steps, assessment, controls_by_id, deviations or [], conversation or [], start,
+    )
+
     # Where two controls describe the same switch at different strengths, doing
     # the stricter one satisfies both, so listing both reads as two jobs when
     # it is one. The looser step is dropped rather than the stricter, because
@@ -1947,6 +2149,8 @@ def generate_plan(
             if any(step.phase >= 4 for step in steps)
             else {}
         ),
+        acceptedDeviations=accepted_deviations,
+        conflicts=conflicts,
         scopeNote=(
             "This plan is executed by a person, never by this tool. Every checkpoint "
             "is checked by re-running 'iamai collect' and 'iamai assess'. An unmet "

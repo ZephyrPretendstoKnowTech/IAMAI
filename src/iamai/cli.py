@@ -1473,10 +1473,19 @@ def plan(
         typer.echo(f"Run 'iamai wizard {alias}' or 'iamai questions {alias}' first.", err=True)
         raise typer.Exit(code=1)
 
+    from iamai.plan import load_conversation, load_deviations
+
     plan_record = generate_plan(
         assessment, answers, artifact, data,
         tenant_id=tenant_id, alias=alias, start_date=start_date,
+        deviations=load_deviations(store.alias_dir(alias)),
+        conversation=load_conversation(store.alias_dir(alias)),
     )
+    if plan_record.get("conflicts"):
+        typer.echo("")
+        typer.echo("Needs your decision (the plan's inputs disagree):")
+        for conflict in plan_record["conflicts"]:
+            typer.echo(f"  - {conflict}")
 
     out_dir = store.alias_dir(alias) / "plans"
     out_dir.mkdir(parents=True, exist_ok=True)

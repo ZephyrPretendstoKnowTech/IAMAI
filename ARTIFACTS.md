@@ -128,6 +128,8 @@ Top-level fields:
 | `steps` | array | The work. See below. |
 | `watchList` | array | `{item, kind, reason}`: things to watch during rollout. |
 | `notIncluded` | array | Steps deliberately left out (e.g. a control the licence does not support, or one with no step written yet), each with a reason. |
+| `acceptedDeviations` | array | `{controlId, title, reason, decidedBy, decidedAt, compensatingControl, reviewBy, status}`: gaps accepted on purpose. The grade underneath stays honest and the report still shows it; this is the durable record of the decision. `status` is `accepted`, `review due`, or `no longer needed`. |
+| `conflicts` | array of string | Where the plan's inputs disagree (a recorded deviation the tenant now meets, a constraint on a day one step). Each line asks for a decision; nothing is silently preferred. |
 | `comms` | object | `{announcement, reminder, helpdesk}`: ready-to-send plain-text templates. Rendered into the plan HTML, never sent by the tool. |
 | `bestEffortNote` | string | Present when the plan is a best-effort fallback. |
 | `unknowns` | array of string | What the plan could not determine. |
@@ -149,6 +151,61 @@ A **step** object:
 | `watchFor` | array of string | What the change will cost the people who use the tenant, stated up front. |
 | `affected` | object | `{count, samples}`: who it touches. `count` is 0 for tenant-wide settings this tool cannot enumerate. |
 | `lists` | array | Supporting lists (e.g. accounts to onboard), when a step needs them. |
+| `drivenBy` | array | `{source, detail}` per entry, `source` one of `standard`, `questionnaire`, `conversation`: what drove this step, so a reader can tell the generic parts from the tenant-specific ones. Context changes what to do and when; it never changes what is true. |
+
+## The plan's input files: deviations.json and conversation.json
+
+Plan generation reads three inputs: the assessment (grades, from code), the
+questionnaire answers (inside the assessment), and two optional files under
+`data/<alias>/` that whoever negotiates the plan with the operator, typically
+the Claude skill, writes from conversation. **Grading never reads either
+file.** No content in them can change a grade; they change what the plan asks
+for and when.
+
+`deviations.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "deviations": [
+    {
+      "controlId": "cap-002",
+      "reason": "Warehouse staff on shared kiosks cannot use phishing-resistant MFA.",
+      "decidedBy": "J. Reyes (IT manager)",
+      "decidedAt": "2026-08-17",
+      "compensatingControl": "Kiosk accounts are in a dedicated group with sign-in restricted to the warehouse network.",
+      "reviewBy": "2027-02-01"
+    }
+  ]
+}
+```
+
+The next plan drops the step for an accepted deviation and records the
+decision in `acceptedDeviations` instead of re-litigating it. Past its
+`reviewBy` date the step returns and the plan says why. If a later
+assessment shows the control is met, the plan flags the record as no longer
+needed rather than deleting history.
+
+`conversation.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "statements": [
+    {
+      "text": "The finance app still uses legacy auth until the March migration.",
+      "recordedAt": "2026-08-17",
+      "controlIds": ["cap-005"],
+      "deferUntil": "2027-03-31"
+    }
+  ]
+}
+```
+
+A statement attaches to its steps as `drivenBy` provenance; `deferUntil`
+re-sequences the step into the final phase with an explicit not-before
+precondition. A day one safety step is never deferred; the plan records the
+disagreement in `conflicts` and asks instead.
 
 ## What is deliberately not here
 

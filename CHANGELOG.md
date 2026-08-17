@@ -6,6 +6,10 @@ All notable changes to IAMAI are recorded here. The format follows
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [1.2.0] - 2026-08-17
+
 ### Added
 
 - **Cross-tenant trust is now read and questioned.** A new collector reads the

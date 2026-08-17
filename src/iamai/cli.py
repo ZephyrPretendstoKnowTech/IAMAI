@@ -756,7 +756,7 @@ app.add_typer(baseline_app, name="baseline")
 import importlib.resources  # noqa: E402
 
 DEFAULT_PACK = importlib.resources.files("iamai") / "packs" / "basics-v1.json"
-TOOL_VERSION = "1.1.0"
+TOOL_VERSION = "1.2.0"
 
 
 def _baselines_dir():

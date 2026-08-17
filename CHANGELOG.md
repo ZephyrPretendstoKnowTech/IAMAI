@@ -18,6 +18,10 @@ All notable changes to IAMAI are recorded here. The format follows
   `devicecode-001`). A policy blocking the device code flow may excuse
   specific accounts or a device group; excusing an application instead
   reopens the flow for every user, and the report now says so.
+- **The Claude skill now walks a new user through setup.** The bundled
+  `iamai-review` skill gained a step-by-step setup walkthrough (install,
+  app registration, consent, verify, collect, assess, wizard, plan), with
+  tests that keep every command it names real and in the right order.
 
 ### Changed
 

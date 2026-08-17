@@ -56,4 +56,5 @@ markers = [
     "m11: milestone PUB-M1 licensing aware grading tests",
     "m12: milestone PUB-M2 basics pack tests",
     "m13: publication safety tests",
+    "m14: milestone PUB-M4 skill tests",
 ]

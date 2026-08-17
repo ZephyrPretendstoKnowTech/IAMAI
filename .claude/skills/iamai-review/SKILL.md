@@ -1,6 +1,6 @@
 ---
 name: iamai-review
-description: "Read and explain what IAMAI collected and graded for a Microsoft Entra tenant. Use whenever the user asks about a tenant's identity security posture, a specific control grade, the remediation plan, or the raw collected data (conditional access, users, roles, sign-ins, groups, service principals), or points at an IAMAI snapshot, assessment, or plan under data/. Reads the engine's own artifacts and restates them faithfully; investigates the raw snapshot for questions the grades do not answer. Read only: it never re-grades and never changes the tenant."
+description: "Set up and read IAMAI, the Microsoft Entra identity posture collector. Use whenever the user asks about a tenant's identity security posture, a specific control grade, the remediation plan, or the raw collected data (conditional access, users, roles, sign-ins, groups, service principals), points at an IAMAI snapshot, assessment, or plan under data/, or wants help installing IAMAI, running setup, consenting a tenant, or getting from nothing to a first report. Reads the engine's own artifacts and restates them faithfully; investigates the raw snapshot for questions the grades do not answer. Read only: it never re-grades and never changes the tenant."
 ---
 
 # iamai-review
@@ -95,6 +95,22 @@ rather than guessing at its contents:
 - No assessment: `iamai assess <alias>` (after collect)
 - No plan: `iamai wizard <alias>` then `iamai plan <alias>` (the wizard answers
   the handful of questions only the operator knows)
+
+## Job C: walk the person through setup
+
+When the person has not run the tool yet, or asks how to get started, follow
+`reference/setup.md`. It is the whole path: install, the one-time `iamai
+setup` app registration, approving consent, `iamai verify`, then collect,
+assess, wizard, and plan. The rules that matter:
+
+- **They run every command.** Setup and consent sign in interactively as a
+  Global Administrator, and collect reads their live tenant. Give them the
+  next command and what it will ask; never run those yourself.
+- One step at a time. Ask what happened before moving to the next command;
+  the walkthrough lists the common snags per step.
+- The collector is fully usable without this skill. If they would rather
+  read the manual, the full guide ships with the project's documentation
+  site; this walkthrough is the conversational version of the same path.
 
 ## Job A: interpret the graded artifacts
 

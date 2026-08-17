@@ -113,13 +113,16 @@ jobs:
         # missing or malformed pack breaks the only path they can take.
         run: |
           python - <<'PY'
-          import json, pathlib, sys
+          import json, sys
+          import importlib.resources
           from iamai.canon import validate_pack
-          path = pathlib.Path("packs/basics-v1.json")
-          pack = json.loads(path.read_text(encoding="utf-8"))
+          # Resolved the same way the CLI resolves DEFAULT_PACK, so this
+          # checks the pack an install actually ships, not a repo path.
+          res = importlib.resources.files("iamai") / "packs" / "basics-v1.json"
+          pack = json.loads(res.read_text(encoding="utf-8"))
           errors = validate_pack(pack)
           if errors:
               print("\n".join(errors))
               sys.exit(1)
-          print(f"{path}: {len(pack['controls'])} controls, valid")
+          print(f"{res}: {len(pack['controls'])} controls, valid")
           PY

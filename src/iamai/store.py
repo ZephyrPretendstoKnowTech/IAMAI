@@ -13,7 +13,7 @@ from __future__ import annotations
 import json
 import os
 import time
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 from pydantic import BaseModel, Field
 
@@ -27,7 +27,7 @@ MANIFEST_NAME = "manifest.json"
 # whitelist too. A path separator or ".." lets an alias walk out of data/;
 # on Windows, Path("data") / "C:\\Windows\\Temp\\x" discards "data" entirely
 # because the right operand is absolute, which a separator-based check alone
-# would miss without the drive-qualified case Path(alias).name also catches.
+# would miss without the drive-qualified case the name checks also catch.
 _UNSAFE_ALIAS_CHARS = ("/", "\\")
 
 
@@ -51,7 +51,11 @@ def _validate_alias(alias: str) -> None:
         not alias
         or alias in (".", "..")
         or any(char in alias for char in _UNSAFE_ALIAS_CHARS)
-        or alias != Path(alias).name
+        # Both flavours, not Path: on POSIX, Path("C:").name is "C:" itself,
+        # so a drive-qualified alias collected on Linux would pass here and
+        # then behave as an absolute path if the tree is ever read on Windows.
+        or alias != PurePosixPath(alias).name
+        or alias != PureWindowsPath(alias).name
     ):
         raise ValueError(
             f"{alias!r} is not a valid tenant alias. An alias must be a plain "

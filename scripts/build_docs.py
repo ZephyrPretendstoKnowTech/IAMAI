@@ -190,7 +190,8 @@ def _section(anchor, title, inner, open=False):
 
 def _toc():
     items = [
-        ("what", "What IAMAI is"), ("install", "Installing it"),
+        ("what", "What IAMAI is"), ("before", "Before you install"),
+        ("install", "Installing it"), ("footprint", "What this puts on your machine"),
         ("setup", "Connecting a tenant"), ("workflow", "The workflow"),
         ("commands", "Command reference"), ("questionnaire", "The questionnaire"),
         ("report", "Reading the report"), ("plan", "Reading the plan"),
@@ -216,42 +217,101 @@ def _build_sections():
         "anywhere: the only traffic is to Microsoft's own Graph and login endpoints, and everything "
         "it collects stays in a folder on your machine.</div>", open=True))
 
+    parts.append(_section("before", "Before you install",
+        "<p>What you need, so nothing surprises you halfway through:</p>"
+        "<ul>"
+        "<li><strong>A Windows, macOS or Linux machine you are allowed to install on.</strong> "
+        "On Windows, the stock Windows PowerShell 5.1 is enough; PowerShell 7 also works. No "
+        "administrator rights are needed and no developer tools (no git, no compilers).</li>"
+        "<li><strong>Python 3.12 or newer</strong>, or on Windows the installer will fetch it "
+        "for you via winget. On macOS or Linux install it first (brew, apt, dnf).</li>"
+        "<li><strong>Network access to github.com and pypi.org</strong> for the install, and to "
+        "graph.microsoft.com and login.microsoftonline.com to read a tenant. Nothing else is "
+        "ever contacted.</li>"
+        "<li><strong>A Global Administrator sign-in</strong> for each tenant you want to assess, "
+        "used once during setup to create and approve the read-only app.</li>"
+        "<li><strong>About fifteen minutes</strong>: a few minutes to install, about five for "
+        "setup, and a collect whose sign-in log pull can take a few minutes on a busy "
+        "tenant.</li>"
+        "</ul>"))
+
     parts.append(_section("install", "Installing it",
         "<p>You do not need to know Python. On <strong>Windows</strong>, open PowerShell and paste "
-        "one line; it installs everything and starts setup:</p>"
+        "one line; it checks the machine, says what it will do, installs everything, verifies the "
+        "install actually worked, and starts setup:</p>"
         + code_block("irm " + INSTALL_PS1 + " | iex")
         + "<p>On <strong>macOS or Linux</strong>, in a terminal:</p>"
         + code_block("curl -fsSL " + INSTALL_SH + " | bash")
-        + "<p>The installer finds or installs Python, puts IAMAI in its own per-user place (so it "
-        "never clutters your folders), adds the <code>iamai</code> command, and launches the guided "
-        "setup. It installs for your user only and needs no administrator rights.</p>"
+        + "<p>The installer prefers the pinned wheel from the latest release, needs no "
+        "administrator rights, and installs for your user only. If anything fails it stops and "
+        "says what failed and what to try; it never claims success it has not verified.</p>"
+        "<p><strong>Confirm it yourself.</strong> The natural last step of any install:</p>"
+        + code_block("iamai --version\niamai doctor")
+        + "<p><code>--version</code> proves the command runs; <code>doctor</code> checks the whole "
+        "install and, later, the config, certificate, connectivity and consent, with the next "
+        "command to run printed beside anything wrong.</p>"
         "<p><strong>The careful way.</strong> If you would rather read every step and have each "
         "dependency verified against a recorded hash, clone the repository and follow the README:</p>"
         + code_block("git clone " + REPO_URL + ".git iamai\ncd iamai\npython -m venv .venv\n"
           ".venv\\Scripts\\python.exe -m pip install --require-hashes -r requirements.txt\n"
           ".venv\\Scripts\\python.exe -m pip install --no-deps -e .")
-        + "<p>On macOS or Linux the last two lines use <code>.venv/bin/python</code>. That path "
-        "verifies every dependency against a recorded hash, rather than trusting whatever a package "
-        "index serves that day.</p>"))
+        + "<p>On macOS or Linux the last two lines use <code>.venv/bin/python</code>. Each release "
+        "also records its wheel's SHA256 in the release notes, and the build is reproducible, so "
+        "you can verify a downloaded wheel against the recorded value.</p>"))
+
+    parts.append(_section("footprint", "What this puts on your machine",
+        "<p>Everything the one-line install places, and how to remove it:</p>"
+        "<ul>"
+        "<li><strong>Python 3.12</strong> (Windows only, and only when missing), installed per "
+        "user by winget.</li>"
+        "<li><strong>pipx</strong>, a standard tool that keeps Python applications in isolated "
+        "environments, installed into your user Python.</li>"
+        "<li><strong>IAMAI and its pinned dependencies</strong> (about forty packages: Microsoft's "
+        "MSAL sign-in library, an HTTP client, the report templating, the local questionnaire "
+        "server) inside pipx's isolated environment for this one tool. They are not visible to "
+        "any other Python on the machine.</li>"
+        "<li><strong>The <code>iamai</code> command</strong> and one PATH entry for the folder "
+        "holding it.</li>"
+        "<li><strong>One data folder</strong> for config, the sign-in certificate, and everything "
+        "collected: <code>%LOCALAPPDATA%\\IAMAI</code> on Windows, "
+        "<code>~/Library/Application Support/IAMAI</code> on macOS, "
+        "<code>~/.local/share/iamai</code> on Linux. Collected snapshots hold real identity "
+        "data; that is the folder to guard and, when an engagement ends, purge.</li>"
+        "<li><strong>A local web page during the wizard only</strong>: <code>iamai wizard</code> "
+        "serves the questionnaire on 127.0.0.1 (this machine only, never the network), prints "
+        "the address and port when it starts, and stops when you press Ctrl+C. Nothing listens "
+        "at any other time.</li>"
+        "</ul>"
+        "<p>No services, no scheduled tasks, no telemetry. <code>iamai uninstall</code> prints "
+        "removal steps matched to how your copy was installed, including the Entra app "
+        "registrations an administrator deletes to revoke access everywhere.</p>"))
 
     parts.append(_section("setup", "Connecting a tenant",
-        "<p>The one-line installer starts this for you the first time. It creates the read-only "
-        "collector app, generates the certificate it uses, and walks you through granting consent. "
-        "To connect another tenant later, or to run it again, use <code>iamai setup</code>.</p>"
-        "<p><strong>A one-time helper app.</strong> Before the very first setup you register a small "
-        "\"IAMAI Setup\" app in the tenant. This is deliberate: the alternative is a shared app "
-        "controlled by whoever publishes this tool, which is its own trust problem. If you have the "
-        "Azure CLI and are signed in as a Global Administrator, one command does it:</p>"
-        + code_block('az ad app create --display-name "IAMAI Setup" '
-          "--sign-in-audience AzureADMultipleOrgs --is-fallback-public-client true --query appId -o tsv")
-        + "<p>Otherwise setup prints the handful of portal steps with a direct link. Then it prints an "
-        "admin-consent link: open it as a Global Administrator and review the list. Every permission "
-        "on it is a read permission.</p>"
-        "<p><strong>The certificate.</strong> Setup generates a certificate valid for 180 days. It "
-        "is the one credential the tool uses to read your tenants, so it is kept deliberately short "
-        "lived. When it nears expiry the tool warns you; once expired it stops with a plain "
-        "instruction to run setup again. To add another tenant later, send its administrator the "
-        "link from <code>iamai consent &lt;alias&gt;</code>.</p>"))
+        "<p>The one-line installer starts this for you the first time; run <code>iamai setup</code> "
+        "any time to add a tenant or renew the certificate. Four steps, each explained as it "
+        "happens:</p>"
+        "<ol>"
+        "<li><strong>A one-time sign-in app.</strong> Setup signs you in through a small app "
+        "registration of your own, so no third party ever sits in the sign-in path. The Azure CLI "
+        "fast path is one command; the portal path is about two minutes. It is remembered "
+        "afterwards.</li>"
+        "<li><strong>Sign in.</strong> Your browser opens Microsoft's own sign-in page (a device "
+        "code works on machines with no browser). Sign in as a Global Administrator of the tenant "
+        "to assess; your usual MFA applies. The tenant is read from your sign-in and echoed back "
+        "for confirmation, so there is no Directory ID to find and paste. Before the browser "
+        "opens, setup prints the exact scope it requests and what it can and cannot do.</li>"
+        "<li><strong>The read-only Collector app.</strong> Setup lists every permission the "
+        "Collector will hold, each one a read permission (the tool refuses, in code, to request "
+        "anything else), then creates the app and its 180-day certificate.</li>"
+        "<li><strong>Approval.</strong> Setup prints Microsoft's admin-consent link. Open it, "
+        "still signed in as a Global Administrator, review the read-only list, and accept. Then "
+        "<code>iamai verify &lt;alias&gt;</code> proves every permission actually answers.</li>"
+        "</ol>"
+        "<p><strong>The certificate</strong> is the one credential the tool uses and lasts 180 "
+        "days by design; the tool warns before expiry and setup renews it. <strong>More "
+        "tenants:</strong> run setup again and sign in to the next tenant, or send its "
+        "administrator the link from <code>iamai consent &lt;alias&gt;</code>; the Collector app "
+        "is registered once and each tenant only approves it.</p>"))
 
     parts.append(_section("workflow", "The workflow",
         "<p>Five commands, in order. Each writes files and is safe to run again.</p>"
@@ -318,14 +378,14 @@ def _build_sections():
         "<p><strong>Deleting it.</strong> Nothing is removed on its own. Run "
         "<code>iamai purge &lt;alias&gt; --all</code> when an engagement ends, or "
         "<code>--keep-latest N</code> / <code>--older-than N</code> to prune old snapshots. It "
-        "confirms before deleting unless you pass <code>--yes</code>.</p>"))
+        "confirms before deleting unless you pass <code>--yes</code>.</p>", open=True))
 
     parts.append(_section("permissions", "Permissions it uses, and why",
         "<p>Setup asks for one write permission, <code>Application.ReadWrite.OwnedBy</code>, used "
         "only to create the collector app itself. It cannot touch any other app. Everything the "
         "collector then reads uses read-only permissions:</p>"
         "<table><tr><th>Permission</th><th>What it reads</th></tr>"
-        + "".join(f"<tr><td><code>{_esc(p)}</code></td><td>{_esc(w)}</td></tr>" for p, w in PERMISSIONS) + "</table>"))
+        + "".join(f"<tr><td><code>{_esc(p)}</code></td><td>{_esc(w)}</td></tr>" for p, w in PERMISSIONS) + "</table>", open=True))
 
     parts.append(_section("skill", "Reading results with Claude",
         "<p>The repository ships a Claude Code skill, <code>iamai-review</code>, at "
@@ -338,6 +398,9 @@ def _build_sections():
 
     parts.append(_section("trouble", "Troubleshooting",
         "<dl class=\"gloss\">"
+        "<dt>'iamai' is not recognized after installing</dt><dd>The PATH entry lands in new terminals. Close PowerShell, open a new one, and run <code>iamai --version</code>. If it is still not found, run the installer again; it verifies the command answers before claiming success, so its output will say what is wrong.</dd>"
+        "<dt>The installer stopped with INSTALL FAILED</dt><dd>The lines above the failure are the underlying tool's own report. Most causes are network or proxy; fix that and paste the one-liner again. The installer is safe to re-run and upgrades in place.</dd>"
+        "<dt>The browser did not open at sign-in</dt><dd>Setup falls back to a device code automatically: open the printed link on any device, enter the code, and sign in there.</dd>"
         "<dt>verify shows a permission failing</dt><dd>Consent was not fully granted. Open the link "
         "from <code>iamai consent &lt;alias&gt;</code> again as a Global Administrator and accept the "
         "whole list, then re-run verify.</dd>"
@@ -375,12 +438,26 @@ BODY = f"""<body>
 <main id="top">
   <h1>IAMAI user guide</h1>
   <p class="lead">Everything the tool does, in plain English: install it, connect a tenant,
-    run the assessment, and read what comes out. Each section below expands.</p>
+    run the assessment, and read what comes out. Each section below expands.
+    <a href="#" id="expand-all">Expand all sections</a> for reading straight through,
+    searching with Ctrl+F, or printing.</p>
   {_toc()}
   {_build_sections()}
   {site_footer()}
 </main>
 {COPY_SCRIPT}
+<script>
+(function () {{
+  function openAll() {{
+    document.querySelectorAll("details.sect").forEach(function (d) {{ d.open = true; }});
+  }}
+  var link = document.getElementById("expand-all");
+  if (link) link.addEventListener("click", function (e) {{ e.preventDefault(); openAll(); }});
+  // Printing a page of collapsed sections prints their headings and nothing
+  // else, so everything opens before print and search-friendly reading.
+  window.addEventListener("beforeprint", openAll);
+}})();
+</script>
 </body>
 </html>"""
 

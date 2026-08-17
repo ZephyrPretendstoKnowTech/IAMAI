@@ -94,17 +94,32 @@ python -m venv .venv
 On macOS or Linux the last two lines use `.venv/bin/python`. This path verifies
 every dependency, direct and transitive, against a hash recorded when it was
 locked, rather than whatever a package index happens to serve on the day of
-install.
+install. Each release also records its wheel's SHA256 in the release notes.
 
-**2. Connect it to a tenant.**
+**2. Confirm the install worked.**
 
 ```
-.venv\Scripts\iamai.exe setup
+iamai --version
+iamai doctor
 ```
 
-This walks you through creating the read only app registration, generating a
-certificate, and having you grant consent. It prints every step and tells you
-what it needs before it needs it.
+`--version` proves the command runs. `doctor` checks the whole install in one
+go and, beside anything wrong, prints the exact next command to run. (The
+one-line installer already ran the verification itself; this is how you re-run
+it any time.)
+
+**3. Connect it to a tenant.**
+
+```
+iamai setup
+```
+
+Four explained steps: a one-time sign-in app, a browser sign-in as a Global
+Administrator of the tenant to assess (the tenant is read from your sign-in,
+so there is no ID to find and paste), the read-only Collector app with every
+permission listed before anything is created, and Microsoft's approval link.
+It prints every step and tells you what it needs before it needs it. To remove
+everything later, `iamai uninstall` prints the exact steps.
 
 **What you are approving, in plain terms.** Setup does two things that need a
 Global Administrator, and it is worth knowing exactly what each one is:
@@ -152,7 +167,7 @@ treat the `certs/` folder accordingly, and note that running `setup` on a second
 machine replaces the certificate and will stop the first machine from
 authenticating until it is re-run there too.
 
-**3. Run it.**
+**4. Run it.**
 
 ```
 iamai verify <alias>      Check every permission actually works
@@ -183,9 +198,11 @@ Each control records why it exists and, where one exists, the published
 guidance it corresponds to. Where this tool asks for less than a published
 baseline does, it does not claim to meet it.
 
-If you already run a tenant you trust, you can freeze it as your own standard
-with `iamai baseline build` and grade every other tenant against that instead.
-Most people will not need to.
+The standard is fixed and versioned on purpose: a grade means the same thing
+in every tenant, this year and next, which is what makes results comparable
+across clients and over time. Tailoring to one tenant happens in the plan,
+never in the grade. (Advanced users can import an authored pack with
+`iamai baseline import`; most people will not need to.)
 
 ## Licensing aware
 
